@@ -20,4 +20,11 @@ Vagrant.configure("2") do |config|
     inline: "rsync -r -u -i -h /vagrant/provision/dotfiles/ $HOME"
   config.vm.provision "build", type: "shell", privileged: false, path: "provision/build.sh"
 
+  # Customized
+  config.vm.synced_folder "../", "/opt/disk/src/iptvdream"
+  config.vm.provision "make-links", type: "shell", privileged: false, inline: <<-SHELL
+    ln -sf -v "/opt/disk/src/iptvdream/src" "/opt/disk/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream"
+    ln -sf -v "/opt/disk/src/iptvdream/skin" "/opt/disk/usr/share/enigma2/IPtvDream"
+  SHELL
+
 end
