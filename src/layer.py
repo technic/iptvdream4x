@@ -19,7 +19,7 @@ else:
 			eTimerEnigma.__init__(self)
 			self.callback = []
 			self.conn = self.timeout.connect(self.fire)
-		
+
 		def fire(self):
 			for f in self.callback:
 				f()

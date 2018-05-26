@@ -24,12 +24,14 @@ def trace(*args):
 
 def getHwAddr(ifname):
 	try:
-		import fcntl, socket, struct
+		import fcntl
+		import socket
+		import struct
 	except ImportError:
 		return '00:00:00:00:00:00'
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	try:
-		info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
+		info = fcntl.ioctl(s.fileno(), 0x8927, struct.pack('256s', ifname[:15]))
 	except IOError:
 		return '00:00:00:00:00:00'
 	return ''.join(['%02x:' % ord(char) for char in info[18:24]])[:-1]
@@ -381,4 +383,3 @@ class OfflineFavourites:
 				f.write(','.join(map(str, self.favourites)))
 		except Exception as e:
 			raise APIException(str(e))
-

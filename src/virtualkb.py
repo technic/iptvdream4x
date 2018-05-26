@@ -51,7 +51,7 @@ kbd_languages["ru_RU"] = ([
 	[u"Й", u"Ц", u"У", u"К", u"Е", u"Н", u"Г", u"Ш", u"Щ", u"З", u"I", u"Х", u"*"],
 	[u"Ф", u"Ы", u"В", u"А", u"П", u"Р", u"О", u"О", u"Л", u"Д", u"Ж", u"'"],
 	[u">", u"Э", u"Я", u"Ч", u"С", u"М", u"И", u"Т", u";", u":", u"_", u"CLEAR"],
-	[u"SHIFT", u"SPACE", u"?", u"\\", u"Ь", u"Б", u"Ю",  u"Ъ", u"OK"]])
+	[u"SHIFT", u"SPACE", u"?", u"\\", u"Ь", u"Б", u"Ю", u"Ъ", u"OK"]])
 
 
 class VirtualKeyBoard(VirtualKeyBoard_e2):
