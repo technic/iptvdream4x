@@ -1,0 +1,10 @@
+image: python:2.7.15
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - pip
+        script:
+          - pip install pep8
+          - pep8 --ignore E266,E226,W191,W293 --max-line-length=119 src
