@@ -196,7 +196,6 @@ class Manager(object):
 		return self.apiDict[name]
 
 	def getConfig(self, name):
-		trace(id(config.IPtvDream), id(self.config), id(self.config[name]))
 		return self.config[name]
 
 
