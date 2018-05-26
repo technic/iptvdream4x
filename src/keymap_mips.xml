@@ -1,0 +1,113 @@
+<!--
+flags="m" - onKeyDown
+flags="l" - onKeyLongPress
+flags="b" - onKeyUp
+flags="r" - onKeyRepeat
+-->
+<keymap>
+	<!-- ### CHANNELS -->
+	<map context="IPtvDreamInfobarActions">
+		<key id="KEY_TV" mapto="closePlugin" flags="m" />
+		<key id="KEY_VIDEO" mapto="openVideos" flags="m" />
+		<key id="KEY_UP" mapto="openServiceList" flags="mr" />
+		<key id="KEY_DOWN" mapto="openServiceList" flags="mr" />
+		<key id="KEY_CHANNELUP" mapto="zapUp" flags="m" />
+		<key id="KEY_CHANNELDOWN" mapto="zapDown" flags="m" />
+		<key id="KEY_INFO" mapto="showEPGList" flags="m" />
+		<key id="KEY_EPG" mapto="showEPGList" flags="m" />
+		<key id="KEY_PREVIOUS" mapto="historyBack" flags="mr" />
+		<key id="KEY_NEXT" mapto="historyNext" flags="mr" />
+		<key id="KEY_BACK" mapto="historyBack" flags="mr" />
+		<key id="KEY_FORWARD" mapto="historyNext" flags="mr" />
+	</map>
+	
+	<map context="IPtvDreamLiveActions">
+		<key id="KEY_LEFT" mapto="zapUp" flags="mr" />
+		<key id="KEY_RIGHT" mapto="zapDown" flags="mr" />
+	</map>
+	
+	<map context="IPtvDreamArchiveActions">
+		<key id="KEY_RED" mapto="exitArchive" flags="m" />
+		<device name="dreambox remote control (native)">
+			<key id="KEY_YELLOW" mapto="playpause" flags="b" />
+		</device>
+		<device name="dreambox advanced remote control (native)">
+			<key id="KEY_PLAY" mapto="playpause" flags="m" />
+		</device>
+		<key id="KEY_PLAYPAUSE" mapto="playpause" flags="m" />
+		<key id="KEY_PAUSE" mapto="pause" flags="m" />
+		<key id="KEY_PLAY" mapto="play" flags="m" />
+		<key id="KEY_LEFT" mapto="seekBackward" flags="mr" />
+		<key id="KEY_RIGHT" mapto="seekForward" flags="mr" />
+		<key id="KEY_REWIND" mapto="seekBackward" flags="m" />
+		<key id="KEY_FASTFORWARD" mapto="seekForward" flags="m" />
+	</map>
+	
+	<map context="IPtvDreamChannelListActions">
+		<key id="KEY_RED" mapto="showAll" flags="m" />
+		<key id="KEY_GREEN" mapto="showGroups" flags="m" />
+		<key id="KEY_YELLOW" mapto="addFavourites" flags="m" />
+		<key id="KEY_BLUE" mapto="showFavourites" flags="m" />
+		<key id="KEY_MENU" mapto="contextMenu" flags="m" />
+		<key id="KEY_INFO" mapto="showEPGList" flags="m" />
+		<key id="KEY_CHANNELUP" mapto="nextBouquet" flags="m" />
+		<key id="KEY_CHANNELDOWN" mapto="prevBouquet" flags="m" />
+	</map>
+	
+	<map context="IPtvDreamEpgListActions">
+		<key id="KEY_CHANNELUP" mapto="nextDay" flags="m" />
+		<key id="KEY_CHANNELDOWN" mapto="prevDay" flags="m" />
+	</map>
+	
+	<!-- ### MOVIES -->
+	<map context="IPtvDreamPlayerActions">
+		<key id="KEY_UP" mapto="openServiceList" flags="m" />
+		<key id="KEY_DOWN" mapto="openServiceList" flags="m" />
+		<key id="KEY_CHANNELUP" mapto="zapUp" flags="m" />
+		<key id="KEY_CHANNELDOWN" mapto="zapDown" flags="m" />
+		<key id="KEY_INFO" mapto="showInfo" flags="m" />
+		<key id="KEY_TV" mapto="closePlugin" flags="m" />
+		<key id="KEY_STOP" mapto="closePlugin" flags="m" />
+		<key id="KEY_PLAY" mapto="keyPlay" flags="m" />
+		<key id="KEY_PLAYPAUSE" mapto="keyPlay" flags="m" />
+		<key id="KEY_PAUSE" mapto="keyPause" flags="m" />
+	</map>
+	
+	<map context="IPtvDreamSeekActions">
+		<device name="dreambox advanced remote control (native)">
+			<key id="KEY_PREVIOUSSONG" mapto="movingLeft" flags="mr" />
+			<key id="KEY_NEXTSONG" mapto="movingRight" flags="mr" />
+			<key id="KEY_PREVIOUSSONG" mapto="moveRelease" flags="b" />
+			<key id="KEY_NEXTSONG" mapto="moveRelease" flags="b" />
+		</device>
+		<device name="dreambox remote control (native)">
+			<key id="KEY_RED" mapto="movingLeft" flags="mr" />
+			<key id="KEY_BLUE" mapto="movingRight" flags="mr" />
+			<key id="KEY_RED" mapto="moveRelease" flags="b" />
+			<key id="KEY_BLUE" mapto="moveRelease" flags="b" />
+		</device>
+		<key id="KEY_REWIND" mapto="movingLeft" flags="mr" />
+		<key id="KEY_FASTFORWARD" mapto="movingRight" flags="mr" />
+		<key id="KEY_REWIND" mapto="moveRelease" flags="b" />
+		<key id="KEY_FASTFORWARD" mapto="moveRelease" flags="b" />
+		<device name="dreambox remote control (native)">
+			<key id="KEY_LEFT" mapto="movingLeft" flags="mr" />
+			<key id="KEY_RIGHT" mapto="movingRight" flags="mr" />
+			<key id="KEY_LEFT" mapto="moveRelease" flags="b" />
+			<key id="KEY_RIGHT" mapto="moveRelease" flags="b" />
+		</device>
+	</map>
+	
+	<map context="IPtvDreamMoviesActions">
+		<key id="KEY_RED" mapto="red" flags="m" />
+		<key id="KEY_GREEN" mapto="green" flags="m" />
+		<key id="KEY_YELLOW" mapto="yellow" flags="m" />
+		<key id="KEY_BLUE" mapto="blue" flags="m" />
+		<key id="KEY_INFO" mapto="showInfo" flags="m" />
+		<key id="KEY_CHANNELUP" mapto="nextPage" flags="mr" />
+		<key id="KEY_CHANNELDOWN" mapto="prevPage" flags="mr" />
+		<key id="KEY_CHANNELUP" mapto="pageRelease" flags="b" />
+		<key id="KEY_CHANNELDOWN" mapto="pageRelease" flags="b" />
+		<key id="KEY_TV" mapto="closePlugin" flags="m" />
+	</map>
+</keymap>

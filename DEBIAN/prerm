@@ -1,0 +1,3 @@
+#!/bin/sh
+ppath=/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream
+rm -f $ppath/keymap.xml

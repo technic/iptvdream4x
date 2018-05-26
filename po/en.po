@@ -1,0 +1,240 @@
+# English translations for tuxbox-enigma package.
+# Copyright (C) 2005 THE tuxbox-enigma'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the tuxbox-enigma package.
+# Automatically generated, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tuxbox-enigma 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-08 02:42+0300\n"
+"PO-Revision-Date: 2011-08-24 17:33+0300\n"
+"Last-Translator: technic <alexeytech@gmail.com>\n"
+"Language-Team: none\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"Access denied!\n"
+"Try again?"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "Apr"
+msgstr ""
+
+msgid "Archive"
+msgstr ""
+
+msgid "Aug"
+msgstr ""
+
+msgid "Auto send parental code"
+msgstr ""
+
+msgid "By group"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Change pin code"
+msgstr ""
+
+msgid "Channel Locked"
+msgstr ""
+
+msgid "Configuration of "
+msgstr ""
+
+msgid "Context menu"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Enter edit mode"
+msgstr ""
+
+msgid "Enter protect password"
+msgstr ""
+
+msgid "Enter the service pin"
+msgstr ""
+
+msgid "Error while getting stream url:"
+msgstr ""
+
+msgid "Exit edit mode"
+msgstr ""
+
+msgid "Expire: "
+msgstr ""
+
+msgid "Failed to save settings"
+msgstr ""
+
+msgid "Favourites"
+msgstr ""
+
+msgid "Feb"
+msgstr ""
+
+msgid "Force kill opkg? Are you sure?"
+msgstr ""
+
+msgid "Fully"
+msgstr ""
+
+msgid "Go to page"
+msgstr ""
+
+msgid "Go to page..."
+msgstr ""
+
+msgid "Groups"
+msgstr ""
+
+msgid "IPtvDream plugin already running"
+msgstr ""
+
+msgid "Install"
+msgstr ""
+
+msgid "Jan"
+msgstr ""
+
+msgid "Jul"
+msgstr ""
+
+msgid "Jump"
+msgstr ""
+
+msgid "Jun"
+msgstr ""
+
+msgid "Keyboard"
+msgstr ""
+
+msgid "Mar"
+msgstr ""
+
+msgid "May"
+msgstr ""
+
+msgid "Menu"
+msgstr ""
+
+msgid "Not implemented yet"
+msgstr ""
+
+msgid "Nov"
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "Oct"
+msgstr ""
+
+msgid ""
+"Only IPtvDream manager available.\n"
+"Main plugin failed due to error: "
+msgstr ""
+
+msgid "Opkg ERROR! Log:"
+msgstr ""
+
+msgid "Opkg OK! Log:"
+msgstr ""
+
+msgid "Opkg running, please wait..."
+msgstr ""
+
+msgid "Remote config error: "
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Resume movie"
+msgstr ""
+
+msgid "Search by name (beta)"
+msgstr ""
+
+msgid "See error log in"
+msgstr ""
+
+msgid "Sep"
+msgstr ""
+
+msgid "Service (player) id"
+msgstr ""
+
+msgid "Show in bouquets"
+msgstr ""
+
+msgid "Show in mainmenu"
+msgstr ""
+
+msgid "Sort by default"
+msgstr ""
+
+msgid "Sort by name"
+msgstr ""
+
+msgid ""
+"Start failed!\n"
+"Edit options?\n"
+msgstr ""
+
+msgid "Stop movie?"
+msgstr ""
+
+msgid "The pin code you entered is wrong."
+msgstr ""
+
+msgid "Up to date"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "add to parental protection"
+msgstr ""
+
+msgid "all"
+msgstr ""
+
+msgid "best"
+msgstr ""
+
+msgid "favourites"
+msgstr ""
+
+msgid "last"
+msgstr ""
+
+msgid "login"
+msgstr ""
+
+msgid "min"
+msgstr ""
+
+msgid "password"
+msgstr ""
+
+msgid "remove from parental protection"
+msgstr ""
+
+msgid "text"
+msgstr "search"

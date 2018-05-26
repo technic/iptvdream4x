@@ -1,0 +1,11 @@
+# build
+version
+skin/iptvdream.xml
+*.mo
+build/
+# python
+*.py[cod]
+# backup files
+*~
+# linux stuff
+.directory

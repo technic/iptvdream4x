@@ -1,0 +1,13 @@
+#!/bin/sh
+ppath=/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream
+m=$(uname -m)
+rm -f $ppath/keymap.xml
+if [ "$m" = "sh4" ] ; then
+    ln -s keymap_sh4.xml  $ppath/keymap.xml
+else
+    ln -s keymap_mips.xml $ppath/keymap.xml
+fi
+rm -f /var/lib/opkg/iptvdream
+rm -f /var/opkg/iptvdream
+rm -f /etc/opkg/iptvdream-feed.conf
+
