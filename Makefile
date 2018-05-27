@@ -33,6 +33,8 @@ pyfiles += src/api/edem.py
 endif
 ifeq ($(PROVIDER),WowTV)
 pyfiles += src/api/edem.py
+else
+pyfiles := $(error Unknown provider $(PROVIDER))
 endif
 
 pyext := pyo
