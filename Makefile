@@ -106,7 +106,7 @@ version: src/dist.py
 include version
 
 name := enigma2-plugin-extensions-$(shell echo $(plugin_name)-$(PROVIDER) | tr A-Z a-z)
-provider := $(shell echo $(POVIDER) |tr A-Z a-z)
+provider := $(shell echo $(PROVIDER) |tr A-Z a-z)
 pkgname := $(name)_$(version)_$(architecture)
 
 controldir := DEBIAN
