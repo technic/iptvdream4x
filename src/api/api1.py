@@ -114,7 +114,7 @@ class TeleportStream(AbstractStream, TeleportAPI):
 
 	def pushSettings(self, sett):
 		for s in sett:
-			params = {'var':s[0]['id'],'val':s[1]}
+			params = {'var': s[0]['id'], 'val': s[1]}
 			response = self.getJsonData(self.site+"/set?", params, "Push setting [%s] new value." % s[0]['id'])
 			s[0]['value'] = s[1]
 	
@@ -175,8 +175,10 @@ class OzoVideos(CallbackCore):
 	### Private functions
 	
 	def fixMovie(self, entry):
-		rename = [("name", "title"), ("desc", "description"), ("actors", "acters"),
-		          ("poster", "pic"), ("genres", "genre")]
+		rename = [
+			("name", "title"), ("desc", "description"), ("actors", "acters"),
+			("poster", "pic"), ("genres", "genre")
+		]
 		for new, old in rename:
 			entry[new] = entry[old]
 			del entry[old]
@@ -194,11 +196,11 @@ class OzoVideos(CallbackCore):
 			params['genre'] = ",".join(genres)
 		if sortkey != "id":
 			params['sort'] = sortkey
-			params['order'] = 1 # ascent
+			params['order'] = 1  # ascent
 		
 		def f(data):
 			c = int(data['options']['count'])
-			c = c/NUMS_ON_PAGE + (c%NUMS_ON_PAGE > 0)
+			c = c / NUMS_ON_PAGE + (c % NUMS_ON_PAGE > 0)
 			return (map(self.fixMovie, data['groups']), c)
 		return self.get(params).addCallback(f)
 	
@@ -217,7 +219,7 @@ class OzoVideos(CallbackCore):
 	def loadseries(self, entry):
 		return succeed([])
 	
-	def videourl(self, entry, code = None):
+	def videourl(self, entry, code=None):
 		def f(data):
 			return data['url'].encode('utf-8')
 		params = {'cmd': "get_url_movie", 'cid': entry['id']}
