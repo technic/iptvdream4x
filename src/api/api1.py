@@ -51,22 +51,7 @@ class TeleportAPI(AbstractAPI):
 		pass
 
 	def parseSettings(self, settings):
-		for s in response['account']['subscriptions']:
-			if 'end_date' in s:
-				expire = datetime.strptime(s['end_date'], "%Y-%m-%d")
-				self.packet_expire = expire
-
-		if 'time_shift' in response['settings']:
-			self.time_shift = int(response['settings']['time_shift'])
-		if 'time_zone' in response['settings']:
-			self.time_zone = int(response['settings']['time_zone'])
-
-		self.settings['Language']           = {'id':'interface_lng', 'value':settings['interface_lng'].encode('utf-8'), 'vallist':['ru','de','ua','en']}
-		self.settings['Cache size(seconds)']= {'id':'stb_buffer', 'value':int(settings['stb_buffer']), 'vallist':range(0,30)}
-		self.settings['Timeshift']          = {'id':'time_shift', 'value':int(settings['time_shift']), 'vallist':range(0,24)}
-
-		media_servers = [(s['id'].encode('utf-8'), s['title'].encode('utf-8')) for s in settings['media_servers']]
-		self.settings['Stream server']={'id':'media_server_id', 'value': settings['media_server_id'], 'vallist':media_servers}
+		pass
 
 
 class TeleportStream(AbstractStream, TeleportAPI):
