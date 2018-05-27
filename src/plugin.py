@@ -61,7 +61,7 @@ def managerRun(session, **kwargs):
 
 def managerMenu(menuid):
 	if menuid == "mainmenu":
-		return [(NAME, managerRun, "media_player", -4)]
+		return [("IPtvDream", managerRun, "media_player", -4)]
 	else:
 		return []
 
@@ -84,10 +84,10 @@ def Plugins(path, **kwargs):
 	if NAME == 'all':
 		plugins += [
 			PluginDescriptor(
-				name="IPtvDream", description=_("list all iptv providers"),
+				name="IPtvDream", description=_("Show all iptv providers"),
 				where=PluginDescriptor.WHERE_MENU, fnc=managerMenu, icon="IPtvDream.png"),
 			PluginDescriptor(
-				name="IPtvDream", description=_("list all iptv providers"),
+				name="IPtvDream", description=_("Show all iptv providers"),
 				where=PluginDescriptor.WHERE_PLUGINMENU, fnc=managerRun, icon="IPtvDream.png")
 		]
 	elif not plugins:

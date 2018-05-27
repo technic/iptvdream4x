@@ -206,7 +206,8 @@ manager = Manager()
 class IPtvDreamManager(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		self["key_red"] = Button(_("Cancel"))
+		self.setTitle(_("Providers list"))
+		self["key_red"] = Button(_("Exit"))
 		self["key_green"] = Button(_("Setup"))
 		self["actions"] = ActionMap(
 				["OkCancelActions", "ColorActions"], {
