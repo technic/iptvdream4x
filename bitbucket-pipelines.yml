@@ -7,6 +7,8 @@ pipelines:
           - pip
         script:
           - uname -a
+          - lsb_release -a
+          - apt-get update && apt-get install -y gettext
           - pip install pep8
           - make
           - pep8 --ignore E266,E226,W191,W293 --max-line-length=119 src
