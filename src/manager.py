@@ -18,7 +18,8 @@ from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
 from Tools.Import import my_import
-from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT
+from Tools.LoadPixmap import LoadPixmap
+from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER
 from Components.MenuList import MenuList
 from Screens.ChoiceBox import ChoiceBox
 from Plugins.Plugin import PluginDescriptor
@@ -216,16 +217,20 @@ class IPtvDreamManager(Screen):
 				}, -1)
 		self.listbox = self["list"] = MenuList([], content=eListboxPythonMultiContent)
 		self.listbox.l.setFont(0, gFont("Regular", 22))
+		self.listbox.l.setItemHeight(45)
 		self.onFirstExecBegin.append(self.start)
 
 	def start(self):
 		self.listbox.setList(map(self.makeEntry, manager.getList()))
 	
 	def makeEntry(self, entry):
+		prefix = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream')
+		pixmap = LoadPixmap(os.path.join(prefix, entry['name'] + '.png'))
 		return [
 			entry,
-			(eListboxPythonMultiContent.TYPE_TEXT, 1, 2, 585, 24,
-				0, RT_HALIGN_LEFT, entry['name']),
+			(eListboxPythonMultiContent.TYPE_PIXMAP, 1, 2, 100, 40, pixmap),
+			(eListboxPythonMultiContent.TYPE_TEXT, 110, 2, 400, 40,
+				0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, entry['name']),
 		]
 
 	def getSelected(self):
