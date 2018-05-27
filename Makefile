@@ -24,6 +24,7 @@ all: package
 
 pyfiles := src/__init__.py src/common.py src/dist.py src/plugin.py src/updater.py \
 	src/layer.py src/loc.py src/utils.py src/htmlentitydefs.py src/manager.py src/main.py src/settings.py \
+	src/standby.py src/virtualkb.py \
 	src/api/__init__.py src/api/abstract_api.py
 datafiles := src/keymap_mips.xml src/keymap_sh4.xml src/IPtvDream.png
 
