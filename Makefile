@@ -6,9 +6,6 @@ UPDATE_PO ?= n
 PROVIDER ?= all
 
 plugin_name := IPtvDream
-ifneq ($(PROVIDER), all)
-plugin_name := IPtvDream-$(PROVIDER)
-endif
 plugin_path := /usr/lib/enigma2/python/Plugins/Extensions/$(plugin_name)
 skin_path := /usr/share/enigma2/$(plugin_name)
 
@@ -25,8 +22,13 @@ skindir = $(build)$(skin_path)
 
 all: package
 
+pyfiles := src/__init__.py src/common.py src/dist.py src/plugin.py src/updater.py \
+	src/layer.py src/loc.py src/utils.py src/htmlentitydefs.py src/manager.py src/main.py \
+	src/api/__init__.py src/api/abstract_api.py
+datafiles := src/keymap_mips.xml src/keymap_sh4.xml src/IPtvDream.png
+
+
 pyext := pyo
-pyfiles := $(shell find src -name '*.py' -type f)
 pyinstall := $(pyfiles:src/%=$(plugindir)/%)
 pycinstall := $(pyinstall:.py=.$(pyext))
 
@@ -38,7 +40,6 @@ $(pycinstall): $(plugindir)/%.$(pyext): src/%.py
 	$(PYTHON) -c 'import py_compile; py_compile.compile("$<", "$@")'
 
 
-datafiles = src/keymap_mips.xml src/keymap_sh4.xml src/IPtvDream.png
 datainstall := $(patsubst src/%,$(plugindir)/%,$(datafiles))
 
 $(datainstall): $(plugindir)/%: src/%
@@ -100,7 +101,7 @@ version: src/dist.py
 
 include version
 
-name := enigma2-plugin-extensions-$(shell echo $(plugin_name) | tr A-Z a-z)
+name := enigma2-plugin-extensions-$(shell echo $(plugin_name)-$(PROVIDER) | tr A-Z a-z)
 pkgname := $(name)_$(version)_$(architecture)
 
 controldir := DEBIAN
