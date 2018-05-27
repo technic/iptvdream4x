@@ -57,7 +57,7 @@ $(skininstall): $(skindir)/%: skin/%
 	install -D -m644 $< $@
 
 skin/iptvdream.xml: skin/skin.xml
-	./skin-post.py $< $@
+	python skin-post.py $< $@
 
 prepare: skin/iptvdream.xml
 
