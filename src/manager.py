@@ -43,7 +43,6 @@ loadSkin("IPtvDream/iptvdream.xml")
 
 
 def getPlugins():
-	return []
 	plugins = []
 	if NAME == 'all':
 		f_name = resolveFilename(SCOPE_SYSETC, 'iptvdream.json')
@@ -57,11 +56,6 @@ def getPlugins():
 			mod = __import__('api.%s' % n)
 			getProviders = getattr(mod, 'getProviders')
 	return plugins
-
-
-def pluginOpen(session, name):
-	trace("Open provider", name)
-	session.open(PluginStarter, name)
 
 
 def loadProviders():
@@ -80,6 +74,7 @@ def loadProviders():
 
 class PluginStarter(Screen):
 	def __init__(self, session, name):
+		trace("Starting provider", name)
 		Screen.__init__(self, session)
 		self.cfg = manager.getConfig(name)
 		self.apiClass = manager.getApi(name)
@@ -162,10 +157,6 @@ class Manager(object):
 				continue
 			seen.add(f)
 
-			# FIXME: temporary hack
-			# if f.find('edem') < 0:
-			# 	continue
-
 			try:
 				trace("Loading module", f)
 				module = my_import('%s.%s' % (prefix, f))
@@ -244,7 +235,7 @@ class IPtvDreamManager(Screen):
 	def ok(self):
 		entry = self.getSelected()
 		if entry is not None:
-			pluginOpen(self.session, entry['name'])
+			self.session.open(PluginStarter, entry['name'])
 
 	def setup(self):
 		entry = self.getSelected()

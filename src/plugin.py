@@ -51,8 +51,8 @@ def checkUpdate(session, callback):
 
 def pluginRun(name, session, **kwargs):
 	def run():
-		from main import pluginOpen
-		pluginOpen(name, session)
+		from manager import PluginStarter
+		session.open(PluginStarter, name)
 	checkUpdate(session, run)
 
 
@@ -63,45 +63,40 @@ def managerRun(session, **kwargs):
 	checkUpdate(session, run)
 
 
-def managerMenu(menuid):
+def makeMenuEntry(name, menuid):
 	if menuid == "mainmenu":
-		return [("IPtvDream", managerRun, "media_player", -4)]
-	else:
-		return []
-
-
-def menuOpen(name, menuid):
-	if menuid == "mainmenu":
-		return [(NAME, managerRun, "media_player", -4)]
+		# title, function, id, priority
+		return [(name, boundFunction(pluginRun, name), "iptvdream_%s" % name, -1)]
 	else:
 		return []
 
 
 def Plugins(path, **kwargs):
+	plugins = []
 	try:
-		from manager import getPlugins
-		plugins = getPlugins()
+		from manager import manager
+		for p in manager.getList():
+			name = p['name']
+			if manager.getConfig(name).in_menu.value:
+				plugins += [
+					PluginDescriptor(
+						name=p['title'], description="IPtvDream plugin by technic", icon="%s.png" % name,
+						where=PluginDescriptor.WHERE_MENU, fnc=boundFunction(makeMenuEntry, name))
+				]
 	except Exception as e:
 		print("[IPtvDream] error loading plugins:", e)
-		plugins = []
 
 	if NAME == 'all':
 		plugins += [
 			PluginDescriptor(
 				name="IPtvDream", description=_("Show all iptv providers"),
-				where=PluginDescriptor.WHERE_MENU, fnc=managerMenu, icon="IPtvDream.png"),
-			PluginDescriptor(
-				name="IPtvDream", description=_("Show all iptv providers"),
 				where=PluginDescriptor.WHERE_PLUGINMENU, fnc=managerRun, icon="IPtvDream.png")
 		]
-	elif not plugins:
+	else:
 		plugins += [
 			PluginDescriptor(
-				name=TITLE, description="",
+				name=TITLE, description="IPtvDream plugin by technic",
 				where=PluginDescriptor.WHERE_PLUGINMENU, fnc=boundFunction(pluginRun, NAME)),
-			PluginDescriptor(
-				name=NAME, description="",
-				where=PluginDescriptor.WHERE_MENU, fnc=boundFunction(menuOpen, NAME)),
 		]
 
 	return plugins
