@@ -81,7 +81,7 @@ class Updater(object):
 
 		def cb(data):
 			new_version = parseVersion(data)
-			print("[IPtvDream] Available version:", version)
+			print("[IPtvDream] Available version:", new_version)
 			return new_version > version
 
 		def eb(err):
