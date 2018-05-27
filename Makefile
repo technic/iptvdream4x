@@ -106,6 +106,7 @@ version: src/dist.py
 include version
 
 name := enigma2-plugin-extensions-$(shell echo $(plugin_name)-$(PROVIDER) | tr A-Z a-z)
+provider := $(shell echo $(POVIDER) |tr A-Z a-z)
 pkgname := $(name)_$(version)_$(architecture)
 
 controldir := DEBIAN
@@ -131,6 +132,7 @@ $(pkgdir)/$(pkgname).$(pkgext): install $(build)/DEBIAN/control $(hooks)
 	mkdir -p $(pkgdir)
 	dpkg-deb -b -Zgzip $(build) tmp.deb
 	mv tmp.deb $@
+	echo '$(version)' > $(pkgdir)/version-$(provider).txt
 
 package: $(pkgdir)/$(pkgname).$(pkgext)
 

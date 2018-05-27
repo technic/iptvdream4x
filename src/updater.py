@@ -91,7 +91,7 @@ class Updater(object):
 			else:
 				fatalError(err)
 
-		return getPage(self.url + "version.txt").addCallback(cb).addErrback(eb)
+		return getPage(self.url + "version-%s.txt" % NAME.lower()).addCallback(cb).addErrback(eb)
 
 	def installUpdate(self):
 		print("[IPtvDream] install update")
