@@ -1,6 +1,7 @@
 PYTHON := python2.7
 ARCH := all
 DESTDIR ?= build
+PACKAGEDIR ?= packages
 DEB ?= n
 UPDATE_PO ?= n
 PROVIDER ?= all
@@ -125,7 +126,7 @@ $(hooks): $(build)/DEBIAN/%: $(controldir)/%
 	install -m 755 $< $@
 
 
-pkgdir := packages/$(architecture)
+pkgdir := $(PACKAGEDIR)
 
 $(pkgdir)/$(pkgname).$(pkgext): install $(build)/DEBIAN/control $(hooks)
 	@ ! test -f "$@" || (echo "Error: package $(pkgname).$(pkgext) already exists"; false)
