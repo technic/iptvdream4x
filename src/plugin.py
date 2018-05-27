@@ -95,7 +95,7 @@ def Plugins(path, **kwargs):
 	else:
 		plugins += [
 			PluginDescriptor(
-				name=TITLE, description="IPtvDream plugin by technic",
+				name=TITLE, description="IPtvDream plugin by technic", icon="%s.png" % NAME,
 				where=PluginDescriptor.WHERE_PLUGINMENU, fnc=boundFunction(pluginRun, NAME)),
 		]
 
