@@ -95,7 +95,7 @@ update-po:
 	$(MAKE) UPDATE_PO=y $(langs_po)
 
 
-install: $(build)/etc/iptvdream/iptvdream.epgmap
+#install: $(build)/etc/iptvdream/iptvdream.epgmap
 install: $(pycinstall) $(datainstall) $(skininstall) $(moinstall)
 
 
