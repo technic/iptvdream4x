@@ -18,7 +18,11 @@ from Tools.BoundFunction import boundFunction
 
 # plugin imports
 from dist import NAME, TITLE
-from loc import translate as _
+try:
+	from loc import translate as _
+except ImportError:
+	def _(text):
+		return text
 
 
 def checkUpdate(session, callback):
