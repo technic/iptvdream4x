@@ -20,7 +20,7 @@ from ..utils import syncTime, APIException, EPG, Channel, Group
 
 
 class OTTProvider(AbstractStream):
-	NAME = "EdemTV"
+	NAME = "WowTV"
 	HAS_LOGIN = False
 
 	def __init__(self, username, password):

@@ -1,3 +1,3 @@
-NAME = "all"
-TITLE = "All"
+NAME = "WowTV"
+TITLE = "WowTV"
 VERSION = "4.0"

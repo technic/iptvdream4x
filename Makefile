@@ -31,6 +31,9 @@ datafiles := src/keymap_mips.xml src/keymap_sh4.xml src/IPtvDream.png
 ifeq ($(PROVIER),all)
 pyfiles += src/api/edem.py
 endif
+ifeq ($(PROVIDER),WowTV)
+pyfiles += src/api/edem.py
+endif
 
 pyext := pyo
 pyinstall := $(pyfiles:src/%=$(plugindir)/%)
