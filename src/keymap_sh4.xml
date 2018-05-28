@@ -7,7 +7,7 @@ flags="r" - onKeyRepeat
 <keymap>
 	<!-- ### CHANNELS -->
 	<map context="IPtvDreamInfobarActions">
-		<key id="KEY_TV2" mapto="closePlugin" flags="m" />
+		<key id="KEY_TV" mapto="closePlugin" flags="m" />
 		<key id="KEY_VIDEO" mapto="openVideos" flags="m" />
 		<key id="KEY_UP" mapto="openServiceList" flags="mr" />
 		<key id="KEY_DOWN" mapto="openServiceList" flags="mr" />
