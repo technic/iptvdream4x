@@ -135,7 +135,10 @@ $(pkgdir)/$(pkgname).$(pkgext): install $(build)/DEBIAN/control $(hooks)
 	mv tmp.deb $@
 	echo '$(version)' > $(pkgdir)/version-$(provider).txt
 
-package: $(pkgdir)/$(pkgname).$(pkgext)
+package: $(pkgdir)/$(pkgname).$(pkgext) info
+
+info:
+	echo '{"name": "$(name)"}' > $@.json
 
 sshinstall: $(pkgdir)/$(pkgname).$(pkgext)
 	test -n '$(HOST)'
@@ -147,4 +150,4 @@ clean:
 	rm -rf build
 	rm -f version
 
-.PHONY: prepare install package update-po clean
+.PHONY: prepare install package info update-po clean
