@@ -88,6 +88,7 @@ def test():
 	testVerStr = '.'.join(map(str, testVer))
 
 	print("Starting make\n" + "-" * 15)
+	os.remove('version')
 	subprocess.check_call(['make', 'package', 'PACKAGEDIR=%s' % PKG_DEPLOY])
 	print("-" * 15)
 
