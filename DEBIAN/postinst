@@ -3,7 +3,7 @@ plugin_path=/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream
 m=$(uname -m)
 rm -f ${plugin_path}/keymap.xml
 if [ "$m" = "sh4" ]; then
-    ln -s keymap_sh4.xml ${plugin_path}/keymap.xml
+    ln -s keymap_neutrino.xml ${plugin_path}/keymap.xml
 else
-    ln -s keymap_mips.xml ${plugin_path}/keymap.xml
+    ln -s keymap_enigma.xml ${plugin_path}/keymap.xml
 fi
