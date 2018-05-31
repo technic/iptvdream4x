@@ -1,6 +1,7 @@
 PYTHON := python2.7
 ARCH := all
 DESTDIR ?= build
+PACKAGEDIR ?= packages
 DEB ?= n
 UPDATE_PO ?= n
 PROVIDER ?= all
@@ -28,7 +29,7 @@ pyfiles := src/__init__.py src/common.py src/dist.py src/plugin.py src/updater.p
 	src/api/__init__.py src/api/abstract_api.py
 datafiles := src/keymap_mips.xml src/keymap_sh4.xml src/IPtvDream.png
 
-ifeq ($(PROVIER),all)
+ifeq ($(PROVIDER),all)
 pyfiles += src/api/edem.py
 endif
 ifeq ($(PROVIDER),WowTV)
@@ -62,7 +63,7 @@ $(skininstall): $(skindir)/%: skin/%
 	install -D -m644 $< $@
 
 skin/iptvdream.xml: skin/skin.xml
-	./skin-post.py $< $@
+	python skin-post.py $< $@
 
 prepare: skin/iptvdream.xml
 
@@ -100,7 +101,7 @@ update-po:
 	$(MAKE) UPDATE_PO=y $(langs_po)
 
 
-install: $(build)/etc/iptvdream/iptvdream.epgmap
+#install: $(build)/etc/iptvdream/iptvdream.epgmap
 install: $(pycinstall) $(datainstall) $(skininstall) $(moinstall)
 
 
@@ -111,7 +112,7 @@ version: src/dist.py
 include version
 
 name := enigma2-plugin-extensions-$(shell echo $(plugin_name)-$(PROVIDER) | tr A-Z a-z)
-provider := $(shell echo $(POVIDER) |tr A-Z a-z)
+provider := $(shell echo $(PROVIDER) |tr A-Z a-z)
 pkgname := $(name)_$(version)_$(architecture)
 
 controldir := DEBIAN
@@ -130,7 +131,7 @@ $(hooks): $(build)/DEBIAN/%: $(controldir)/%
 	install -m 755 $< $@
 
 
-pkgdir := packages/$(architecture)
+pkgdir := $(PACKAGEDIR)
 
 $(pkgdir)/$(pkgname).$(pkgext): install $(build)/DEBIAN/control $(hooks)
 	@ ! test -f "$@" || (echo "Error: package $(pkgname).$(pkgext) already exists"; false)
@@ -139,7 +140,10 @@ $(pkgdir)/$(pkgname).$(pkgext): install $(build)/DEBIAN/control $(hooks)
 	mv tmp.deb $@
 	echo '$(version)' > $(pkgdir)/version-$(provider).txt
 
-package: $(pkgdir)/$(pkgname).$(pkgext)
+package: $(pkgdir)/$(pkgname).$(pkgext) info
+
+info:
+	echo '{"name": "$(name)"}' > $@.json
 
 sshinstall: $(pkgdir)/$(pkgname).$(pkgext)
 	test -n '$(HOST)'
@@ -151,4 +155,4 @@ clean:
 	rm -rf build
 	rm -f version
 
-.PHONY: prepare install package update-po clean
+.PHONY: prepare install package info update-po clean

@@ -11,7 +11,9 @@
 
 import socket
 import zlib
-import cookielib, urllib, urllib2
+import cookielib
+import urllib
+import urllib2
 from json import loads as json_loads
 from xml.etree.cElementTree import fromstring
 from ..utils import getHwAddr, syncTime, Group, Channel, APIException, EPG
@@ -35,7 +37,7 @@ class AbstractAPI(object):
 	PROVIDER = "free"
 	NAME = "example"
 	TITLE = None
-	NEXT_API = None 
+	NEXT_API = None
 	NUMBER_PASS = False
 	HAS_PIN = False
 	SERVICES = []

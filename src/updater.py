@@ -69,7 +69,7 @@ def parseVersion(data):
 
 class Updater(object):
 	def __init__(self):
-		self.url = "http://technic.16mb.com/iptvdream/packages/"
+		self.url = "http://technic.16mb.com/iptvdream4x/packages/"
 		self.console = Console()
 		self.prefix = "enigma2-plugin-extensions"
 		self.agent = "IPtvDream-%s/%s" % (NAME, VERSION)
@@ -81,7 +81,8 @@ class Updater(object):
 
 		def cb(data):
 			new_version = parseVersion(data)
-			print("[IPtvDream] Available version:", version)
+			self._version = new_version
+			print("[IPtvDream] Available version:", new_version)
 			return new_version > version
 
 		def eb(err):

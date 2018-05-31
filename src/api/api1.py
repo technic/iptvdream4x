@@ -51,22 +51,7 @@ class TeleportAPI(AbstractAPI):
 		pass
 
 	def parseSettings(self, settings):
-		for s in response['account']['subscriptions']:
-			if 'end_date' in s:
-				expire = datetime.strptime(s['end_date'], "%Y-%m-%d")
-				self.packet_expire = expire
-
-		if 'time_shift' in response['settings']:
-			self.time_shift = int(response['settings']['time_shift'])
-		if 'time_zone' in response['settings']:
-			self.time_zone = int(response['settings']['time_zone'])
-
-		self.settings['Language']           = {'id':'interface_lng', 'value':settings['interface_lng'].encode('utf-8'), 'vallist':['ru','de','ua','en']}
-		self.settings['Cache size(seconds)']= {'id':'stb_buffer', 'value':int(settings['stb_buffer']), 'vallist':range(0,30)}
-		self.settings['Timeshift']          = {'id':'time_shift', 'value':int(settings['time_shift']), 'vallist':range(0,24)}
-
-		media_servers = [(s['id'].encode('utf-8'), s['title'].encode('utf-8')) for s in settings['media_servers']]
-		self.settings['Stream server']={'id':'media_server_id', 'value': settings['media_server_id'], 'vallist':media_servers}
+		pass
 
 
 class TeleportStream(AbstractStream, TeleportAPI):
@@ -129,7 +114,7 @@ class TeleportStream(AbstractStream, TeleportAPI):
 
 	def pushSettings(self, sett):
 		for s in sett:
-			params = {'var':s[0]['id'],'val':s[1]}
+			params = {'var': s[0]['id'], 'val': s[1]}
 			response = self.getJsonData(self.site+"/set?", params, "Push setting [%s] new value." % s[0]['id'])
 			s[0]['value'] = s[1]
 	
@@ -190,8 +175,10 @@ class OzoVideos(CallbackCore):
 	### Private functions
 	
 	def fixMovie(self, entry):
-		rename = [("name", "title"), ("desc", "description"), ("actors", "acters"),
-		          ("poster", "pic"), ("genres", "genre")]
+		rename = [
+			("name", "title"), ("desc", "description"), ("actors", "acters"),
+			("poster", "pic"), ("genres", "genre")
+		]
 		for new, old in rename:
 			entry[new] = entry[old]
 			del entry[old]
@@ -209,11 +196,11 @@ class OzoVideos(CallbackCore):
 			params['genre'] = ",".join(genres)
 		if sortkey != "id":
 			params['sort'] = sortkey
-			params['order'] = 1 # ascent
+			params['order'] = 1  # ascent
 		
 		def f(data):
 			c = int(data['options']['count'])
-			c = c/NUMS_ON_PAGE + (c%NUMS_ON_PAGE > 0)
+			c = c / NUMS_ON_PAGE + (c % NUMS_ON_PAGE > 0)
 			return (map(self.fixMovie, data['groups']), c)
 		return self.get(params).addCallback(f)
 	
@@ -232,7 +219,7 @@ class OzoVideos(CallbackCore):
 	def loadseries(self, entry):
 		return succeed([])
 	
-	def videourl(self, entry, code = None):
+	def videourl(self, entry, code=None):
 		def f(data):
 			return data['url'].encode('utf-8')
 		params = {'cmd': "get_url_movie", 'cid': entry['id']}

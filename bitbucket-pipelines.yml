@@ -1,10 +1,36 @@
-image: python:2.7.15
+image:
+  name: technic93/e2xvfb:0.1
+  run-as-user: 0
+
+stepdefs:
+  - testing: &testing
+      name: Run tests
+      caches:
+        - pip
+      script:
+        - uname -a
+        - whoami
+        - mkdir -p /dev/input
+        - service apache2 start
+        - Xvfb :99 -ac -screen 0 1280x720x16 &
+        - export DISPLAY=:99
+        - ps ax
+        - pip install pep8
+        - pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
+        - python update-test.py
 
 pipelines:
   default:
-    - step:
-        caches:
-          - pip
-        script:
-          - pip install pep8
-          - pep8 --ignore E266,E226,W191,W293 --max-line-length=119 src
+    - step: *testing
+  tags:
+    v/*:
+      - step: *testing
+      - step:
+          name: Deploy packages
+          image: python:2.7.15
+          deployment: staging
+          script:
+            - apt-get update && apt-get install -y gettext lftp
+            - make
+            - lftp -e "set ssl:verify-certificate no; mirror -v -R packages iptvdream4x/packages; quit"
+              -u $FTP_USER,$FTP_PASSWORD ftp://technic.16mb.com

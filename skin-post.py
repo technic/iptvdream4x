@@ -1,53 +1,48 @@
 #!/usr/bin/python2
-import sys
-if not len(sys.argv) > 1:
-    print("Specify input file!")
-    print('usage: skinfix.exe infile outfile')
-    sys.exit(1)
 
+"""
+read colors section from the skin header and replace all screens colors with explicit hex values
+"""
+
+import sys
 from xml.etree.ElementTree import ElementTree, Element
 
+if not len(sys.argv) > 1:
+    print('Specify input and output files!')
+    print('usage: %s <infile> <outfile>' % sys.argv[0])
+    sys.exit(1)
+
 infile = open(sys.argv[1])
-#text = infile.read()
 root = ElementTree()
 root.parse(infile)
 colors = root.find('colors')
 coldict = {}
+
 for col in colors:
     colname = col.get('name')
     colval = col.get('value')
-    print('Add color', colname, colval)
+    # print('Add color', colname, colval)
     coldict[colname] = colval
 
+
 def search(element):
-    for atr in element.keys():
-        if atr.lower().find('color') > -1:
-            print('found color attribute', atr)
-            oldcol = element.get(atr)
-            if coldict.has_key(oldcol):
-                element.set(atr, coldict[oldcol])
-                print('replace', oldcol, 'with', coldict[oldcol])
+    for attr in element.keys():
+        if attr.lower().find('color') > -1:
+            # print('found color attribute', attr)
+            oldcol = element.get(attr)
+            if oldcol in coldict:
+                element.set(attr, coldict[oldcol])
+                # print('replace', oldcol, 'with', coldict[oldcol])
             else:
-                print('maybe good color', oldcol)
+                # print('maybe good color', oldcol)
                 pass
     for x in element:
-        print(x)
         search(x)
 
+
 skin_root = Element('skin')
-for x in root.findall('screen'):
-    print(x)
-    search(x)
-    skin_root.append(x)
+for screen in root.findall('screen'):
+    search(screen)
+    skin_root.append(screen)
 
-if len(sys.argv) > 2:
-    outfile = sys.argv[2]
-else:
-    outfile = 'kartina_skin.xml'
-    from os.path import exists
-    if exists(outfile):
-        from shutil import copy
-        copy(outfile, outfile+'.backup')
-            
-
-ElementTree(skin_root).write(outfile)
+ElementTree(skin_root).write(sys.argv[2])
