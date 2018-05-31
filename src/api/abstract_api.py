@@ -275,6 +275,19 @@ class AbstractStream(AbstractAPI):
 		"""
 		return []
 
+	def getFavourites(self):
+		"""
+		:rtype: list[int]
+		"""
+		return []
+
+	def setFavourite(self, cid, favorite):
+		"""
+		:param int cid: channel id
+		:param bool favorite: whether channel should be in favourites
+		"""
+		pass
+
 	def getSettings(self):
 		return {}
 
