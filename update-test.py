@@ -86,7 +86,8 @@ def test():
 	testVerStr = '.'.join(map(str, testVer))
 
 	print("Starting make\n" + "-" * 15)
-	subprocess.check_call(['make', 'clean', 'package', 'PACKAGEDIR=%s' % PKG_DEPLOY])
+	subprocess.check_call(['make', 'clean'])
+	subprocess.check_call(['make', 'package', 'PACKAGEDIR=%s' % PKG_DEPLOY])
 	print("-" * 15)
 
 	print("Writing hosts alias on box")
