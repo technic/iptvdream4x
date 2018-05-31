@@ -4,7 +4,7 @@ image:
 
 stepdefs:
   - testing: &testing
-      name: run tests
+      name: Run tests
       caches:
         - pip
       script:
