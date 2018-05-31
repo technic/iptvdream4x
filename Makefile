@@ -98,6 +98,7 @@ update-po:
 
 #install: $(build)/etc/iptvdream/iptvdream.epgmap
 install: $(pycinstall) $(datainstall) $(skininstall) $(moinstall)
+	install -d $(build)/etc/iptvdream
 
 
 version: src/dist.py
