@@ -75,7 +75,7 @@ def test():
 	newVerStr = '.'.join(map(str, newVer))
 	package = os.path.join(PKG_TMP, '%s_%s_all.ipk' % (packageName, newVerStr))
 	assert os.path.isfile(package)
-	assert os.path.getctime(package) > time.mktime(buildStartTime.timetuple())
+	assert os.path.getctime(package) >= time.mktime(buildStartTime.timetuple())
 
 	print("Installing package")
 	subprocess.check_call(['opkg', 'install', package])
