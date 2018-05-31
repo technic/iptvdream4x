@@ -31,6 +31,7 @@ datafiles := src/keymap_mips.xml src/keymap_sh4.xml src/IPtvDream.png
 
 ifeq ($(PROVIDER),all)
 pyfiles += src/api/edem.py
+datafiles += $(wildcard src/logo/*.png)
 endif
 
 pyext := pyo

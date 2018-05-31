@@ -217,7 +217,7 @@ class IPtvDreamManager(Screen):
 	
 	def makeEntry(self, entry):
 		prefix = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream')
-		pixmap = LoadPixmap(os.path.join(prefix, entry['name'] + '.png'))
+		pixmap = LoadPixmap(os.path.join(prefix, 'logo/%s.png' % entry['name']))
 		return [
 			entry,
 			(eListboxPythonMultiContent.TYPE_PIXMAP, 1, 2, 100, 40, pixmap),
