@@ -1,6 +1,6 @@
 image:
   name: technic93/e2xvfb:0.1
-  run-as-user: root
+  run-as-user: 0
 
 pipelines:
   default:
