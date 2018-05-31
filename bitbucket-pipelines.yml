@@ -10,6 +10,7 @@ pipelines:
         script:
           - uname -a
           - whoami
+          - mkdir -p /dev/input
           - service apache2 start
           - Xvfb :99 -ac -screen 0 1280x720x16 &
           - export DISPLAY=:99
