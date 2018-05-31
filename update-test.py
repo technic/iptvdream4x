@@ -11,7 +11,6 @@ import time
 import shutil
 
 VERSION_FILE = 'src/dist.py'
-BUILD_DIR = "/tmp/build"
 PKG_TMP = "/tmp/packages"
 PKG_DEPLOY = "/var/www/html/iptvdream4x/packages"
 SERVER_HOSTNAME = "technic.16mb.com"
@@ -64,8 +63,7 @@ def test():
 
 	print("Starting make\n" + "-" * 15)
 	buildStartTime = datetime.now()
-	os.environ['DESTDIR'] = BUILD_DIR
-	subprocess.check_call(['make', 'package', 'info', 'PACKAGEDIR=%s' % PKG_TMP])
+	subprocess.check_call(['make', 'package', 'PACKAGEDIR=%s' % PKG_TMP])
 	print("-" * 15)
 
 	with open('info.json') as f:
@@ -88,7 +86,6 @@ def test():
 	testVerStr = '.'.join(map(str, testVer))
 
 	print("Starting make\n" + "-" * 15)
-	os.remove('version')
 	subprocess.check_call(['make', 'package', 'PACKAGEDIR=%s' % PKG_DEPLOY])
 	print("-" * 15)
 
