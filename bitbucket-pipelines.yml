@@ -18,3 +18,15 @@ pipelines:
           - pip install pep8
           - pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
           - python update-test.py
+
+  tags:
+    v/*:
+      - step:
+          name: Deploy packages
+          image: python:2.7.15
+          deployment:
+          script:
+            - apt-get update && apt-get install -y gettext lftp
+            - make
+            - lftp -e "set ssl:verify-certificate no; mirror -v -R packages iptvdream4x/packages; quit"
+              -u $FTP_USER,$FTP_PASSWORD ftp://technic.16mb.com
