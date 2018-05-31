@@ -489,6 +489,8 @@ class IPtvDreamStreamPlayer(
 		self.channels.callback = self.channelSelected
 
 	def channelSelected(self, cid, time=None):
+		if cid is None:
+			return
 		if time:
 			self.programSelected(cid, time)
 		elif cid != self.cid:
