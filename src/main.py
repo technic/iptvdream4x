@@ -972,6 +972,10 @@ class IPtvDreamChannels(Screen):
 			title.append(_("Favourites"))
 
 		self.setTitle(" / ".join(title))
+		if self.mode == self.FAV:
+			self["key_yellow"].setText(_("Remove"))
+		else:
+			self["key_yellow"].setText(_("Add"))
 
 	def selectionChanged(self):
 		if self.editMoving:

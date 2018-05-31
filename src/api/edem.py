@@ -15,11 +15,11 @@ import urllib2
 import os
 
 # plugin imports
-from abstract_api import AbstractStream
+from abstract_api import AbstractStream, OfflineFavourites
 from ..utils import syncTime, APIException, EPG, Channel, Group
 
 
-class OTTProvider(AbstractStream):
+class OTTProvider(OfflineFavourites):
 	NAME = "EdemTV"
 	HAS_LOGIN = False
 
