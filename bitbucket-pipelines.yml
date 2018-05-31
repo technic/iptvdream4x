@@ -13,3 +13,4 @@ pipelines:
           - pip install pep8
           - make
           - pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
+          - ./update-test.py
