@@ -1,4 +1,4 @@
-image: python:2.7.15
+image: technic93/e2xvfb:0.1
 
 pipelines:
   default:
