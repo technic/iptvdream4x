@@ -15,6 +15,7 @@ import cookielib
 import urllib
 import urllib2
 from json import loads as json_loads
+from os import path as os_path
 from xml.etree.cElementTree import fromstring
 from ..utils import getHwAddr, syncTime, Group, Channel, APIException, EPG
 from datetime import datetime
@@ -190,11 +191,11 @@ class AbstractStream(AbstractAPI):
 	def addFav(self, cid):
 		if not self.favourites.count(cid):
 			self.favourites.append(cid)
-			self.setFavourite(cid, True)
-	
+			self.uploadFavourites(self.favourites, cid, True)
+
 	def rmFav(self, cid):
 		self.favourites.remove(cid)
-		self.setFavourite(cid, False)
+		self.uploadFavourites(self.favourites, cid, False)
 
 	def loadChannelsEpg(self, cids):
 		for cid, program in self.getChannelsEpg(cids):
@@ -230,7 +231,7 @@ class AbstractStream(AbstractAPI):
 			s = set(self.getFavourites()).intersection(self.channels.keys())
 			self.favourites = list(s)
 			self.got_favourites = True
-		return self.favourites
+		return [self.channels[cid] for cid in self.favourites]
 	
 	def findNumber(self, number):
 		for cid, ch in self.channels.iteritems():
@@ -275,11 +276,53 @@ class AbstractStream(AbstractAPI):
 		"""
 		return []
 
+	def getFavourites(self):
+		"""
+		:rtype: list[int]
+		"""
+		return []
+
+	def uploadFavourites(self, current, cid, added):
+		"""
+		:param list[int] current: list of current favourites
+		:param int cid: channel id that was just added or removed
+		:param bool added: whether channel should be in favourites
+		"""
+		pass
+
 	def getSettings(self):
 		return {}
 
 	def pushSettings(self, sett):
 		pass
+
+
+class OfflineFavourites(AbstractStream):
+	def __init__(self, username, password):
+		super(OfflineFavourites, self).__init__(username, password)
+		try:
+			from Tools.Directories import resolveFilename, SCOPE_SYSETC
+			self._favorites_file = resolveFilename(SCOPE_SYSETC, 'iptvdream/%s.txt' % self.NAME)
+		except ImportError:
+			self.trace("error: cant locate favourites files")
+			self._favorites_file = "/tmp/fav_%s.txt" % self.NAME
+
+	def getFavourites(self):
+		if not os_path.isfile(self._favorites_file):
+			return []
+		with open(self._favorites_file) as f:
+			data = f.read().strip()
+			fav = []
+			for cid in map(int, data.split(',')):
+				fav.append(cid)
+			return fav
+
+	def uploadFavourites(self, current, cid, added):
+		try:
+			with open(self._favorites_file, 'w') as f:
+				f.write(','.join(map(str, current)))
+		except Exception as e:
+			raise APIException(str(e))
 
 
 class CallbackCore(object):

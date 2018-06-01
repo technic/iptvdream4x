@@ -32,7 +32,7 @@ from json import load as json_load
 import os
 
 # plugin imports
-from dist import NAME
+from dist import NAME, VERSION
 from utils import trace, APIException, APILoginFailed
 from loc import translate as _
 from settings import IPtvDreamConfig
@@ -197,7 +197,7 @@ manager = Manager()
 class IPtvDreamManager(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		self.setTitle(_("Providers list"))
+		self.setTitle(_("IPtvDream %s. Providers list:") % VERSION)
 		self["key_red"] = Button(_("Exit"))
 		self["key_green"] = Button(_("Setup"))
 		self["actions"] = ActionMap(
@@ -217,7 +217,7 @@ class IPtvDreamManager(Screen):
 	
 	def makeEntry(self, entry):
 		prefix = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream')
-		pixmap = LoadPixmap(os.path.join(prefix, entry['name'] + '.png'))
+		pixmap = LoadPixmap(os.path.join(prefix, 'logo/%s.png' % entry['name']))
 		return [
 			entry,
 			(eListboxPythonMultiContent.TYPE_PIXMAP, 1, 2, 100, 40, pixmap),

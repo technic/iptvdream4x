@@ -354,32 +354,3 @@ class APILoginFailed(APIException):
 class APIWrongPin(APIException):
 	def __init__(self, msg):
 		APIException.__init__(self, msg)
-
-
-class OfflineFavourites:
-	def __init__(self):
-		pass
-	
-	def getFavourites(self):
-		from Tools.Directories import resolveFilename, SCOPE_SYSETC
-		fname = resolveFilename(SCOPE_SYSETC, 'iptvdream/%s.txt' % self.NAME)
-		
-		if not os_path.isfile(fname):
-			return []
-		with open(fname) as f:
-			data = f.read().strip()
-			fav = []
-			for cid in map(int, data.split(',')):
-				if cid in self.channels:
-					fav.append(cid)
-			return fav
-	
-	def setFavourite(self, cid, fav):
-		from Tools.Directories import resolveFilename, SCOPE_SYSETC
-		fname = resolveFilename(SCOPE_SYSETC, 'iptvdream/%s.txt' % self.NAME)
-		
-		try:
-			with open(fname, 'w') as f:
-				f.write(','.join(map(str, self.favourites)))
-		except Exception as e:
-			raise APIException(str(e))

@@ -489,6 +489,8 @@ class IPtvDreamStreamPlayer(
 		self.channels.callback = self.channelSelected
 
 	def channelSelected(self, cid, time=None):
+		if cid is None:
+			return
 		if time:
 			self.programSelected(cid, time)
 		elif cid != self.cid:
@@ -922,6 +924,7 @@ class IPtvDreamChannels(Screen):
 			self.mode = self.GROUP
 			self.gid = entry.gid
 			self.fillList()
+			self.list.moveToIndex(0)
 		else:
 			idx = self.list.getSelectedIndex()
 			cid = entry.cid
@@ -972,6 +975,10 @@ class IPtvDreamChannels(Screen):
 			title.append(_("Favourites"))
 
 		self.setTitle(" / ".join(title))
+		if self.mode == self.FAV:
+			self["key_yellow"].setText(_("Remove"))
+		else:
+			self["key_yellow"].setText(_("Add"))
 
 	def selectionChanged(self):
 		if self.editMoving:

@@ -31,6 +31,7 @@ datafiles := src/keymap_mips.xml src/keymap_sh4.xml src/IPtvDream.png
 
 ifeq ($(PROVIDER),all)
 pyfiles += src/api/edem.py
+datafiles += $(wildcard src/logo/*.png)
 endif
 ifeq ($(PROVIDER),WowTV)
 pyfiles += src/api/edem.py
@@ -103,6 +104,7 @@ update-po:
 
 #install: $(build)/etc/iptvdream/iptvdream.epgmap
 install: $(pycinstall) $(datainstall) $(skininstall) $(moinstall)
+	install -d $(build)/etc/iptvdream
 
 
 version: src/dist.py

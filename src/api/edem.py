@@ -15,17 +15,17 @@ import urllib2
 import os
 
 # plugin imports
-from abstract_api import AbstractStream
+from abstract_api import AbstractStream, OfflineFavourites
 from ..utils import syncTime, APIException, EPG, Channel, Group
 
 
-class OTTProvider(AbstractStream):
+class OTTProvider(OfflineFavourites):
 	NAME = "WowTV"
 	HAS_LOGIN = False
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://technic.zapto.org/epg"
+		self.site = "http://iptvdream.zapto.org/epg"
 		self.channels = {}
 		self.groups = {}
 		self.channels_data = {}
@@ -94,7 +94,6 @@ class OTTProvider(AbstractStream):
 			elif not line.strip():
 				continue
 			elif cid is not None:
-				group = group.capitalize()
 				url = line.strip().replace("localhost", self._domain).replace("00000000000000", self._key)
 				assert url.find("://") > 0, "line: " + url
 				try:
@@ -103,7 +102,7 @@ class OTTProvider(AbstractStream):
 				except KeyError:
 					gid = len(group_names)
 					group_names[group] = gid
-					g = self.groups[gid] = Group(gid, group, [])
+					g = self.groups[gid] = Group(gid, group.decode('utf-8').capitalize().encode('utf-8'), [])
 
 				num += 1
 				c = Channel(cid, gid, name, num, True)
