@@ -924,6 +924,7 @@ class IPtvDreamChannels(Screen):
 			self.mode = self.GROUP
 			self.gid = entry.gid
 			self.fillList()
+			self.list.moveToIndex(0)
 		else:
 			idx = self.list.getSelectedIndex()
 			cid = entry.cid
