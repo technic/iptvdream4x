@@ -94,7 +94,6 @@ class OTTProvider(OfflineFavourites):
 			elif not line.strip():
 				continue
 			elif cid is not None:
-				group = group.capitalize()
 				url = line.strip().replace("localhost", self._domain).replace("00000000000000", self._key)
 				assert url.find("://") > 0, "line: " + url
 				try:
@@ -103,7 +102,7 @@ class OTTProvider(OfflineFavourites):
 				except KeyError:
 					gid = len(group_names)
 					group_names[group] = gid
-					g = self.groups[gid] = Group(gid, group, [])
+					g = self.groups[gid] = Group(gid, group.decode('utf-8').capitalize().encode('utf-8'), [])
 
 				num += 1
 				c = Channel(cid, gid, name, num, True)
