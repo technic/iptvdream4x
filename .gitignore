@@ -4,6 +4,8 @@ version
 skin/iptvdream.xml
 *.mo
 build/
+packages/
+*.pot
 # python
 *.py[cod]
 # backup files
