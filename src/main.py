@@ -1081,7 +1081,7 @@ class IPtvDreamChannels(Screen):
 		if channel and self.modeChannels():
 			self.session.openWithCallback(self.showEpgCB, IPtvDreamEpg, self.db, channel.cid, 0)
 
-	def showEpgCB(self, cid, time=None):
+	def showEpgCB(self, cid=None, time=None):
 		trace("selected program", cid, time)
 		if time is not None:
 			self.ok(time)
