@@ -13,7 +13,8 @@
 # enigma2 imports
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
-from Components.config import config, ConfigSubsection, ConfigSubDict, ConfigText, ConfigYesNo, ConfigSelection
+from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
+	ConfigText, ConfigYesNo, ConfigSelection
 from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
@@ -277,8 +278,15 @@ class IPtvDreamManager(Screen):
 			os.symlink('keymap_%s.xml' % style, link)
 		except OSError as e:
 			trace(e)
-			if e.errno != errno.EPROTO:  # ignore virtual machine related error
+			if e.errno == errno.EPROTO:  # ignore virtual machine related error
+				import shutil
+				shutil.copy(os.path.join(plugin_path, 'keymap_%s.xml' % style), link)
+			else:
 				raise e
+
+		config.plugins.IPtvDream.keymap_type.value = style
+		config.plugins.IPtvDream.keymap_type.save()
+		configfile.save()
 
 		def cb(ret):
 			if ret:
