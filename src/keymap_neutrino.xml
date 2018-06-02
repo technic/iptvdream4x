@@ -8,11 +8,11 @@ flags="r" - onKeyRepeat
 	<!-- ### CHANNELS -->
 	<map context="IPtvDreamInfobarActions">
 		<key id="KEY_TV" mapto="closePlugin" flags="m" />
-		<key id="KEY_VIDEO" mapto="openVideos" flags="m" />
-		<key id="KEY_UP" mapto="openServiceList" flags="mr" />
-		<key id="KEY_DOWN" mapto="openServiceList" flags="mr" />
-		<key id="KEY_CHANNELUP" mapto="openServiceList" flags="m" />
-		<key id="KEY_CHANNELDOWN" mapto="openServiceList" flags="m" />
+		<key id="KEY_OK" mapto="openServiceList" flags="m" />
+		<key id="KEY_UP" mapto="zapDown" flags="mr" />
+		<key id="KEY_DOWN" mapto="zapUp" flags="mr" />
+		<key id="KEY_CHANNELUP" mapto="zapDown" flags="m" />
+		<key id="KEY_CHANNELDOWN" mapto="zapUp" flags="m" />
 		<key id="KEY_INFO" mapto="showEPGList" flags="m" />
 		<key id="KEY_EPG" mapto="showEPGList" flags="m" />
 		<key id="KEY_PREVIOUS" mapto="historyBack" flags="mr" />
@@ -22,8 +22,10 @@ flags="r" - onKeyRepeat
 	</map>
 
 	<map context="IPtvDreamLiveActions">
-		<key id="KEY_LEFT" mapto="zapUp" flags="mr" />
-		<key id="KEY_RIGHT" mapto="zapDown" flags="mr" />
+		<key id="KEY_UP" mapto="zapDown" flags="mr" />
+		<key id="KEY_DOWN" mapto="zapUp" flags="mr" />
+		<key id="KEY_CHANNELUP" mapto="zapDown" flags="m" />
+		<key id="KEY_CHANNELDOWN" mapto="zapUp" flags="m" />
 	</map>
 
 	<map context="IPtvDreamArchiveActions">
@@ -53,10 +55,8 @@ flags="r" - onKeyRepeat
 	</map>
 
 	<map context="IPtvDreamEpgListActions">
-		<key id="KEY_CHANNELUP" mapto="nextDay" flags="m" />
-		<key id="KEY_CHANNELDOWN" mapto="prevDay" flags="m" />
-		<key id="KEY_PAGEUP" mapto="nextDay" flags="m" />
-		<key id="KEY_PAGEDOWN" mapto="prevDay" flags="m" />
+		<key id="KEY_RIGHT" mapto="nextDay" flags="m" />
+		<key id="KEY_LEFT" mapto="prevDay" flags="m" />
 	</map>
 
 	<!-- ### MOVIES -->
