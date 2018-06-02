@@ -122,7 +122,13 @@ class PluginStarter(Screen):
 		except APIException as e:
 			trace(e)
 			return self.session.openWithCallback(lambda ret: self.exit(), MessageBox, str(e), MessageBox.TYPE_ERROR)
-		self.session.openWithCallback(lambda ret: self.exit(), IPtvDreamStreamPlayer, self.db)
+		self.session.openWithCallback(self.finished, IPtvDreamStreamPlayer, self.db)
+
+	def finished(self, ret):
+		if ret == 'settings':
+			self.login()
+		else:
+			self.exit()
 
 	def exit(self):
 		self.close()
