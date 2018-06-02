@@ -231,10 +231,12 @@ class IPtvDreamStreamPlayer(
 				"openVideos": self.openVod,
 				"green": self.openSettings,
 				"openServiceList": self.showList,
+				"zapUp": self.previousChannel,
+				"zapDown": self.nextChannel,
 				"historyNext": self.historyNext,
 				"historyBack": self.historyBack,
 				"showEPGList": self.showEpg,
-			}, -1)
+			})
 
 		self["live_actions"] = ActionMap(["IPtvDreamLiveActions"], {
 				"zapUp": self.previousChannel,
