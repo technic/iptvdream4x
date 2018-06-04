@@ -226,7 +226,8 @@ class IPtvDreamStreamPlayer(
 
 		# TODO: ActionMap add help.
 
-		self["actions"] = ActionMap(["IPtvDreamInfobarActions", "ColorActions"], {
+		self["actions"] = ActionMap(["IPtvDreamInfobarActions", "ColorActions", "OkCancelActions"], {
+				"cancel": self.confirmExit,
 				"closePlugin": self.exit,
 				"openVideos": self.openVod,
 				"green": self.openSettings,
@@ -284,6 +285,12 @@ class IPtvDreamStreamPlayer(
 		self.channels.saveQuery()
 		self.session.deleteDialog(self.channels)
 		self.close(ret)
+
+	def confirmExit(self):
+		def cb(ret):
+			if ret:
+				self.exit()
+		self.session.openWithCallback(cb, MessageBox, _("Exit plugin?"), MessageBox.TYPE_YESNO)
 
 	### Play
 
