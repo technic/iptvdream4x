@@ -30,7 +30,7 @@ pyfiles := src/__init__.py src/common.py src/dist.py src/plugin.py src/updater.p
 datafiles := src/keymap_enigma.xml src/keymap_neutrino.xml src/IPtvDream.png
 
 ifeq ($(PROVIDER),all)
-pyfiles += src/api/edem.py
+pyfiles += src/api/edem.py src/api/teleprom.py src/api/raduga.py
 datafiles += $(wildcard src/logo/*.png)
 endif
 
