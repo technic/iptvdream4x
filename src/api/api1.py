@@ -107,7 +107,7 @@ class TeleportStream(AbstractStream, TeleportAPI):
 	def getDayEpg(self, cid, date):
 		params = {"cid": cid, "from_uts": datetime(date.year, date.month, date.day).strftime('%s'), "hours": 24}
 		data = self.getJsonData(self.site + "/get_epg?", params)
-		return map(self.epgEntry, data['channels'][0])
+		return map(self.epgEntry, data['channels'][0]['epg'])
 	
 	def getSettings(self):
 		return self.settings
