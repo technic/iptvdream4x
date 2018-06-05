@@ -39,6 +39,8 @@ if __name__ == "__main__":
 		assert nextVer is not None
 
 		subprocess.check_call(['git', 'add', versionFile])
-		subprocess.check_call(['git', 'commit', '-m', 'version up %s' % '.'.join(map(str, nextVer))])
+		ver = '.'.join(map(str, nextVer))
+		subprocess.check_call(['git', 'commit', '-m', 'version up %s' % ver])
+		subprocess.check_call(['git', 'tag', '-a', 'v/%s' % ver, '-m', 'version up %s' % ver])
 
 	print("Done.")
