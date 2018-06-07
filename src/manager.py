@@ -13,7 +13,8 @@
 # enigma2 imports
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
-from Components.config import config, ConfigSubsection, ConfigSubDict, ConfigText, ConfigYesNo, ConfigSelection
+from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
+	ConfigText, ConfigYesNo, ConfigSelection
 from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
@@ -40,6 +41,10 @@ from main import IPtvDreamStreamPlayer
 
 PLAYERS = [('1', "enigma2 ts (1)"), ('4097', "gstreamer (4097)"), ('5002', "exteplayer3 (5002)")]
 loadSkin("IPtvDream/iptvdream.xml")
+
+config.plugins.IPtvDream = ConfigSubsection()
+KEYMAPS = [('enigma', 'enigma'), ('neutrino', 'neutrino')]
+config.plugins.IPtvDream.keymap_type = ConfigSelection(KEYMAPS)
 
 
 def getPlugins():
@@ -206,12 +211,14 @@ class IPtvDreamManager(Screen):
 		self.setTitle(_("IPtvDream %s. Providers list:") % VERSION)
 		self["key_red"] = Button(_("Exit"))
 		self["key_green"] = Button(_("Setup"))
+		self["key_blue"] = Button(_("Keymap"))
 		self["actions"] = ActionMap(
 				["OkCancelActions", "ColorActions"], {
 					"cancel": self.cancel,
 					"ok": self.ok,
 					"green": self.setup,
 					"red": self.cancel,
+					"blue": self.selectKeymap,
 				}, -1)
 		self.listbox = self["list"] = MenuList([], content=eListboxPythonMultiContent)
 		self.listbox.l.setFont(0, gFont("Regular", 22))
@@ -250,3 +257,40 @@ class IPtvDreamManager(Screen):
 
 	def cancel(self):
 		self.close()
+
+	def selectKeymap(self):
+		def cb(selected):
+			if selected is not None:
+				self.applyKeymap(selected[0])
+		self.session.openWithCallback(cb, ChoiceBox, title=_("Select keymap style"), list=KEYMAPS)
+
+	def applyKeymap(self, style):
+		import os
+		import errno
+		from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN
+		plugin_path = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream')
+		link = os.path.join(plugin_path, 'keymap.xml')
+		try:
+			os.remove(link)
+		except (OSError, IOError) as e:
+			trace(e)
+		try:
+			os.symlink('keymap_%s.xml' % style, link)
+		except OSError as e:
+			trace(e)
+			if e.errno == errno.EPROTO:  # ignore virtual machine related error
+				import shutil
+				shutil.copy(os.path.join(plugin_path, 'keymap_%s.xml' % style), link)
+			else:
+				raise e
+
+		config.plugins.IPtvDream.keymap_type.value = style
+		config.plugins.IPtvDream.keymap_type.save()
+		configfile.save()
+
+		def cb(ret):
+			if ret:
+				from Screens.Standby import TryQuitMainloop
+				self.session.open(TryQuitMainloop, retvalue=3)
+		self.session.openWithCallback(
+				cb, MessageBox, _("Restart enigma2 to apply keymap changes?"), MessageBox.TYPE_YESNO)

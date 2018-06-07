@@ -1,9 +1,11 @@
 #!/bin/sh
-plugin_path=/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream
-m=$(uname -m)
-rm -f ${plugin_path}/keymap.xml
-if [ "$m" = "sh4" ]; then
-    ln -s keymap_sh4.xml ${plugin_path}/keymap.xml
+keymap=/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream/keymap.xml
+style=`cat /etc/enigma2/settings |sed -n 's/^config.plugins.IPtvDream.keymap_type=\(.*\)/\1/p'`
+echo "detected keymap '${style}'"
+if test "${style}" = "neutrino"
+then
+    ln -s keymap_neutrino.xml ${keymap}
 else
-    ln -s keymap_mips.xml ${plugin_path}/keymap.xml
+    ln -s keymap_enigma.xml ${keymap}
 fi
+echo "created keymap link to `readlink ${keymap}`"

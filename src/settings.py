@@ -21,6 +21,7 @@ from Components.Sources.Boolean import Boolean
 # plugin imports
 from utils import trace
 from virtualkb import VirtualKeyBoard
+from common import ConfigNumberText
 from loc import translate as _
 
 
@@ -71,7 +72,7 @@ class IPtvDreamConfig(ConfigListScreen, Screen):
 	def showHideKb(self):
 		c = self["config"].getCurrent()
 		# Add to support ConfigSearchText
-		if c and isinstance(c[1], ConfigSearchText):
+		if c and (isinstance(c[1], ConfigSearchText) or isinstance(c[1], ConfigNumberText)):
 			self["actions_kbd"].setEnabled(True)
 			self["Keyboard"].boolean = True
 			self["key_blue"].show()

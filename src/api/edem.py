@@ -58,8 +58,11 @@ class OTTProvider(OfflineFavourites):
 		if not self._domain and self._key:
 			raise APIException("Failed to parse EdemTV playlist located at %s." % m3u8)
 
-		o = urllib2.urlopen("http://epg.it999.ru/edem_epg_ico.m3u8")
-		self._parsePlaylist(o.read().split('\n'))
+		try:
+			self._parsePlaylist(self.readHttp("http://epg.it999.ru/edem_epg_ico.m3u8").split('\n'))
+		except IOError as e:
+			self.trace("error!", e)
+			raise APIException(e)
 
 	def _parsePlaylist(self, lines):
 		group_names = {}

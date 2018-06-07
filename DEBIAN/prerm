@@ -1,3 +1,4 @@
 #!/bin/sh
-plugin_path=/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream
-rm -f ${plugin_path}/keymap.xml
+keymap=/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream/keymap.xml
+echo "remove keymap link ${keymap}"
+rm -f ${keymap}

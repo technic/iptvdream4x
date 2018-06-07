@@ -199,7 +199,10 @@ class AbstractStream(AbstractAPI):
 
 	def loadChannelsEpg(self, cids):
 		for cid, program in self.getChannelsEpg(cids):
-			self.channels[cid].addEpg(program)
+			try:
+				self.channels[cid].addEpg(program)
+			except KeyError:
+				self.trace("unknown channel", cid)
 	
 	def loadCurrentEpg(self, cid):
 		for e in self.getCurrentEpg(cid):

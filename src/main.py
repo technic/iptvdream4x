@@ -226,15 +226,18 @@ class IPtvDreamStreamPlayer(
 
 		# TODO: ActionMap add help.
 
-		self["actions"] = ActionMap(["IPtvDreamInfobarActions", "ColorActions"], {
+		self["actions"] = ActionMap(["IPtvDreamInfobarActions", "ColorActions", "OkCancelActions"], {
+				"cancel": self.confirmExit,
 				"closePlugin": self.exit,
 				"openVideos": self.openVod,
 				"green": self.openSettings,
 				"openServiceList": self.showList,
+				"zapUp": self.previousChannel,
+				"zapDown": self.nextChannel,
 				"historyNext": self.historyNext,
 				"historyBack": self.historyBack,
 				"showEPGList": self.showEpg,
-			}, -1)
+			})
 
 		self["live_actions"] = ActionMap(["IPtvDreamLiveActions"], {
 				"zapUp": self.previousChannel,
@@ -282,6 +285,12 @@ class IPtvDreamStreamPlayer(
 		self.channels.saveQuery()
 		self.session.deleteDialog(self.channels)
 		self.close(ret)
+
+	def confirmExit(self):
+		def cb(ret):
+			if ret:
+				self.exit()
+		self.session.openWithCallback(cb, MessageBox, _("Exit plugin?"), MessageBox.TYPE_YESNO)
 
 	### Play
 
@@ -1079,7 +1088,7 @@ class IPtvDreamChannels(Screen):
 		if channel and self.modeChannels():
 			self.session.openWithCallback(self.showEpgCB, IPtvDreamEpg, self.db, channel.cid, 0)
 
-	def showEpgCB(self, cid, time=None):
+	def showEpgCB(self, cid=None, time=None):
 		trace("selected program", cid, time)
 		if time is not None:
 			self.ok(time)
