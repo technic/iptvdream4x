@@ -51,15 +51,15 @@ def checkUpdate(session, callback):
 
 def pluginRun(name, session, **kwargs):
 	def run():
-		from manager import PluginStarter
-		session.open(PluginStarter, name)
+		from manager import runner
+		runner.runPlugin(session, name)
 	checkUpdate(session, run)
 
 
 def managerRun(session, **kwargs):
 	def run():
-		from manager import IPtvDreamManager
-		session.open(IPtvDreamManager)
+		from manager import runner
+		runner.runManager(session)
 	checkUpdate(session, run)
 
 
