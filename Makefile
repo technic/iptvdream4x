@@ -30,7 +30,8 @@ pyfiles := src/__init__.py src/common.py src/dist.py src/plugin.py src/updater.p
 datafiles := src/keymap_enigma.xml src/keymap_neutrino.xml src/IPtvDream.png
 
 ifeq ($(PROVIDER),all)
-pyfiles += src/api/edem.py src/api/api1.py src/api/teleprom.py src/api/raduga.py
+pyfiles += src/api/edem.py src/api/api1.py src/api/teleprom.py src/api/raduga.py \
+	src/api/mywy.py src/api/naschetv.py src/api/ozo.py
 datafiles += $(wildcard src/logo/*.png)
 endif
 ifeq ($(PROVIDER),WowTV)

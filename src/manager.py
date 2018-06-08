@@ -26,7 +26,7 @@ from Screens.ChoiceBox import ChoiceBox
 from Plugins.Plugin import PluginDescriptor
 from common import ConfigNumberText
 from skin import loadSkin
-from enigma import gFont
+from enigma import gFont, getDesktop, gMainDC, eSize
 
 # system imports
 from json import load as json_load
@@ -80,6 +80,13 @@ def loadProviders():
 class PluginStarter(Screen):
 	def __init__(self, session, name):
 		trace("Starting provider", name)
+
+		desktop = getDesktop(0)
+		self.resolution = desktop.size().width(), desktop.size().height()
+		if self.resolution[0] != 1280:
+			gMainDC.getInstance().setResolution(1280, 720)
+			desktop.resize(eSize(1280, 720))
+
 		Screen.__init__(self, session)
 		self.cfg = manager.getConfig(name)
 		self.apiClass = manager.getApi(name)
@@ -140,6 +147,12 @@ class PluginStarter(Screen):
 
 	def restoreService(self):
 		self.session.nav.playService(self.last_service)
+		desktop = getDesktop(0)
+		w, h = self.resolution
+		trace("restore resolution", w, h)
+		if w != 1280:
+			gMainDC.getInstance().setResolution(w, h)
+			desktop.resize(eSize(w, h))
 
 
 class Manager(object):
@@ -294,3 +307,32 @@ class IPtvDreamManager(Screen):
 				self.session.open(TryQuitMainloop, retvalue=3)
 		self.session.openWithCallback(
 				cb, MessageBox, _("Restart enigma2 to apply keymap changes?"), MessageBox.TYPE_YESNO)
+
+
+class Runner(object):
+	def __init__(self):
+		self._running = False
+
+	def runPlugin(self, session, name):
+		if not self._running:
+			self._running = True
+			session.openWithCallback(self.closed, PluginStarter, name)
+		else:
+			self.showWarning(session)
+
+	def runManager(self, session):
+		if not self._running:
+			self._running = True
+			session.openWithCallback(self.closed, IPtvDreamManager)
+		else:
+			self.showWarning(session)
+
+	def closed(self, *args):
+		self._running = False
+
+	def showWarning(self, session):
+		assert self._running
+		session.open(MessageBox, _("IPtvDream plugin is already running!"), MessageBox.TYPE_ERROR)
+
+
+runner = Runner()
