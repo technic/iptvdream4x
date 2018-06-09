@@ -31,7 +31,7 @@ datafiles := src/keymap_enigma.xml src/keymap_neutrino.xml src/IPtvDream.png
 
 ifeq ($(PROVIDER),all)
 pyfiles += src/api/edem.py src/api/api1.py src/api/teleprom.py src/api/raduga.py \
-	src/api/mywy.py src/api/naschetv.py src/api/ozo.py
+	src/api/mywy.py src/api/naschetv.py src/api/ozo.py src/api/sovok.py
 datafiles += $(wildcard src/logo/*.png)
 endif
 
