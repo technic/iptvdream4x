@@ -36,6 +36,7 @@ datafiles += $(wildcard src/logo/*.png)
 endif
 ifeq ($(PROVIDER),WowTV)
 pyfiles += src/api/edem.py
+datafiles += src/logo/$(PROVIDER).png
 else
 pyfiles := $(error Unknown provider $(PROVIDER))
 endif
