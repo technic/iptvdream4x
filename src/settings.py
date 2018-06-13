@@ -12,7 +12,7 @@ from __future__ import print_function
 
 # enigma2 imports
 from Screens.Screen import Screen
-from Components.config import config, configfile, getConfigListEntry, ConfigSearchText
+from Components.config import getConfigListEntry, ConfigSearchText
 from Components.ConfigList import ConfigListScreen
 from Components.ActionMap import ActionMap
 from Components.Button import Button
@@ -88,8 +88,8 @@ class IPtvDreamConfig(ConfigListScreen, Screen):
 	def keySave(self):
 		trace("Save config")
 		self.saveAll()
-		config.IPtvDream.save()
-		configfile.save()
+		from manager import manager
+		manager.saveConfig()
 		self.close(True)
 
 
