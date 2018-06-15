@@ -956,6 +956,7 @@ class IPtvDreamChannels(Screen):
 
 		if self.mode == self.GROUPS:
 			self.fillGroupsList()
+			title.append(_("Groups"))
 		elif self.mode == self.GROUP:
 			self.list.setList(self.db.selectChannels(self.gid))
 			title.append(self.db.groups[self.gid].title)
