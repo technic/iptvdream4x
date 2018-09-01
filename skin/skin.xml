@@ -1,5 +1,8 @@
 <!-- ### SKIN VERSION 0.1 -->
 <skin>
+    <output id="0">
+        <resolution xres="1280" yres="720" bpp="32"/>
+    </output>
 <!-- ### Colors -->
 <colors>
 	<color name="bg" value="#0004030c" />
