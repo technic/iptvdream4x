@@ -19,13 +19,16 @@ from abstract_api import AbstractStream, OfflineFavourites
 from ..utils import syncTime, APIException, EPG, Channel, Group
 
 
-class OTTProvider(OfflineFavourites):
+class M3UProvider(OfflineFavourites):
 	NAME = "EdemTV"
 	HAS_LOGIN = False
 
 	def __init__(self, username, password):
-		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg"
+		super(M3UProvider, self).__init__(username, password)
+		# Override site and playlist in derived class
+		self.site = ""
+		self.playlist = "default.m3u"
+		self.playlist_url = ""
 		self.channels = {}
 		self.groups = {}
 		self.channels_data = {}
@@ -39,7 +42,7 @@ class OTTProvider(OfflineFavourites):
 		except ImportError:
 			path = '.'
 
-		m3u8 = os.path.join(path, 'edem_pl.m3u8')
+		m3u8 = os.path.join(path, self.playlist)
 		if not os.path.exists(m3u8):
 			raise APIException("EdemTV playlist not found! Please copy your playlist to %s." % m3u8)
 
@@ -59,7 +62,7 @@ class OTTProvider(OfflineFavourites):
 			raise APIException("Failed to parse EdemTV playlist located at %s." % m3u8)
 
 		try:
-			self._parsePlaylist(self.readHttp("http://epg.it999.ru/edem_epg_ico.m3u8").split('\n'))
+			self._parsePlaylist(self.readHttp(self.playlist_url).split('\n'))
 		except IOError as e:
 			self.trace("error!", e)
 			raise APIException(e)
