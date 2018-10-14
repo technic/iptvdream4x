@@ -34,4 +34,4 @@ pipelines:
             - make
             - make DEB=y
             - lftp -e "set ssl:verify-certificate no; mirror -v -R packages iptvdream4x/packages; quit"
-              -u $FTP_USER,$FTP_PASSWORD ftp://technic.cf
+              -u $FTP_USER,$FTP_PASSWORD ftp://files.000webhost.com
