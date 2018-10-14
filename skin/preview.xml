@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens>
+  <screen>
+    <name>IPtvDreamStreamPlayer</name>
+    <entries/>
+  </screen>
+  <screen>
+    <name>IPtvDreamChannels</name>
+    <entries/>
+  </screen>
+  <screen>
+    <name>IPtvDreamEpg</name>
+    <entries/>
+  </screen>
+  <screen>
+    <name>IPtvDreamSeekScreen</name>
+    <entries/>
+  </screen>
+  <screen>
+    <name>IPtvDreamPlayer</name>
+    <entries/>
+  </screen>
+  <screen>
+    <name>IPtvDreamMovies</name>
+    <entries/>
+  </screen>
+  <screen>
+    <name>VirtualKeyBoardRu</name>
+    <entries/>
+  </screen>
+  <screen>
+    <name>IPtvDreamConfig</name>
+    <entries/>
+  </screen>
+  <screen>
+    <name>IPtvDreamManager</name>
+    <entries/>
+  </screen>
+</screens>
