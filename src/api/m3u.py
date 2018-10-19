@@ -50,15 +50,15 @@ class M3UProvider(OfflineFavourites):
 		url_regexp = re.compile("https?://([\w.]+)/iptv/(\w+)/\d+/index.m3u8")
 
 		with open(m3u8) as f:
-			while True:
-				line = f.readline().strip()
+			for line in f:
+				line = line.strip()
 				m = url_regexp.match(line)
 				if m:
 					self._domain = m.group(1)
 					self._key = m.group(2)
 					self.trace("found domain and key in user playlist")
 					break
-		if not self._domain and self._key:
+		if not (self._domain and self._key):
 			raise APIException("Failed to parse EdemTV playlist located at %s." % m3u8)
 
 		try:
