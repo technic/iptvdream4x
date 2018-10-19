@@ -646,23 +646,6 @@ class ChannelList(MenuList):
 		else:
 			self.num = 0
 
-	# Return index of value in list or None if value is not in list
-	def locate(self, value, index):
-		if index is None:
-			self.moveToIndex(0)
-			return None
-		try:
-			if self.list[index] == value:
-				self.moveToIndex(index)
-				return index
-			else:
-				new_index = self.list.index(value)
-				self.moveToIndex(new_index)
-				return new_index
-		except (IndexError, ValueError):
-			self.moveToIndex(0)
-			return None
-
 	def setList(self, channels):
 		self.list = channels
 		print(len(channels), channels)
@@ -973,6 +956,7 @@ class IPtvDreamChannels(Screen):
 
 		if self.mode == self.GROUPS:
 			self.fillGroupsList()
+			title.append(_("Groups"))
 		elif self.mode == self.GROUP:
 			self.list.setList(self.db.selectChannels(self.gid))
 			title.append(self.db.groups[self.gid].title)
@@ -1130,15 +1114,23 @@ class IPtvDreamChannels(Screen):
 		else:
 			return None
 
+	def findChannelIndex(self, cid):
+		for i, channel in enumerate(self.list.list):
+			if channel.cid == cid:
+				return i
+		else:
+			return None
+
 	def goToNumber(self, num):
 		cid = self.db.findNumber(num)
 		if cid is None:
 			return None
-		idx = self.list.locate(cid, 0)
+		idx = self.findChannelIndex(cid)
 		if idx is None:
 			self.mode, self.gid = self.ALL, None
 			self.fillList()
-			self.list.locate(cid, 0)
+			idx = self.findChannelIndex(cid)
+		self.list.moveToIndex(idx)
 		self.history.historyAppend(self.createHistoryEntry())
 		return cid
 

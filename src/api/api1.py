@@ -82,7 +82,7 @@ class TeleportStream(AbstractStream, TeleportAPI):
 
 	def getStreamUrl(self, cid, pin, time=None):
 		params = {"cid": cid, "time_shift": self.time_shift}
-		if self.channels[cid].is_protected and pin:
+		if pin:
 			params["protect_code"] = pin
 		if time:
 			params["uts"] = time.strftime("%s")

@@ -160,6 +160,7 @@ class Manager(object):
 		self.enabled = {}
 		self.apiDict = {}
 		self.config = config.IPtvDream = ConfigSubDict()
+		self.onConfigChanged = []
 		self.initList()
 
 	def initList(self):
@@ -193,6 +194,7 @@ class Manager(object):
 				self.config[name] = ConfigSubsection()
 				self.config[name].login = ConfigNumberText()
 				self.config[name].password = ConfigNumberText()
+				self.config[name].parental_code = ConfigNumberText()
 				self.config[name].in_menu = ConfigYesNo(default=False)
 				self.config[name].playerid = ConfigSelection(PLAYERS, default='4097')
 				self.config[name].last_played = ConfigText()
@@ -213,6 +215,12 @@ class Manager(object):
 
 	def getConfig(self, name):
 		return self.config[name]
+
+	def saveConfig(self):
+		self.config.save()
+		configfile.save()
+		for f in self.onConfigChanged:
+			f()
 
 
 manager = Manager()

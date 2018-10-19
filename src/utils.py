@@ -22,6 +22,16 @@ def trace(*args):
 	print("[IPtvDream]", " ".join(map(str, args)))
 
 
+def timeit(f):
+	def wrapper(*args, **kwargs):
+		t = time.time()
+		result = f(*args, **kwargs)
+		d = time.time() - t
+		trace("timeit", f, d)
+		return result
+	return wrapper
+
+
 def getHwAddr(ifname):
 	try:
 		import fcntl

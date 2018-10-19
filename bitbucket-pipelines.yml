@@ -32,5 +32,6 @@ pipelines:
           script:
             - apt-get update && apt-get install -y gettext lftp
             - make
+            - make DEB=y
             - lftp -e "set ssl:verify-certificate no; mirror -v -R packages iptvdream4x/packages; quit"
-              -u $FTP_USER,$FTP_PASSWORD ftp://technic.16mb.com
+              -u $FTP_USER,$FTP_PASSWORD ftp://files.000webhost.com/public_html

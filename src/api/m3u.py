@@ -11,21 +11,23 @@
 from __future__ import print_function
 
 # system imports
-import urllib2
 import os
 
 # plugin imports
-from abstract_api import AbstractStream, OfflineFavourites
+from abstract_api import OfflineFavourites
 from ..utils import syncTime, APIException, EPG, Channel, Group
 
 
-class OTTProvider(OfflineFavourites):
+class M3UProvider(OfflineFavourites):
 	NAME = "WowTV"
 	HAS_LOGIN = False
 
 	def __init__(self, username, password):
-		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg"
+		super(M3UProvider, self).__init__(username, password)
+		# Override site and playlist in derived class
+		self.site = ""
+		self.playlist = "default.m3u"
+		self.playlist_url = ""
 		self.channels = {}
 		self.groups = {}
 		self.channels_data = {}
@@ -39,7 +41,7 @@ class OTTProvider(OfflineFavourites):
 		except ImportError:
 			path = '.'
 
-		m3u8 = os.path.join(path, 'edem_pl.m3u8')
+		m3u8 = os.path.join(path, self.playlist)
 		if not os.path.exists(m3u8):
 			raise APIException("EdemTV playlist not found! Please copy your playlist to %s." % m3u8)
 
@@ -47,19 +49,19 @@ class OTTProvider(OfflineFavourites):
 		url_regexp = re.compile("https?://([\w.]+)/iptv/(\w+)/\d+/index.m3u8")
 
 		with open(m3u8) as f:
-			while True:
-				line = f.readline().strip()
+			for line in f:
+				line = line.strip()
 				m = url_regexp.match(line)
 				if m:
 					self._domain = m.group(1)
 					self._key = m.group(2)
 					self.trace("found domain and key in user playlist")
 					break
-		if not self._domain and self._key:
+		if not (self._domain and self._key):
 			raise APIException("Failed to parse EdemTV playlist located at %s." % m3u8)
 
 		try:
-			self._parsePlaylist(self.readHttp("http://epg.it999.ru/edem_epg_ico.m3u8").split('\n'))
+			self._parsePlaylist(self.readHttp(self.playlist_url).split('\n'))
 		except IOError as e:
 			self.trace("error!", e)
 			raise APIException(e)

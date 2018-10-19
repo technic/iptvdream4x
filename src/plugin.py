@@ -24,6 +24,12 @@ except ImportError:
 	def _(text):
 		return text
 
+try:
+	from server import startApiProxy
+	startApiProxy()
+except Exception as e:
+	print("[IPtvDream] Cant start server", e)
+
 
 def checkUpdate(session, callback):
 	try:
