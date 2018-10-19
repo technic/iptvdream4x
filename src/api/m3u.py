@@ -11,11 +11,10 @@
 from __future__ import print_function
 
 # system imports
-import urllib2
 import os
 
 # plugin imports
-from abstract_api import AbstractStream, OfflineFavourites
+from abstract_api import OfflineFavourites
 from ..utils import syncTime, APIException, EPG, Channel, Group
 
 
