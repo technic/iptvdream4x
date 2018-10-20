@@ -12,10 +12,6 @@ pep8:
 
 test:
   script:
-  - mkdir -p /dev/input
-  - service apache2 start
-  - Xvfb :99 -ac -screen 0 1280x720x16 &
-  - export DISPLAY=:99
   - ps ax
   - epxort PROVIDER=WowTV
   - python update-test.py
