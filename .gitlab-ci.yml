@@ -13,7 +13,7 @@ pep8:
 test:
   script:
   - ps ax
-  - epxort PROVIDER=WowTV
+  - export PROVIDER=WowTV
   - python update-test.py
 
 deploy:
@@ -22,7 +22,7 @@ deploy:
     - v/*
   script:
   - apt-get update && apt-get install -y gettext lftp
-  - epxort PROVIDER=WowTV
+  - export PROVIDER=WowTV
   - make
   - make DEB=y
   - lftp -e "set ssl:verify-certificate no; mirror -v -R packages iptvdream4x/packages; quit"
