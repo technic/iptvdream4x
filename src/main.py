@@ -1040,6 +1040,7 @@ class IPtvDreamChannels(Screen):
 				if g.gid == self.gid:
 					self.gid = groups[(idx + diff) % len(groups)].gid
 					self.fillList()
+					break
 
 	def nextGroup(self):
 		self.npGroup(1)
