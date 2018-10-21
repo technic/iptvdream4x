@@ -43,7 +43,7 @@ class M3UProvider(OfflineFavourites):
 
 		m3u8 = os.path.join(path, self.playlist)
 		if not os.path.exists(m3u8):
-			raise APIException("EdemTV playlist not found! Please copy your playlist to %s." % m3u8)
+			raise APIException("%s playlist not found! Please copy your playlist to %s." % (self.NAME, m3u8))
 
 		import re
 		url_regexp = re.compile("https?://([\w.]+)/iptv/(\w+)/\d+/index.m3u8")
@@ -58,7 +58,7 @@ class M3UProvider(OfflineFavourites):
 					self.trace("found domain and key in user playlist")
 					break
 		if not (self._domain and self._key):
-			raise APIException("Failed to parse EdemTV playlist located at %s." % m3u8)
+			raise APIException("Failed to parse %s playlist located at %s." % (self.NAME, m3u8))
 
 		try:
 			self._parsePlaylist(self.readHttp(self.playlist_url).split('\n'))
