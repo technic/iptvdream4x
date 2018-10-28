@@ -24,7 +24,7 @@ class OTTProvider(OfflineFavourites):
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org:3001/"
+		self.site = "http://iptvdream.zapto.org/epg-soveni/"
 		self.channels = {}
 		self.groups = {}
 		self.channels_data = {}
