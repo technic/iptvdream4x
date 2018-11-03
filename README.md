@@ -2,6 +2,8 @@
 
 Плагин для просмотра iptv на ресивирах с enigma2.
 
+[![](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/iptvdream4x)
+
 # Release notes
 
 ## 4.16
