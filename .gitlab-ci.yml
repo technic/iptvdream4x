@@ -10,6 +10,12 @@ pep8:
     - pip install pep8
     - pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
 
+shellcheck:
+  image: koalaman/shellcheck
+  script:
+    - find -name '*.sh' -print |xargs -n 1 shellcheck
+  allow_failure: true
+
 test:
   script:
   - ps ax
