@@ -13,7 +13,7 @@ pep8:
 shellcheck:
   image:
     name: koalaman/shellcheck
-    entrypoint:
+    entrypoint: ["/bin/sh", "-c"]
   script:
     - find -name '*.sh' -print |xargs -n 1 shellcheck
   allow_failure: true
