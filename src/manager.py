@@ -13,6 +13,7 @@
 # enigma2 imports
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
+from Screens.InputBox import InputBox
 from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
 	ConfigText, ConfigYesNo, ConfigSelection
 from Components.ActionMap import ActionMap
@@ -153,6 +154,58 @@ class PluginStarter(Screen):
 		if w != 1280:
 			gMainDC.getInstance().setResolution(w, h)
 			desktop.resize(eSize(w, h))
+
+
+class TokenPluginStarter(PluginStarter):
+	def __init__(self, session, name):
+		super(TokenPluginStarter, self).__init__(session, name)
+
+	def start(self):
+		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
+		if self.cfg.password.value == '':
+			self.login()
+		else:
+			self.auth()
+
+	def auth(self):
+		try:
+			self.db.start()
+			return self.run()
+		except APILoginFailed as e:
+			cb = lambda ret: self.login()
+			message = _("We need to authenticate your device") + "\n" + str(e)
+		except APIException as e:
+			cb = lambda ret: self.exit()
+			message = _("Start of %s failed") % self.db.NAME + "\n" + str(e)
+		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
+
+	def login(self):
+		""" Ask user for pin code and obtain a token"""
+		self.session.openWithCallback(
+			self._codeEntered, InputBox, title=_("Please go to %s and generate pin code") % self.apiClass.token_page,
+			windowTitle=_("Input pin"))
+
+	def _codeEntered(self, code):
+		try:
+			token = self.db.getToken(code)
+			self._saveToken(token)
+			return self.auth()
+		except APILoginFailed as e:
+			cb = lambda ret: self.login()
+			message = _("Failed to authentificate your device") + "\n" + str(e)
+		except APIException as e:
+			cb = lambda ret: self.exit()
+			message = _("Start of %s failed") % self.db.NAME + "\n" + str(e)
+		self._saveToken(None)
+		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
+
+	def _saveToken(self, token):
+		if token is None:
+			token = ''
+		assert isinstance(token, str)
+		self.cfg.password.value = token
+		self.cfg.password.save()
+		manager.saveConfig()
 
 
 class Manager(object):
@@ -324,7 +377,7 @@ class Runner(object):
 	def runPlugin(self, session, name):
 		if not self._running:
 			self._running = True
-			session.openWithCallback(self.closed, PluginStarter, name)
+			session.openWithCallback(self.closed, TokenPluginStarter, name)
 		else:
 			self.showWarning(session)
 

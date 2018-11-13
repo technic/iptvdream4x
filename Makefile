@@ -36,6 +36,10 @@ pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py \
 datafiles += $(wildcard src/logo/*.png)
 endif
 
+ifeq ($(PROVIDER),cbilling)
+pyfiles += src/api/cbilling.py
+endif
+
 pyext := pyo
 pyinstall := $(pyfiles:src/%=$(plugindir)/%)
 pycinstall := $(pyinstall:.py=.$(pyext))
