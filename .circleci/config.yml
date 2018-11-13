@@ -8,12 +8,9 @@ jobs:
       - checkout
 
       - run:
-          name: pip install
-          command: pip install pep8
-
-      - run:
           name: pep8
           command: |
+            pip install pep8
             pep8 --version
             pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
 
