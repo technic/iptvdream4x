@@ -33,7 +33,7 @@ jobs:
             whoami
             sudo mkdir -p /dev/input
             sudo service apache2 start
-            Xvfb :99 -ac -screen 0 1280x720x16 &
+            sudo Xvfb :99 -ac -screen 0 1280x720x16 &
             export DISPLAY=:99
             ps ax
             sudo python update-test.py
