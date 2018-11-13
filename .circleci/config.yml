@@ -9,7 +9,7 @@ jobs:
 
       - run:
           name: pip install
-          command: pipenv install pep8
+          command: pip install pep8
 
       - run:
           name: pep8
