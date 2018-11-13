@@ -17,20 +17,47 @@ shellcheck:
     - find -name '*.sh' -print |xargs -n 1 shellcheck
   allow_failure: true
 
-test:
-  script:
-  - ps ax
-  - export PROVIDER=WowTV
-  - python update-test.py
+.test:
+  script: &test_script
+    - ps ax
+    - export PROVIDER=WowTV
+    - python update-test.py
 
-deploy:
-  image: python:2.7.15
+test:wow:
+  variables:
+    PROVIDER: WowTv
   only:
-    - v/*
+    - wow
+  script: *test_script
+
+test:cbilling:
+  variables:
+    PROVIDER: cbilling
+  only:
+    - cbilling
+  script: *test_script
+
+.deploy: &deploy_template
+  image: python:2.7.15
+  stage: deploy
+  when: manual
   script:
-  - apt-get update && apt-get install -y gettext lftp
-  - export PROVIDER=WowTV
-  - make
-  - make DEB=y
-  - lftp -e "set ssl:verify-certificate no; mirror -v -R packages iptvdream4x/packages; quit"
-    -u $FTP_USER,$FTP_PASSWORD ftp://files.000webhost.com/public_html
+    - apt-get update && apt-get install -y gettext lftp
+    - echo $PROVIDER
+    - make
+    - make DEB=y
+    - rsync -rt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
+
+deploy:wow:
+  extends: .deploy
+  only:
+    - wow
+  variables:
+    PROVIDER: WowTV
+
+deploy:cbilling:
+  extends: .deploy
+  only:
+    - cbilling
+  variables:
+    PROVIDER: cbilling
