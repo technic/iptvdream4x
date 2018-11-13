@@ -1,8 +1,17 @@
-version: 2
+version: 2.1
+
 jobs:
   build:
     docker:
       - image: technic93/e2xvfb:0.1
+
+    parameters:
+      provider:
+        type: string
+        default: "all"
+
+    environment:
+      PROVIDER: << parameters.provider >>
 
     steps:
       - checkout
@@ -18,16 +27,22 @@ jobs:
       - run:
           name: build
           command: |
+            echo "PROVIDER=${PROVIDER}"
             apt-get update && apt-get install -y gettext rsync
             make
             make DEB=y
+
+      - persist_to_workspace:
+          root: packages
+          paths:
+            - packages/*
 
       - store_artifacts:
           path: packages
           destination: packages
 
       - run:
-          name: test
+          name: test update
           command: |
             uname -a
             whoami
@@ -37,3 +52,30 @@ jobs:
             export DISPLAY=:99
             ps ax
             sudo python update-test.py
+
+  deploy:
+    docker:
+      - image: python:2.7.15
+        # TODO:
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: packages
+
+      - run:
+          name: build and deploy
+          command: |
+            apt-get update && apt-get install -y rsync
+            ls packages/
+
+workflows:
+  version: 2
+  test-cbilling:
+    jobs:
+      - build:
+          provider: cbilling
+          filters:
+            branches:
+              only: cbilling
+
