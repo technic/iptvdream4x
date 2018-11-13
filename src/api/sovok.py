@@ -44,6 +44,7 @@ class OTTProvider(AbstractStream):
 			channels = []
 			for c in g['channels']:
 				cid = int(c['id'])
+				number += 1
 				channel = Channel(
 					cid, gid, c['name'].encode('utf-8'), number,
 					bool(int(c['have_archive'])), bool(int(c['protected']))

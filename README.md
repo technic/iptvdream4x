@@ -2,7 +2,14 @@
 
 Плагин для просмотра iptv на ресивирах с enigma2.
 
+[![](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/iptvdream4x)
+
 # Release notes
+
+## 4.17
+
+- исправлена нумерация каналов совок.тв
+- отображение даты окончания подписки для наше.тв и др.
 
 ## 4.16
 

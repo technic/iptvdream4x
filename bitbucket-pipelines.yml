@@ -16,6 +16,7 @@ stepdefs:
         - export DISPLAY=:99
         - ps ax
         - pip install pep8
+        - pep8 --version
         - pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
         - python update-test.py
 
@@ -34,3 +35,6 @@ pipelines:
             - make
             - make DEB=y
             - rsync -rt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
+            - export API_URL="https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads"
+            - curl -X POST -u "${BB_AUTH_STRING}" "${API_URL}" -F files=@"$(find packages/ -name '*.ipk')"
+            - curl -X POST -u "${BB_AUTH_STRING}" "${API_URL}" -F files=@"$(find packages/ -name '*.deb')"
