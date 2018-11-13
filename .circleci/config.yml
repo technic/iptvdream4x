@@ -1,0 +1,39 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: technic93/e2xvfb:0.1
+
+    steps:
+      - checkout
+
+      - run:
+          name: pep8
+          command: |
+            echo $PATH |tr ':' '\n'
+            sudo pip install pep8
+            pep8 --version
+            pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
+
+      - run:
+          name: build
+          command: |
+            apt-get update && apt-get install -y gettext rsync
+            make
+            make DEB=y
+
+      - store_artifacts:
+          path: packages
+          destination: packages
+
+      - run:
+          name: test
+          command: |
+            uname -a
+            whoami
+            sudo mkdir -p /dev/input
+            sudo service apache2 start
+            sudo Xvfb :99 -ac -screen 0 1280x720x16 &
+            export DISPLAY=:99
+            ps ax
+            sudo python update-test.py
