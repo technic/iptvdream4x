@@ -1,5 +1,8 @@
 version: 2.1
 
+# To test 2.1 config locally you need to run:
+# circleci config process .circleci/config.yml > ci.yml.tmp && circleci local execute -c ci.yml.tmp
+
 jobs:
   build:
     docker:
