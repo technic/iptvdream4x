@@ -20,6 +20,13 @@ jobs:
       - checkout
 
       - run:
+          name: info
+          command: |
+            uname -a
+            whoami
+            echo PROVIDER=${PROVIDER}
+
+      - run:
           name: pep8
           command: |
             echo $PATH |tr ':' '\n'
@@ -30,8 +37,6 @@ jobs:
       - run:
           name: test update
           command: |
-            uname -a
-            whoami
             sudo mkdir -p /dev/input
             sudo service apache2 start
             sudo Xvfb :99 -ac -screen 0 1280x720x16 &
@@ -48,11 +53,22 @@ jobs:
         type: string
         default: "all"
 
+    environment:
+      PROVIDER: << parameters.provider >>
+
     steps:
+    - checkout
+
+    - run:
+        name: info
+        command: |
+          uname -a
+          whoami
+          echo PROVIDER=${PROVIDER}
+
     - run:
         name: build
         command: |
-          echo "PROVIDER=${PROVIDER}"
           sudo apt-get update && sudo apt-get install -y gettext rsync
           make
           make DEB=y
