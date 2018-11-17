@@ -106,6 +106,7 @@ install: $(pycinstall) $(datainstall) $(skininstall) $(moinstall)
 
 version: src/dist.py
 	mkdir -p $(dir $@)
+	test  `cat $< |sed -n 's/^\s*NAME\s*=\s*"\(.*\)"$$/\1/p'` = '$(PROVIDER)'
 	cat $< |sed -n 's/^\s*VERSION\s*=\s*"\(.*\)"$$/version=\1/p' > $@
 
 include version
