@@ -1,3 +1,3 @@
 NAME = "CbillingIPTV"
-TITLE = "cbilling.tv"
+TITLE = "Cbilling.tv"
 VERSION = "4.17"
