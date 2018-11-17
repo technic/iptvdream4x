@@ -1,7 +1,10 @@
 version: 2.1
 
+# To test 2.1 config locally you need to run:
+# circleci config process .circleci/config.yml > ci.yml.tmp && circleci local execute -c ci.yml.tmp
+
 jobs:
-  build:
+  test:
     docker:
       - image: technic93/e2xvfb:0.1
 
@@ -17,6 +20,13 @@ jobs:
       - checkout
 
       - run:
+          name: info
+          command: |
+            uname -a
+            whoami
+            echo PROVIDER=${PROVIDER}
+
+      - run:
           name: pep8
           command: |
             echo $PATH |tr ':' '\n'
@@ -25,27 +35,8 @@ jobs:
             pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
 
       - run:
-          name: build
-          command: |
-            echo "PROVIDER=${PROVIDER}"
-            apt-get update && apt-get install -y gettext rsync
-            make
-            make DEB=y
-
-      - persist_to_workspace:
-          root: packages
-          paths:
-            - packages/*
-
-      - store_artifacts:
-          path: packages
-          destination: packages
-
-      - run:
           name: test update
           command: |
-            uname -a
-            whoami
             sudo mkdir -p /dev/input
             sudo service apache2 start
             sudo Xvfb :99 -ac -screen 0 1280x720x16 &
@@ -53,10 +44,43 @@ jobs:
             ps ax
             sudo python update-test.py
 
+  build:
+    docker:
+      - image: technic93/e2xvfb:0.1
+
+    parameters:
+      provider:
+        type: string
+        default: "all"
+
+    environment:
+      PROVIDER: << parameters.provider >>
+
+    steps:
+    - checkout
+
+    - run:
+        name: info
+        command: |
+          uname -a
+          whoami
+          echo PROVIDER=${PROVIDER}
+
+    - run:
+        name: build
+        command: |
+          make
+          make DEB=y
+
+    - persist_to_workspace:
+        root: .
+        paths:
+        - packages/*
+
   deploy:
     docker:
       - image: python:2.7.15
-        # TODO:
+
     steps:
       - checkout
 
@@ -65,17 +89,36 @@ jobs:
 
       - run:
           name: build and deploy
+          # TODO:
           command: |
-            apt-get update && apt-get install -y rsync
             ls packages/
 
+
+default-all: &default-all
+  provider: all
+  filters:
+    branches:
+      ignore:
+        - cbilling
+        - cbilling/*
+
+default-cbilling: &default-cbilling
+  provider: all
+  filters:
+    branches:
+      only:
+      - cbilling
+      - cbilling/*
+
+
 workflows:
-  version: 2
-  test-cbilling:
+  task-all:
     jobs:
-      - build:
-          provider: cbilling
-          filters:
-            branches:
-              only: cbilling
+      - test: *default-all
+      - build: *default-all
+
+  task-cbilling:
+    jobs:
+      - test: *default-cbilling
+      - build: *default-cbilling
 

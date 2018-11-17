@@ -4,6 +4,8 @@
 
 [![](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/iptvdream4x)
 
+Отчёты об ошибках, пожелания, предложения, пулл-реквесты и прочая помощь приветсвуется!
+
 # Release notes
 
 ## 4.17
