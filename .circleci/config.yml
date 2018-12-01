@@ -42,7 +42,8 @@ jobs:
             sudo Xvfb :99 -ac -screen 0 1280x720x16 &
             export DISPLAY=:99
             ps ax
-            sudo python update-test.py
+            cat src/dist.py
+            sudo -E python update-test.py
 
   build:
     docker:
@@ -85,13 +86,21 @@ jobs:
       - checkout
 
       - attach_workspace:
-          at: packages
+          at: .
+
+      - add_ssh_keys:
+          fingerprints:
+            - "45:16:fd:9e:94:b8:84:59:ae:5b:50:6e:e7:e2:e5:09"
+      - run:
+          name: add fingerprint
+          command: echo $UPDATE_FINGERPRINT >> ~/.ssh/known_hosts
 
       - run:
-          name: build and deploy
-          # TODO:
+          name: Deploy
           command: |
-            ls packages/
+            apt-get update && apt-get install -y rsync
+            ls -lR packages/
+            rsync -rt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
 
 
 default-all: &default-all
@@ -103,7 +112,7 @@ default-all: &default-all
         - cbilling/*
 
 default-cbilling: &default-cbilling
-  provider: all
+  provider: cbilling
   filters:
     branches:
       only:
@@ -121,4 +130,14 @@ workflows:
     jobs:
       - test: *default-cbilling
       - build: *default-cbilling
-
+      - deploy:
+          requires:
+            - test
+            - build
+          filters:
+            branches:
+              only:
+                - cbilling
+                - cbilling/*
+            tags:
+              only: cbilling/v*
