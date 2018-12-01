@@ -86,7 +86,7 @@ jobs:
       - checkout
 
       - attach_workspace:
-          at: packages
+          at: .
 
       - add_ssh_keys:
           fingerprints:
@@ -96,11 +96,10 @@ jobs:
           command: echo $UPDATE_FINGERPRINT >> ~/.ssh/known_hosts
 
       - run:
-          name: build and deploy
-          # TODO:
+          name: Deploy
           command: |
-            apt-get update && apt-get install -y gettext rsync
-            ls packages/
+            apt-get update && apt-get install -y rsync
+            ls -lR packages/
             rsync -rt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
 
 
