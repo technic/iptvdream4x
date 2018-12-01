@@ -123,10 +123,14 @@ workflows:
     jobs:
       - test: *default-cbilling
       - build: *default-cbilling
-      - deploy: *default-cbilling
+      - deploy:
           requires:
             - test
             - build
           filters:
+            branches:
+              only:
+                - cbilling
+                - cbilling/*
             tags:
               only: cbilling/v*
