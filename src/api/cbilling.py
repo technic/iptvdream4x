@@ -20,7 +20,7 @@ from ..utils import syncTime, APIException, APILoginFailed, EPG, Channel, Group
 
 
 class OTTProvider(OfflineFavourites):
-    NAME = "CbillingIPTV"
+    NAME = "cbilling"
     HAS_LOGIN = False
     token_page = "https://cbilling.tv"
 
