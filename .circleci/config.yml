@@ -92,6 +92,7 @@ jobs:
           name: build and deploy
           # TODO:
           command: |
+            apt-get update && apt-get install -y gettext rsync
             ls packages/
             rsync -rt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
 
