@@ -21,7 +21,7 @@ stepdefs:
         - python update-test.py
 
 pipelines:
-  default:
+  custom:
     - step: *testing
   tags:
     v/*:
