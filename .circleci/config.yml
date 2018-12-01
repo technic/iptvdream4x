@@ -42,7 +42,8 @@ jobs:
             sudo Xvfb :99 -ac -screen 0 1280x720x16 &
             export DISPLAY=:99
             ps ax
-            sudo python update-test.py
+            cat src/dist.py
+            sudo -E python update-test.py
 
   build:
     docker:
@@ -92,6 +93,7 @@ jobs:
           # TODO:
           command: |
             ls packages/
+            rsync -rt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
 
 
 default-all: &default-all
@@ -103,7 +105,7 @@ default-all: &default-all
         - cbilling/*
 
 default-cbilling: &default-cbilling
-  provider: all
+  provider: cbilling
   filters:
     branches:
       only:
@@ -121,4 +123,10 @@ workflows:
     jobs:
       - test: *default-cbilling
       - build: *default-cbilling
-
+      - deploy: *default-cbilling
+          requires:
+            - test
+            - build
+          filters:
+            tags:
+              only: cbilling/v*
