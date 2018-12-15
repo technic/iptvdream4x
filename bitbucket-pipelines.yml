@@ -22,7 +22,8 @@ stepdefs:
 
 pipelines:
   custom:
-    - step: *testing
+    test:
+      - step: *testing
   tags:
     v/*:
       - step: *testing
