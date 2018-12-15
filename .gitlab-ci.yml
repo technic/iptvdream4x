@@ -21,7 +21,7 @@ shellcheck:
   script: &test_script
     - ps ax
     - export PROVIDER=WowTV
-    - python update-test.py
+    - sudo -E python update-test.py
 
 test:wow:
   variables:
