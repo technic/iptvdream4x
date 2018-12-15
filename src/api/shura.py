@@ -18,16 +18,13 @@ from abstract_api import OfflineFavourites
 from ..utils import syncTime, APIException, EPG, Channel, Group
 
 
-class M3UProvider(OfflineFavourites):
-	NAME = "WowTV"
+class OTTProvider(OfflineFavourites):
+	NAME = "ShuraTV"
 	HAS_LOGIN = False
 
 	def __init__(self, username, password):
-		super(M3UProvider, self).__init__(username, password)
-		# Override site and playlist in derived class
-		self.site = ""
-		self.playlist = "default.m3u"
-		self.playlist_url = ""
+		super(OTTProvider, self).__init__(username, password)
+		self.site = "http://iptvdream.zapto.org/epg-soveni/"
 		self.channels = {}
 		self.groups = {}
 		self.channels_data = {}
@@ -41,12 +38,12 @@ class M3UProvider(OfflineFavourites):
 		except ImportError:
 			path = '.'
 
-		m3u8 = os.path.join(path, self.playlist)
+		m3u8 = os.path.join(path, 'shura_pl.m3u8')
 		if not os.path.exists(m3u8):
-			raise APIException("%s playlist not found! Please copy your playlist to %s." % (self.NAME, m3u8))
+			raise APIException("ShuraTV playlist not found! Please copy your playlist to %s." % m3u8)
 
 		import re
-		url_regexp = re.compile("https?://([\w.]+)/iptv/(\w+)/\d+/index.m3u8")
+		url_regexp = re.compile("https?://([\w.]+)/(\w+)/\d+/hls/pl.m3u8")
 
 		with open(m3u8) as f:
 			for line in f:
@@ -58,10 +55,10 @@ class M3UProvider(OfflineFavourites):
 					self.trace("found domain and key in user playlist")
 					break
 		if not (self._domain and self._key):
-			raise APIException("Failed to parse %s playlist located at %s." % (self.NAME, m3u8))
+			raise APIException("Failed to parse ShuraTV playlist located at %s." % m3u8)
 
 		try:
-			self._parsePlaylist(self.readHttp(self.playlist_url).split('\n'))
+			self._parsePlaylist(self.readHttp("http://soveni.leolitz.info/plist/shura_epg_ico.m3u8").split('\n'))
 		except IOError as e:
 			self.trace("error!", e)
 			raise APIException(e)
@@ -107,10 +104,10 @@ class M3UProvider(OfflineFavourites):
 				except KeyError:
 					gid = len(group_names)
 					group_names[group] = gid
-					g = self.groups[gid] = Group(gid, group.decode('utf-8').capitalize().encode('utf-8'), [])
+					g = self.groups[gid] = Group(gid, group.decode('utf-8').encode('utf-8'), [])
 
 				num += 1
-				c = Channel(cid, gid, name, num, True)
+				c = Channel(cid, gid, name, num, name.endswith("(A)"))
 				self.channels[cid] = c
 				g.channels.append(c)
 				self.channels_data[cid] = {'tvg': cid, 'url': url}

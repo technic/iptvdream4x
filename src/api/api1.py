@@ -42,13 +42,14 @@ class TeleportAPI(AbstractAPI):
 			self.sid = response['sid'].encode("utf-8")
 	
 		if 'settings' in response:
-			try:
-				self.parseSettings(response['settings'])
-			except:
-				pass
+			self.parseSettings(response['settings'])
+		if 'account' in response:
+			self.parseAccount(response['account'])
 
 	def parseAccount(self, account):
-		pass
+		for s in account['subscriptions']:
+			if 'end_date' in s:
+				self.packet_expire = datetime.strptime(s['end_date'], "%Y-%m-%d")
 
 	def parseSettings(self, settings):
 		pass

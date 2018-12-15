@@ -163,4 +163,6 @@ class UpdaterScreen(MessageBox):
 		if exitcode == 0:
 			self.close(True)
 		else:
-			self.session.openWithCallback(lambda ret: self.close(False), MessageBox, output, MessageBox.TYPE_ERROR)
+			self.session.openWithCallback(
+				lambda ret: self.close(False), MessageBox,
+				_("Update failed") + ":\n %s" % output, MessageBox.TYPE_ERROR)

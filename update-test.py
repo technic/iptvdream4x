@@ -107,6 +107,7 @@ def test():
 	else:
 		raise Exception("Failed to get enigma2 window")
 	print()
+	time.sleep(1)
 
 	print("Sending control sequences")
 	for key in ['Escape', 'space', 'Down', 'Down', 'Return', 'Down', 'Down', 'Return']:

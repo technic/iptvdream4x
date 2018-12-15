@@ -12,3 +12,5 @@ packages/
 *~
 # linux stuff
 .directory
+# temprorary ci file
+*.yml.tmp
