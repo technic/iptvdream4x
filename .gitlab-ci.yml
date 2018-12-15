@@ -42,7 +42,7 @@ test:cbilling:
   stage: deploy
   when: manual
   script:
-    - apt-get update && apt-get install -y gettext lftp
+    - apt-get update && apt-get install -y gettext lftp rsync
     - echo $PROVIDER
     - make
     - make DEB=y
