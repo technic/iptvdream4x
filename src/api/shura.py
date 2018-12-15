@@ -104,7 +104,7 @@ class OTTProvider(OfflineFavourites):
 				except KeyError:
 					gid = len(group_names)
 					group_names[group] = gid
-					g = self.groups[gid] = Group(gid, group.decode('utf-8').capitalize().encode('utf-8'), [])
+					g = self.groups[gid] = Group(gid, group.decode('utf-8').encode('utf-8'), [])
 
 				num += 1
 				c = Channel(cid, gid, name, num, name.endswith("(A)"))
