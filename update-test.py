@@ -110,7 +110,7 @@ def test():
 	time.sleep(1)
 
 	print("Sending control sequences")
-	for key in ['Escape', 'space', 'Down', 'Down', 'Return', 'Down', 'Down', 'Return']:
+	for key in ['Escape', 'space', 'Down', 'Down', 'Return', 'Up', 'Return']:
 		print("Send key", key)
 		subprocess.check_call(['xdotool', 'key', key])
 
