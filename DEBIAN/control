@@ -1,6 +1,6 @@
 Package: enigma2-plugin-extensions-iptvdream
 Version:
-Description: enigma2 iptvdream plugin framework core
+Description: enigma2 iptvdream4x plugin
 Section: extra
 Priority: optional
 Maintainer: Alex Maystrenko <alexeytech@gmail.com>
