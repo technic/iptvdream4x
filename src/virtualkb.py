@@ -51,6 +51,7 @@ kbd_languages = {
 		[u"SHIFT", u"SPACE", u"?", u"\\", u"Ь", u"Б", u"Ю", u"Ъ", u"OK"]])
 }
 
+
 class VirtualKeyBoard(VirtualKeyBoard_e2):
 	def __init__(self, session, title="", text="", languages=kbd_languages.keys()):
 		self.languages = {}
