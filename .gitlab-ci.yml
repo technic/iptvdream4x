@@ -17,6 +17,15 @@ shellcheck:
     - find -name '*.sh' -print |xargs -n 1 shellcheck
   allow_failure: true
 
+shellharden:
+  image:
+    name: sbkg0002/shellharden:4.0
+    entrypoint: ["/bin/sh", "-c"]
+  script:
+    - find -name '*.sh' -print |xargs -n 1 /release/shellharden
+    - find -name '*.sh' -print |xargs -n 1 /release/shellharden --check
+  allow_failure: true
+
 .test:
   script: &test_script
     - ps ax
