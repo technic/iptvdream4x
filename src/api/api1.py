@@ -126,7 +126,7 @@ class TeleportStream(AbstractStream, TeleportAPI):
 		else:
 			return []
 	
-	def setFavourite(self, cid, fav):
+	def uploadFavourites(self, current, cid, added):
 		self.getJsonData(self.site + "/set_favorites_tv?", {'val': ','.join(map(str, self.favourites))})
 
 
