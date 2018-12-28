@@ -11,6 +11,7 @@
 
 from __future__ import print_function
 
+from functools import wraps
 from datetime import datetime, timedelta
 import time
 import re
@@ -23,6 +24,7 @@ def trace(*args):
 
 
 def timeit(f):
+	@wraps(f)
 	def wrapper(*args, **kwargs):
 		t = time.time()
 		result = f(*args, **kwargs)

@@ -12,11 +12,14 @@ from Components.config import ConfigText
 from Components.Sources.StaticText import StaticText
 from skin import colorNames, SkinError
 
+from functools import wraps
+
 # provide it from common file
 from updater import fatalError
 
 
 def safecb(callback):
+	@wraps(callback)
 	def wrapper(obj, data):
 		try:
 			obj._wantCallbacks
