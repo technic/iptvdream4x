@@ -6,6 +6,7 @@ skin/iptvdream.xml
 build/
 packages/
 *.pot
+src/keymap.xml
 # python
 *.py[cod]
 # backup files
