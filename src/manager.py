@@ -121,7 +121,7 @@ class PluginStarter(Screen):
 		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
 
 	def login(self):
-		def cb(changed):
+		def cb(changed=False):
 			if changed:
 				self.auth()
 			else:
