@@ -16,6 +16,7 @@ from Components.Sources.Boolean import Boolean
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.config import config, configfile, ConfigText, ConfigInteger, ConfigSelection, getConfigListEntry
 from Components.ConfigList import ConfigListScreen
+from Components.Sources.Source import Source
 from Components.Label import Label
 from Components.Slider import Slider
 from Components.Button import Button
@@ -44,11 +45,16 @@ from skin import parseFont, colorNames, SkinError
 # system imports
 from os import path as os_path, listdir as os_listdir, mkdir as os_mkdir
 from datetime import datetime, timedelta
+try:
+	# noinspection PyUnresolvedReferences
+	from typing import Callable, Optional, List
+except ImportError:
+	pass
 
 # plugin imports
 from layer import eTimer
 from common import StaticTextService
-from utils import trace, tdSec, secTd, syncTime, APIException, APILoginFailed, APIWrongPin
+from utils import trace, tdSec, secTd, syncTime, APIException, APILoginFailed, APIWrongPin, EPG
 from api.abstract_api import MODE_VIDEOS, MODE_STREAM, AbstractStream
 from loc import translate as _
 from common import parseColor
@@ -1136,6 +1142,43 @@ class IPtvDreamChannels(Screen):
 		return cid
 
 
+class EpgProgress(Source):
+	def __init__(self):
+		super(EpgProgress, self).__init__()
+		self._epg = None
+		self._timer = eTimer()
+		self._timer.callback.append(self.updateProgress)
+		self.onChanged = []  # type: List[Callable[[float],None]]
+
+	def setEpg(self, epg):
+		# type: (Optional[EPG]) -> None
+		self._epg = epg
+		if self._epg is not None:
+			self._timer.start(1000)
+			self.updateProgress()
+		else:
+			self._timer.stop()
+
+	def getProgress(self):
+		# type: () -> float
+		return self._epg.progress(syncTime())
+
+	def updateProgress(self):
+		for f in self.onChanged:
+			f(self.getProgress())
+
+	def doSuspend(self, suspended):
+		if suspended:
+			self._timer.stop()
+		else:
+			self._timer.start(1000)
+			self.updateProgress()
+
+	def destroy(self):
+		self._timer.stop()
+		super(EpgProgress, self).destroy()
+
+
 class IPtvDreamEpg(Screen):
 	def __init__(self, session, db, cid, shift):
 		Screen.__init__(self, session)
@@ -1152,6 +1195,10 @@ class IPtvDreamEpg(Screen):
 		self["epgDescription"] = Label()
 		self["epgTime"] = Label()
 		self["epgDuration"] = Label()
+
+		self["epgProgress"] = Slider(0, 100)
+		self["progress"] = self._progress = EpgProgress()
+		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
 
 		self["sepgName"] = Label()
 		self["sepgDescription"] = Label()
@@ -1226,6 +1273,7 @@ class IPtvDreamEpg(Screen):
 		self[s % "epgTime"].show()
 		self[s % "epgDuration"].setText("%s min" % (entry.duration() / 60))
 		self[s % "epgDuration"].show()
+		self._progress.setEpg(entry)
 
 	def hideLabels(self, s="%s"):
 		trace("hide", s)

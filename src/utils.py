@@ -124,6 +124,9 @@ class EPG(object):
 	def percent(self, t, size):
 		return size * self.timePass(t) / self.duration()
 
+	def progress(self, t):
+		return float(self.timePass(t)) / float(self.duration())
+
 	def __getitem__(self, key):
 		# print("DEPRECATED")
 		return self.__dict__[key]

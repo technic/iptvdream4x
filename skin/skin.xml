@@ -113,6 +113,7 @@
     <widget backgroundColor="#0038435a" font="Regular;22" foregroundColor="#00e5b243" halign="center" name="epgName" position="795,375" size="430,25" transparent="1"/>
     <widget backgroundColor="#0038435a" font="Regular;19" name="epgTime" position="795,405" size="145,22" transparent="1"/>
     <widget backgroundColor="#0038435a" font="Regular;19" name="epgDuration" position="945,405" size="145,22" transparent="1"/>
+    <widget name="epgProgress" position="1098,408" size="127,15" backgroundColor="#0038435a" borderColor="#00bbbbbb" borderWidth="1" transparent="1"/>
     <widget backgroundColor="#0038435a" font="Regular;18" foregroundColor="#00bbbbbb" name="epgDescription" position="795,437" size="435,170" transparent="1"/>
     <ePixmap alphatest="on" pixmap="IPtvDream/buttons/red.png" position="360,635" size="24,24"/>
     <ePixmap alphatest="on" pixmap="IPtvDream/buttons/green.png" position="650,635" size="24,24"/>
