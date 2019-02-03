@@ -46,7 +46,7 @@ class M3UProvider(OfflineFavourites):
 			raise APIException("%s playlist not found! Please copy your playlist to %s." % (self.NAME, m3u8))
 
 		import re
-		url_regexp = re.compile("https?://([\w.]+)/iptv/(\w+)/\d+/index.m3u8")
+		url_regexp = re.compile(r"https?://([\w.]+)/iptv/(\w+)/\d+/index.m3u8")
 
 		with open(m3u8) as f:
 			for line in f:
