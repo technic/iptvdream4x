@@ -837,6 +837,9 @@ class IPtvDreamChannels(Screen):
 		self["epgNextName"] = Label()
 		self["epgNextDescription"] = Label()
 
+		self["progress"] = self._progress = EpgProgress()
+		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
+
 		self["packetExpire"] = Label()
 
 		self["actions"] = ActionMap(
@@ -996,10 +999,10 @@ class IPtvDreamChannels(Screen):
 				self["epgName"].setText(curr.name)
 				self["epgName"].show()
 				self["epgTime"].show()
-				self["epgProgress"].setValue(curr.percent(syncTime(), 100))
-				self["epgProgress"].show()
 				self["epgDescription"].setText(curr.description)
 				self["epgDescription"].show()
+				self._progress.setEpg(curr)
+				self["epgProgress"].show()
 			else:
 				self.hideEpgLabels()
 			curr = channel.epgNext()
