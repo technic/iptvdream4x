@@ -676,7 +676,7 @@ class ChannelList(MenuList):
 
 	def buildChannelEntry(self, c):
 		defaultFlag = RT_HALIGN_LEFT | RT_VALIGN_CENTER
-		# Filling from left to rigth
+		# Filling from left to right
 
 		lst = [c]
 		xoffset = 1
