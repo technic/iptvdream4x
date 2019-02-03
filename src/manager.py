@@ -17,13 +17,12 @@ from Components.config import config, configfile, ConfigSubsection, ConfigSubDic
 	ConfigText, ConfigYesNo, ConfigSelection
 from Components.ActionMap import ActionMap
 from Components.Button import Button
-from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
+from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
 from Tools.Import import my_import
 from Tools.LoadPixmap import LoadPixmap
 from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER
 from Components.MenuList import MenuList
 from Screens.ChoiceBox import ChoiceBox
-from Plugins.Plugin import PluginDescriptor
 from common import ConfigNumberText
 from skin import loadSkin
 from enigma import gFont, getDesktop, gMainDC, eSize

@@ -14,9 +14,7 @@ from __future__ import print_function
 # enigma2 imports
 from Components.Sources.Boolean import Boolean
 from Components.ActionMap import ActionMap, NumberActionMap
-from Components.config import config, configfile, ConfigText, ConfigInteger, ConfigSelection, getConfigListEntry
-from Components.ConfigList import ConfigListScreen
-from Components.Sources.Source import Source
+from Components.config import config, configfile
 from Components.Label import Label
 from Components.Slider import Slider
 from Components.Button import Button
@@ -31,19 +29,17 @@ from Screens.InfoBarGenerics import NumberZap as NumberZapProxy
 from Screens.MessageBox import MessageBox
 from Screens.MinuteInput import MinuteInput
 from Screens.ChoiceBox import ChoiceBox
-from Screens.InputBox import PinInput, InputBox
-from Tools.BoundFunction import boundFunction
+from Screens.InputBox import InputBox
 from Tools.LoadPixmap import LoadPixmap
-from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
+from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC
 
 # enigma2 core imports
 from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, \
-	gFont, eLabel, eSize, ePoint, iPlayableService, ePicLoad
-from enigma import eServiceReference, iServiceInformation, eDVBDB
-from skin import parseFont, colorNames, SkinError
+	gFont, eLabel, eSize, ePoint, iPlayableService
+from enigma import eServiceReference
+from skin import parseFont
 
 # system imports
-from os import path as os_path, listdir as os_listdir, mkdir as os_mkdir
 from datetime import datetime, timedelta
 try:
 	# noinspection PyUnresolvedReferences
@@ -54,8 +50,8 @@ except ImportError:
 # plugin imports
 from layer import eTimer
 from common import StaticTextService
-from utils import trace, tdSec, secTd, syncTime, APIException, APILoginFailed, APIWrongPin, EPG
-from api.abstract_api import MODE_VIDEOS, MODE_STREAM, AbstractStream
+from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin
+from api.abstract_api import AbstractStream
 from loc import translate as _
 from common import parseColor
 from standby import standbyNotifier
