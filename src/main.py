@@ -59,6 +59,7 @@ from api.abstract_api import MODE_VIDEOS, MODE_STREAM, AbstractStream
 from loc import translate as _
 from common import parseColor
 from standby import standbyNotifier
+from lib.epg import EpgProgress
 
 SKIN_PATH = resolveFilename(SCOPE_SKIN, 'IPtvDream')
 ENIGMA_CONF_PATH = resolveFilename(SCOPE_SYSETC, 'enigma2')
@@ -1140,43 +1141,6 @@ class IPtvDreamChannels(Screen):
 		self.list.moveToIndex(idx)
 		self.history.historyAppend(self.createHistoryEntry())
 		return cid
-
-
-class EpgProgress(Source):
-	def __init__(self):
-		super(EpgProgress, self).__init__()
-		self._epg = None
-		self._timer = eTimer()
-		self._timer.callback.append(self.updateProgress)
-		self.onChanged = []  # type: List[Callable[[float],None]]
-
-	def setEpg(self, epg):
-		# type: (Optional[EPG]) -> None
-		self._epg = epg
-		if self._epg is not None:
-			self._timer.start(1000)
-			self.updateProgress()
-		else:
-			self._timer.stop()
-
-	def getProgress(self):
-		# type: () -> float
-		return self._epg.progress(syncTime())
-
-	def updateProgress(self):
-		for f in self.onChanged:
-			f(self.getProgress())
-
-	def doSuspend(self, suspended):
-		if suspended:
-			self._timer.stop()
-		else:
-			self._timer.start(1000)
-			self.updateProgress()
-
-	def destroy(self):
-		self._timer.stop()
-		super(EpgProgress, self).destroy()
 
 
 class IPtvDreamEpg(Screen):
