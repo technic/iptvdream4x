@@ -565,6 +565,7 @@ class ChannelList(MenuList):
 		self.pixmapProgressBar = None
 		self.pixmapArchive = None
 		self.itemHeight = 28
+		self.itemWidth = 0
 		self.l.setFont(0, parseFont("Regular;22", ((1, 1), (1, 1))))
 		self.l.setFont(1, parseFont("Regular;18", ((1, 1), (1, 1))))
 		self.l.setFont(2, parseFont("Regular;20", ((1, 1), (1, 1))))
