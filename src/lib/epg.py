@@ -21,7 +21,7 @@ except ImportError:
 	pass
 
 # plugin imports
-from ..utils import syncTime
+from ..utils import syncTime, EPG
 from ..layer import eTimer
 
 
