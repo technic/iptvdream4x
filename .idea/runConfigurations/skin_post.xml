@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="skin-post" type="PythonConfigurationType" factoryName="Python">
-    <module name="plugin" />
+    <module name="iptvdream-4x" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
