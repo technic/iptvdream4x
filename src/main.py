@@ -739,47 +739,48 @@ class ChannelList(MenuList):
 
 class History:
 	"""
-	:type history: list[HistoryEntry]
+	:type _history: list[HistoryEntry]
 	"""
+
 	def __init__(self, size):
-		self.history_size = size
-		self.history = []
-		self.history_idx = -1
+		self._size = size
+		self._history = []
+		self._index = -1
 
 	def isEmpty(self):
-		return len(self.history) == 0
+		return len(self._history) == 0
 
-	def historyAppend(self, val):
-		while len(self.history) > self.history_idx + 1:
-			self.history.pop()
-		self.history.append(val)
-		if len(self.history) > self.history_size:
-			self.history.pop(0)
+	def append(self, val):
+		while len(self._history) > self._index + 1:
+			self._history.pop()
+		self._history.append(val)
+		if len(self._history) > self._size:
+			self._history.pop(0)
 		else:
-			self.history_idx += 1
+			self._index += 1
 
 	def historyPrev(self):
-		if self.history_idx < 1:
+		if self._index < 1:
 			return None
 		else:
-			self.history_idx -= 1
-			return self.history[self.history_idx]
+			self._index -= 1
+			return self._history[self._index]
 
 	def historyNext(self):
-		if self.history_idx+1 == len(self.history):
+		if self._index+1 == len(self._history):
 			return None
 		else:
-			self.history_idx += 1
-			return self.history[self.history_idx]
+			self._index += 1
+			return self._history[self._index]
 
-	def historyNow(self):
-		if len(self.history):
-			return self.history[self.history_idx]
+	def now(self):
+		if len(self._history):
+			return self._history[self._index]
 		else:
 			return None
 
-	def historyPrint(self):
-		print(map(str, self.history))
+	def __repr__(self):
+		return map(str, self._history)
 
 
 class HistoryEntry(object):
@@ -879,15 +880,15 @@ class IPtvDreamChannels(Screen):
 	def start(self):
 		trace("Channels list shown")
 		if not self.history.isEmpty():
-			self.saved_state = self.history.historyNow().copy()
+			self.saved_state = self.history.now().copy()
 		else:
 			self.saved_state = None
 
 	def saveQuery(self):
 		trace("save query")
-		h = self.history.historyNow()
+		h = self.history.now()
 		if h is not None:
-			self.cfg.last_played.value = self.history.historyNow().toStr()
+			self.cfg.last_played.value = self.history.now().toStr()
 		else:
 			self.cfg.last_played.value = ""
 		self.cfg.last_played.save()
@@ -927,7 +928,7 @@ class IPtvDreamChannels(Screen):
 		else:
 			idx = self.list.getSelectedIndex()
 			cid = entry.cid
-			self.history.historyAppend(HistoryEntry(self.mode, self.gid, 0, cid, idx))
+			self.history.append(HistoryEntry(self.mode, self.gid, 0, cid, idx))
 			self.close(cid, time)
 
 	def fetchChannelsEpg(self):
@@ -1091,19 +1092,19 @@ class IPtvDreamChannels(Screen):
 		return entry and entry[0]
 
 	def getCurrent(self):
-		return self.history.historyNow().cid
+		return self.history.now().cid
 
 	def modeChannels(self):
 		return self.mode != self.GROUPS
 
 	def nextChannel(self):
 		self.list.down()
-		self.history.historyAppend(self.createHistoryEntry())
+		self.history.append(self.createHistoryEntry())
 		return self.getCurrent()
 
 	def prevChannel(self):
 		self.list.up()
-		self.history.historyAppend(self.createHistoryEntry())
+		self.history.append(self.createHistoryEntry())
 		return self.getCurrent()
 
 	def historyNext(self):
@@ -1139,7 +1140,7 @@ class IPtvDreamChannels(Screen):
 			self.fillList()
 			idx = self.findChannelIndex(cid)
 		self.list.moveToIndex(idx)
-		self.history.historyAppend(self.createHistoryEntry())
+		self.history.append(self.createHistoryEntry())
 		return cid
 
 
