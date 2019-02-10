@@ -278,7 +278,7 @@ class IPtvDreamStreamPlayer(
 		self.archive_pause = None
 		self.shift = 0
 
-	### Init and destroy
+	# Init and destroy
 
 	def start(self):
 		trace("player start")
@@ -295,7 +295,7 @@ class IPtvDreamStreamPlayer(
 				self.exit()
 		self.session.openWithCallback(cb, MessageBox, _("Exit plugin?"), MessageBox.TYPE_YESNO)
 
-	### Play
+	# Play
 
 	def play(self, cid):
 		trace("play cid =", cid)
@@ -336,7 +336,7 @@ class IPtvDreamStreamPlayer(
 
 		self.playUrl(url)
 
-	### Player
+	# Player
 
 	def playUrl(self, url):
 		cid = self.cid
@@ -365,7 +365,7 @@ class IPtvDreamStreamPlayer(
 			else:
 				self.play(self.cid)
 
-	### Archive
+	# Archive
 
 	def setArchiveShift(self, time_shift):
 		self.shift = time_shift
@@ -420,7 +420,7 @@ class IPtvDreamStreamPlayer(
 		self.setArchiveShift(0)
 		self.play(self.cid)
 
-	### EPG
+	# EPG
 
 	def epgEvent(self):
 		# first stop timers
@@ -486,7 +486,7 @@ class IPtvDreamStreamPlayer(
 		self["progressBar"].setValue(self.currentEpg.percent(time, PROGRESS_SIZE))
 		self.epgProgressTimer.start(PROGRESS_TIMER)
 
-	### Dialogs
+	# Dialogs
 
 	def showEpg(self):
 		self.session.openWithCallback(self.programSelected, IPtvDreamEpg, self.db, self.cid, self.shift)
@@ -514,7 +514,7 @@ class IPtvDreamStreamPlayer(
 	def openVod(self):
 		self.exit('vod')
 
-	### Channels
+	# Channels
 
 	def switchChannel(self, cid):
 		# FIXME: zapping breaks archive shift
@@ -549,7 +549,7 @@ class IPtvDreamStreamPlayer(
 			cid = self.channels.getCurrent()
 			self.switchChannel(cid)
 
-	### Errors
+	# Errors
 
 	def showError(self, msg):
 		self.session.open(MessageBox, msg, MessageBox.TYPE_ERROR, 5)
