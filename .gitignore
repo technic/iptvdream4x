@@ -15,3 +15,5 @@ src/keymap.xml
 .directory
 # temprorary ci file
 *.yml.tmp
+tests/secret.json
+tests/_trial_temp/
