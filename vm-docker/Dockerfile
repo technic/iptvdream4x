@@ -1,4 +1,4 @@
-FROM e2xvfb:latest
+FROM technic93/e2xvfb:latest
 
 RUN rev="acac722e25a5e2d69d60d4df6bcef701049e2b38" \
  && curl -fsSL https://github.com/littlesat/skin-PLiHD/archive/$rev.zip -o skin-PLiHD.zip \
