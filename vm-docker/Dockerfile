@@ -9,4 +9,4 @@ RUN sudo apt-get update && sudo apt-get install -y \
   gstreamer1.0-plugins-bad gstreamer1.0-libav
 
 # friendly shell
-RUN sudo apt-get install -y bash-completion command-not-found psmisc
+RUN sudo apt-get install -y bash-completion command-not-found psmisc htop
