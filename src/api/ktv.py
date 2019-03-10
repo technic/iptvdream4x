@@ -100,14 +100,16 @@ class KtvStream(OfflineFavourites, KartinaAPI):
 		data = self.getJsonData(self.site + "/epg_current?", params, "getting epg of cids = %s" % cids)
 		for channel in data['epg']:
 			cid = int(channel['cid'])
+			programs = []
 			e = None
 			for p in channel['epg']:
 				t = int(p['ts'])
 				name, desc = self.parseName(p['progname'].encode('utf-8'))
 				if e is not None:
 					t_start, name, desc = e
-					yield cid, EPG(t_start, t, name, desc)
+					programs.append(EPG(t_start, t, name, desc))
 				e = (t, name, desc)
+			yield cid, programs
 
 	def getDayEpg(self, cid, date):
 		date = datetime(date.year, date.month, date.day)

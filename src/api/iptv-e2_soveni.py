@@ -140,8 +140,6 @@ class OTTProvider(OfflineFavourites):
 		data = self.getJsonData(self.site + "/epg_list?", {"time": syncTime().strftime("%s")})
 		for c in data['data']:
 			cid = c['channel_id']
-			for e in c['programs']:
-				epg = EPG(
-						int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
-						e['description'].encode('utf-8'))
-				yield (cid, epg)
+			yield cid, map(lambda e: EPG(
+				int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
+				e['description'].encode('utf-8')), c['programs'])

@@ -68,9 +68,9 @@ class OTTProvider(AbstractStream):
 	def getChannelsEpg(self, cids):
 		data = self.getJsonData(self.site + "/epg_next2?", {"cids": ",".join(map(str, cids))})
 		for e in data['epg']:
-			yield int(e['chid']), EPG(
+			yield int(e['chid']), [EPG(
 				int(e['start']), int(e['end']),
-				e['progname'].encode('utf-8'), e['description'].encode('utf-8'))
+				e['progname'].encode('utf-8'), e['description'].encode('utf-8'))]
 
 	def getCurrentEpg(self, cid):
 		data = self.getJsonData(self.site + "/epg_next2?", {"cid": cid})

@@ -95,12 +95,14 @@ class TeleportStream(AbstractStream, TeleportAPI):
 		data = self.getJsonData(self.site+"/get_epg_current?", params)
 		for c in data['channels']:
 			cid = c['id']
+			programs = []
 			for e in c['current'], c['next']:
 				try:
-					yield cid, self.epgEntry(e)
+					programs.append(self.epgEntry(e))
 				except (KeyError, TypeError) as e:
 					self.trace(e)
 					continue
+			yield (cid, programs)
 
 	def getCurrentEpg(self, cid):
 		return self.getChannelsEpg([cid])

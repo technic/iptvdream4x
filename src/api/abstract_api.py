@@ -198,9 +198,9 @@ class AbstractStream(AbstractAPI):
 		self.uploadFavourites(self.favourites, cid, False)
 
 	def loadChannelsEpg(self, cids):
-		for cid, program in self.getChannelsEpg(cids):
+		for cid, programs in self.getChannelsEpg(cids):
 			try:
-				self.channels[cid].addEpg(program)
+				self.channels[cid].addEpgSorted(programs)
 			except KeyError:
 				self.trace("unknown channel", cid)
 	
@@ -262,7 +262,7 @@ class AbstractStream(AbstractAPI):
 	def getChannelsEpg(self, cids):
 		"""
 		:param list[int] cids: list of channel ids
-		:rtype: list[(int, EPG)]
+		:rtype: list[(int, list[EPG])]
 		"""
 		return []
 

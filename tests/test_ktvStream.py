@@ -32,9 +32,10 @@ class TestKtvStream(TestCase):
     def test_getChannelsEpg(self):
         self._db.setChannelsList()
         for entry in self._db.getChannelsEpg(self._db.channels.keys()):
-            cid, program = entry
+            cid, programs = entry
             self.assertIsInstance(cid, int)
-            self.assertIsInstance(program, EPG)
+            self.assertIsInstance(programs, list)
+            self.assertTrue(all(isinstance(p, EPG) for p in programs))
 
     def test_getDayEpg(self):
         self._db.setChannelsList()
