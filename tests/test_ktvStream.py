@@ -20,8 +20,7 @@ from datetime import datetime
 class TestKtvStream(TestCase):
     def setUp(self):
         import os
-        print('DIR', os.getcwd())
-        with open('../secret.json') as f:
+        with open(os.path.join(os.path.dirname(__file__), 'secret.json')) as f:
             secret = json.load(f)['kartina']
         self._db = OTTProvider(secret['user'], secret['pass'])
 
