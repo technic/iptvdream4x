@@ -65,13 +65,21 @@ class M3UProvider(OfflineFavourites):
 			raise APIException("Failed to parse %s playlist located at %s." % (self.NAME, m3u8))
 
 	def setChannelsList(self):
+		self._downloadTvgMap()
 		try:
-			if self.TVG_MAP:
-				self.tvg_map = json_loads(self.readHttp(self.site + "/channels"))['data']
 			self._parsePlaylist(self.readHttp(self.playlist_url).split('\n'))
 		except IOError as e:
-			self.trace("error!", e)
+			self.trace("error!", e, type(e))
 			raise APIException(e)
+
+	def _downloadTvgMap(self):
+		self.tvg_map = {}
+		if self.TVG_MAP:
+			try:
+				self.tvg_map = json_loads(self.readHttp(self.site + "/channels"))['data']
+			except IOError as e:
+				self.trace("error!", e)
+				raise APIException(e)
 
 	def _parsePlaylist(self, lines):
 		group_names = {}

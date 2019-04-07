@@ -12,10 +12,13 @@ from __future__ import print_function
 
 # plugin imports
 from m3u import M3UProvider
+from ..utils import APIException, APILoginFailed
+from urllib2 import HTTPError
 
 
 class OTTProvider(M3UProvider):
 	NAME = "KingModIPTV"
+	HAS_LOGIN = True
 	TVG_MAP = True
 
 	def __init__(self, username, password):
@@ -24,5 +27,20 @@ class OTTProvider(M3UProvider):
 		self.playlist = ""
 		self.playlist_url = "http://pl.kingmodiptv.top/%s/%s/tv.m3u" % (username, password)
 
-	def start(self):
+	def setChannelsList(self):
+		# Channels are downloaded during start, to allow handling login exceptions
 		pass
+
+	def start(self):
+		self._downloadTvgMap()
+		try:
+			self._parsePlaylist(self.readHttp(self.playlist_url).split('\n'))
+		except HTTPError as e:
+			self.trace("HTTPError:", e, type(e), e.getcode())
+			if e.code == 404:
+				raise APILoginFailed(e)
+			else:
+				raise APIException(e)
+		except IOError as e:
+			self.trace("IOError:", e, type(e))
+			raise APIException(e)
