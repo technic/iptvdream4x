@@ -10,19 +10,21 @@
 
 from __future__ import print_function
 
-from unittest import TestCase
-from src.api.kartina import OTTProvider
+from twisted.trial.unittest import TestCase
 from src.utils import Group, Channel, EPG
+from src.api.abstract_api import AbstractStream
 import json
 from datetime import datetime
 
 
-class TestKtvStream(TestCase):
+class TestOTTProvider(TestCase):
+    ProviderClass = None
+
     def setUp(self):
         import os
         with open(os.path.join(os.path.dirname(__file__), 'secret.json')) as f:
-            secret = json.load(f)['kartina']
-        self._db = OTTProvider(secret['user'], secret['pass'])
+            secret = json.load(f)[self.ProviderClass.NAME]
+        self._db = self.ProviderClass(secret['user'], secret['pass'])  # type: AbstractStream
 
     def test_setChannelsList(self):
         self._db.setChannelsList()
@@ -30,6 +32,7 @@ class TestKtvStream(TestCase):
             self.assertIsInstance(g, Group)
         for c in self._db.selectAll():
             self.assertIsInstance(c, Channel)
+        print(self._db.selectAll())
 
     def test_getStreamUrl(self):
         self._db.setChannelsList()
