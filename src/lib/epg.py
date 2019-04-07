@@ -36,7 +36,7 @@ class EpgProgress(Source):
 	def setEpg(self, epg):
 		# type: (Optional[EPG]) -> None
 		self._epg = epg
-		if self._epg is not None:
+		if self._epg is not None and self._epg.duration() > 0:
 			self._timer.start(1000)
 			self.updateProgress()
 		else:
