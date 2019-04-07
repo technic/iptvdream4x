@@ -37,7 +37,7 @@ class OTTProvider(M3UProvider):
 			self._parsePlaylist(self.readHttp(self.playlist_url).split('\n'))
 		except HTTPError as e:
 			self.trace("HTTPError:", e, type(e), e.getcode())
-			if e.code == 404:
+			if e.code in (403, 404):
 				raise APILoginFailed(e)
 			else:
 				raise APIException(e)
