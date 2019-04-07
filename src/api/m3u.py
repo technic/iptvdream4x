@@ -15,12 +15,15 @@ import os
 
 # plugin imports
 from abstract_api import OfflineFavourites
+from json import loads as json_loads
 from ..utils import syncTime, APIException, EPG, Channel, Group
 
 
 class M3UProvider(OfflineFavourites):
-	NAME = "EdemTV"
+	NAME = "M3U"
 	HAS_LOGIN = False
+
+	TVG_MAP = False  # True if tvg-id are non-numerical and we need to get map from server
 
 	def __init__(self, username, password):
 		super(M3UProvider, self).__init__(username, password)
@@ -31,6 +34,7 @@ class M3UProvider(OfflineFavourites):
 		self.channels = {}
 		self.groups = {}
 		self.channels_data = {}
+		self.tvg_map = {}
 		self._domain = ''
 		self._key = ''
 
@@ -60,7 +64,10 @@ class M3UProvider(OfflineFavourites):
 		if not (self._domain and self._key):
 			raise APIException("Failed to parse %s playlist located at %s." % (self.NAME, m3u8))
 
+	def setChannelsList(self):
 		try:
+			if self.TVG_MAP:
+				self.tvg_map = json_loads(self.readHttp(self.site + "/channels"))['data']
 			self._parsePlaylist(self.readHttp(self.playlist_url).split('\n'))
 		except IOError as e:
 			self.trace("error!", e)
@@ -84,7 +91,16 @@ class M3UProvider(OfflineFavourites):
 				name = line.strip().split(',')[1]
 				m = tvg_regexp.match(line)
 				if m:
-					cid = int(m.group(1))
+					if self.tvg_map:
+						k = unicode(m.group(1))
+						try:
+							cid = self.tvg_map[k]
+							# print("found", cid, "for", k)
+						except KeyError:
+							cid = None
+							self.trace("unknown tvg-id", k)
+					else:
+						cid = int(m.group(1))
 				else:
 					cid = None
 				m = group_regexp.match(line)
@@ -115,6 +131,7 @@ class M3UProvider(OfflineFavourites):
 				g.channels.append(c)
 				self.channels_data[cid] = {'tvg': cid, 'url': url}
 
+		self.trace("Loaded {} channels".format(len(self.channels)))
 		# all_ch = sorted(self.channels.values(), key=lambda k: getattr(k, 'number'))
 		# self.groups[-1] = Group(gid=-1, title=_("All channels"), channels=all_ch)
 		# self.groups[-2] = Group(gid=-2, title=_("Favourites"), channels=[])
