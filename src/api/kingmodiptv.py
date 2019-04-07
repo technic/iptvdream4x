@@ -27,4 +27,3 @@ class OTTProvider(M3UProvider):
 
 	def start(self):
 		pass
-
