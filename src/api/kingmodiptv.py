@@ -12,7 +12,6 @@ from __future__ import print_function
 
 # plugin imports
 from m3u import M3UProvider
-from utils import APIException
 
 
 class OTTProvider(M3UProvider):
