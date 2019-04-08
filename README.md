@@ -2,6 +2,7 @@
 [![](https://img.shields.io/bitbucket/pipelines/iptvdream/iptvdream-4x.svg)](https://bitbucket.org/iptvdream/iptvdream-4x/addon/pipelines/home)
 
 Плагин для просмотра iptv на ресивирах с enigma2.
+*NO WARRANTIES[*](#markdown-header-no-warranties) (Отказ от ответсвенности)[*](#markdown-header-no-warranties)*.
 
 [![](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/iptvdream4x)
 
@@ -114,3 +115,23 @@
 ## 4.3
 
 - Первая версия 4X
+
+
+# *NO WARRANTIES.
+*Authors are not responsible for the media streams content which one can access with this plugin.*
+The plugin serves as an advanced media player.
+The software provides graphical user interface to see teleguide and watch OTT media streams.
+REST API implementation for specific media providers are contributed in the open source manner.
+When using this plugin user is responsible to check that content from the corresponding provider
+does not violate any international and local laws including copyright laws.
+See `LICENSE` file for more info.
+
+
+# *ОТКАЗ ОТ ОТВЕТСВЕННОСТИ.
+*Авторы не несут ответсвенности за медиа потоки доступные через этот плагин.*
+Плагин является медиаплеером с расширенными возможностями.
+Это програмное обеспечение предоставляет графический интерфейс для доступа к программе телепередач и OTT медиа потокам.
+Имплементации REST API для конкретных медиа провайдеров вносятся в рамках проэкта с открытым исходным кодом.
+При использовании плагина пользователь должен удостоверится что медиа контент соответсвующего провайдера
+не нарушает международных и местных законов включае законы о защите авторских прав.
+Смотрите файл `LICENSE` для более детальной информации.
