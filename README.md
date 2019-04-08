@@ -1,4 +1,5 @@
 # IPtvDream 4X
+[![](https://img.shields.io/bitbucket/pipelines/iptvdream/iptvdream-4x.svg)](https://bitbucket.org/iptvdream/iptvdream-4x/addon/pipelines/home)
 
 Плагин для просмотра iptv на ресивирах с enigma2.
 
