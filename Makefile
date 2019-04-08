@@ -57,6 +57,14 @@ datainstall := $(patsubst src/%,$(plugindir)/%,$(datafiles))
 $(datainstall): $(plugindir)/%: src/%
 	install -D -m644 $< $@
 
+$(plugindir)/LICENSE: LICENSE
+	install -D -m644 $< $@
+
+$(plugindir)/README.md: README.md
+	install -D -m644 $< $@
+
+install: $(plugindir)/LICENSE $(plugindir)/README.md
+
 
 skinfiles := $(shell find skin/ -name *.png) skin/iptvdream.xml
 skininstall := $(patsubst skin/%,$(skindir)/%,$(skinfiles))
