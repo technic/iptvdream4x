@@ -808,7 +808,7 @@ class HistoryEntry(object):
 class IPtvDreamChannels(Screen):
 	"""
 	:type db: AbstractStream
-	:type saved_state: HistoryEntry
+	:type saved_state: Optional[HistoryEntry]
 	"""
 
 	GROUPS, ALL, GROUP, FAV = range(4)
