@@ -13,12 +13,13 @@ from __future__ import print_function
 from twisted.trial.unittest import TestCase
 from src.utils import Group, Channel, EPG
 from src.api.abstract_api import AbstractStream
+from typing import Type
 import json
 from datetime import datetime
 
 
 class TestOTTProvider(TestCase):
-    ProviderClass = None  # type Type[AbstractStream]
+    ProviderClass = None  # type: Type[AbstractStream]
 
     def setUp(self):
         import os
