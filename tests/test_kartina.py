@@ -10,7 +10,7 @@
 
 from __future__ import print_function
 
-from test_OTTProvider import TestOTTProvider
+from ott_provider import TestOTTProvider
 from src.api.kartina import OTTProvider
 
 

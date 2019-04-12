@@ -18,7 +18,7 @@ from datetime import datetime
 
 
 class TestOTTProvider(TestCase):
-    ProviderClass = None
+    ProviderClass = None  # type Type[AbstractStream]
 
     def setUp(self):
         import os
