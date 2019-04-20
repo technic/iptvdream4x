@@ -3,6 +3,21 @@
   <output id="0">
     <resolution xres="1280" yres="720" bpp="32"/>
   </output>
+  <windowstyle type="skinned" id="0">
+    <title offset="33,14" font="Regular;20"/>
+    <color name="Background" color="#25062748"/>
+    <color name="LabelForeground" color="#00ffffff"/>
+    <color name="ListboxBackground" color="#25062748"/>
+    <color name="ListboxForeground" color="#00ffffff"/>
+    <color name="ListboxSelectedBackground" color="#254f7497"/>
+    <color name="ListboxSelectedForeground" color="#00ffffff"/>
+    <color name="ListboxMarkedBackground" color="#00ff0000"/>
+    <color name="ListboxMarkedForeground" color="#00ffffff"/>
+    <color name="ListboxMarkedAndSelectedBackground" color="#ff800000"/>
+    <color name="ListboxMarkedAndSelectedForeground" color="#ffffffff"/>
+    <color name="WindowTitleForeground" color="#00ffffff"/>
+    <color name="WindowTitleBackground" color="#25062748"/>
+  </windowstyle>
   <fonts/>
   <colors>
     <color name="bg" value="#0004030c"/>
