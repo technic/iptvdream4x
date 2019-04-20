@@ -127,6 +127,9 @@ class EPG(object):
 	def progress(self, t):
 		return float(self.timePass(t)) / float(self.duration())
 
+	def isAt(self, t):
+		return self.begin <= t < self.end
+
 	def __getitem__(self, key):
 		# print("DEPRECATED")
 		return self.__dict__[key]

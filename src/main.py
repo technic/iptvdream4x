@@ -12,10 +12,12 @@
 from __future__ import print_function
 
 # enigma2 imports
+from Components.Sources.List import List as ListSource
 from Components.Sources.Boolean import Boolean
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.config import config, configfile
 from Components.Label import Label
+from Components.ScrollLabel import ScrollLabel
 from Components.Slider import Slider
 from Components.Button import Button
 from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
@@ -1150,11 +1152,7 @@ class IPtvDreamEpg(Screen):
 
 		self["key_red"] = Button(_("Archive"))
 		self["key_green"] = Button(_("Details"))
-		self.list = MenuList([], content=eListboxPythonMultiContent)
-		self.list.l.setFont(0, gFont("Regular", 20))
-		self.list.l.setFont(1, gFont("Regular", 20))
-		self.list.l.setItemHeight(28)
-		self["list"] = self.list
+		self["list"] = self.list = ListSource()
 
 		self["epgName"] = Label()
 		self["epgDescription"] = Label()
@@ -1165,18 +1163,13 @@ class IPtvDreamEpg(Screen):
 		self["progress"] = self._progress = EpgProgress()
 		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
 
-		self["sepgName"] = Label()
-		self["sepgDescription"] = Label()
-		self["sepgTime"] = Label()
-		self["sepgDuration"] = Label()
-
 		self["actions"] = ActionMap(
 			["OkCancelActions", "IPtvDreamEpgListActions", "ColorActions"], {
 				"cancel": self.exit,
 				"ok": self.archive,
 				"nextDay": self.nextDay,
 				"prevDay": self.prevDay,
-				"green": self.showSingle,
+				"green": self.showInfo,
 				"red": self.archive
 			}, -1)
 
@@ -1189,23 +1182,17 @@ class IPtvDreamEpg(Screen):
 		self.onLayoutFinish.append(self.fillList)
 
 	def buildEpgEntry(self, entry):
-		res = [
-			entry,
-			(eListboxPythonMultiContent.TYPE_TEXT, 18, 2, 40, 22, 0, RT_HALIGN_LEFT, _(entry.begin.strftime('%a'))),
-			(eListboxPythonMultiContent.TYPE_TEXT, 62, 2, 90, 22, 0, RT_HALIGN_LEFT, entry.begin.strftime('%H:%M')),
-			(eListboxPythonMultiContent.TYPE_TEXT, 140, 2, 585, 24, 1, RT_HALIGN_LEFT, entry.name)]
 		if self.db.channels[self.cid].has_archive and entry.begin < syncTime():
-			res += [(eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, 0, 5, 16, 16, rec_png)]
-		return res
+			pixmap = rec_png
+		else:
+			pixmap = None
+		return entry, pixmap, entry.begin.strftime('%a'), entry.begin.strftime('%H:%M'), entry.name
 
 	def fillList(self):
 		if self.cid is None:
 			return
-		self.hideLabels("s%s")
-		self.list.show()
 
 		d = syncTime()+secTd(self.shift)+timedelta(self.day)
-
 		epg_list = self.db.channels[self.cid].epgDay(d)
 		if len(epg_list) == 0:
 			try:
@@ -1216,44 +1203,25 @@ class IPtvDreamEpg(Screen):
 
 		self.list.setList(map(self.buildEpgEntry, epg_list))
 		self.setTitle("EPG / %s / %s %s" % (self.db.channels[self.cid].name, d.strftime("%d"), _(d.strftime("%b"))))
-		self.list.moveToIndex(0)
+		self.list.setIndex(0)
 		e = self.db.channels[self.cid].epgCurrent(d)
 		if e and self.day == 0:
 			try:
-				self.list.moveToIndex(epg_list.index(e))
+				self.list.setIndex(epg_list.index(e))
 			except ValueError:
 				trace("epgCurrent at other date!")
 
-	def updateLabels(self, s="%s"):
+	def updateLabels(self):
 		entry = self.list.getCurrent()
 		if not entry:
 			return
 
 		entry = entry[0]
-		self[s % "epgName"].setText(entry.name)
-		self[s % "epgTime"].setText(entry.begin.strftime("%d.%m %H:%M"))
-		self[s % "epgDescription"].setText(entry.description)
-		self[s % "epgDescription"].show()
-		self[s % "epgName"].show()
-		self[s % "epgTime"].show()
-		self[s % "epgDuration"].setText("%s min" % (entry.duration() / 60))
-		self[s % "epgDuration"].show()
+		self["epgName"].setText(entry.name)
+		self["epgTime"].setText(entry.begin.strftime("%d.%m %H:%M"))
+		self["epgDescription"].setText(entry.description)
+		self["epgDuration"].setText("%s min" % (entry.duration() / 60))
 		self._progress.setEpg(entry)
-
-	def hideLabels(self, s="%s"):
-		trace("hide", s)
-		self[s % "epgName"].hide()
-		self[s % "epgTime"].hide()
-		self[s % "epgDuration"].hide()
-		self[s % "epgDescription"].hide()
-
-	def showSingle(self):
-		if not self.single:
-			self["key_green"].setText("")
-			self.single = True
-			self.hideLabels()
-			self.list.hide()
-			self.updateLabels("s%s")
 
 	def archive(self):
 		entry = self.list.getCurrent()
@@ -1263,27 +1231,59 @@ class IPtvDreamEpg(Screen):
 		if self.db.channels[self.cid].has_archive:
 			self.close(self.cid, entry.begin)
 
+	def showInfo(self):
+		entry = self.list.getCurrent()
+		if not entry:
+			return
+		entry = entry[0]
+		self.session.open(IPtvDreamEpgInfo, self.db.channels[self.cid], entry)
+
 	def exit(self):
-		# If single view then go to list. Else close all
-		if self.single:
-			self.single = False
-			self["key_green"].setText(_("Details"))
-			self.fillList()
-			self.updateLabels()
-		else:
-			self.close()
+		self.close()
 
 	def nextDay(self):
-		if self.single:
-			return
 		self.day += 1
 		self.fillList()
 
 	def prevDay(self):
-		if self.single:
-			return
 		self.day -= 1
 		self.fillList()
+
+
+class IPtvDreamEpgInfo(Screen):
+	def __init__(self, session, channel, entry):
+		"""
+		Screen to show information for single EPG entry
+		:type entry: utils.EPG
+		:type channel: utils.Channel
+		"""
+		Screen.__init__(self, session)
+		self.entry = entry
+		self.channel = channel
+
+		self.setTitle("%d. %s" % (channel.number, channel.name))
+		self["epgName"] = Label(entry.name)
+		self["epgDescription"] = ScrollLabel(entry.description)
+		self["epgTime"] = Label(entry.begin.strftime("%H:%M"))
+		self["epgDate"] = Label(entry.begin.strftime("%d.%m.%Y"))
+		t = syncTime()
+		if entry.isAt(t):
+			self["epgDuration"] = Label("+%s min" % (entry.timeLeft(t) / 60))
+		else:
+			self["epgDuration"] = Label("%s min" % (entry.duration() / 60))
+
+		self["epgProgress"] = Slider(0, 100)
+		self["progress"] = self._progress = EpgProgress()
+		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
+		self.onLayoutFinish.append(self.initGui)
+
+		self["actions"] = ActionMap(["OkCancelActions"], {
+			"cancel": self.close,
+			"ok": self.close,
+		}, -1)
+
+	def initGui(self):
+		self._progress.setEpg(self.entry)
 
 
 # gettext HACK:
