@@ -1264,7 +1264,7 @@ class IPtvDreamEpgInfo(Screen):
 		self.setTitle("%d. %s" % (channel.number, channel.name))
 		self["epgName"] = Label(entry.name)
 		self["epgDescription"] = ScrollLabel(entry.description)
-		self["epgTime"] = Label(entry.begin.strftime("%H:%M"))
+		self["epgTime"] = Label(entry.begin.strftime("%a %H:%M"))
 		self["epgDate"] = Label(entry.begin.strftime("%d.%m.%Y"))
 		t = syncTime()
 		if entry.isAt(t):
@@ -1277,9 +1277,11 @@ class IPtvDreamEpgInfo(Screen):
 		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
 		self.onLayoutFinish.append(self.initGui)
 
-		self["actions"] = ActionMap(["OkCancelActions"], {
+		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions"], {
 			"cancel": self.close,
 			"ok": self.close,
+			"up": self["epgDescription"].pageUp,
+			"down": self["epgDescription"].pageDown
 		}, -1)
 
 	def initGui(self):
