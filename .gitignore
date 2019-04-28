@@ -16,4 +16,5 @@ src/keymap.xml
 # temprorary ci file
 *.yml.tmp
 tests/secret.json
-_trial_temp
+# Twisted tests
+_trial_temp*
