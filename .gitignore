@@ -9,6 +9,7 @@ packages/
 src/keymap.xml
 # python
 *.py[cod]
+.venv/
 # backup files
 *~
 # linux stuff
