@@ -1266,15 +1266,10 @@ class IPtvDreamEpgInfo(Screen):
 		self["epgDescription"] = ScrollLabel(entry.description)
 		self["epgTime"] = Label(entry.begin.strftime("%a %H:%M"))
 		self["epgDate"] = Label(entry.begin.strftime("%d.%m.%Y"))
-		t = syncTime()
-		if entry.isAt(t):
-			self["epgDuration"] = Label("+%s min" % (entry.timeLeft(t) / 60))
-		else:
-			self["epgDuration"] = Label("%s min" % (entry.duration() / 60))
-
+		self["epgDuration"] = Label()
 		self["epgProgress"] = Slider(0, 100)
 		self["progress"] = self._progress = EpgProgress()
-		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
+		self._progress.onChanged.append(self.updateProgress)
 		self.onLayoutFinish.append(self.initGui)
 
 		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions"], {
@@ -1287,6 +1282,13 @@ class IPtvDreamEpgInfo(Screen):
 	def initGui(self):
 		self._progress.setEpg(self.entry)
 
+	def updateProgress(self, value):
+		t = syncTime()
+		if self.entry.isAt(t):
+			self["epgDuration"] = Label("+%s min" % (self.entry.timeLeft(t) / 60))
+		else:
+			self["epgDuration"] = Label("%s min" % (self.entry.duration() / 60))
+		self["epgProgress"].setValue(int(100 * value))
 
 # gettext HACK:
 # [_("Jan"), _("Feb"), _("Mar"), _("Apr"), _("May"), _("Jun"), _("Jul"), _("Aug"), _("Sep"), _("Oct"), _("Nov") ]
