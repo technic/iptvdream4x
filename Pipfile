@@ -4,6 +4,10 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pep8 = "*"
+typing = "*"
+pylint = "<2.0.0"
+pipenv = "*"
 
 [packages]
 attrs = "==18.2.0"

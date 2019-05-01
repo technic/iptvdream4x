@@ -3,6 +3,7 @@
 """
 read colors section from the skin header and replace all screens colors with explicit hex values
 """
+from __future__ import print_function
 
 import sys
 from xml.etree.ElementTree import ElementTree, Element
