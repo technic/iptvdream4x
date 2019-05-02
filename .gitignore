@@ -19,3 +19,12 @@ src/keymap.xml
 tests/secret.json
 # Twisted tests
 _trial_temp*
+
+# JetBrains IDE
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+.idea/shelf
+.idea/dbnavigator.xml
+.idea/codeStyles
