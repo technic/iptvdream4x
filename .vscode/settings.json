@@ -1,0 +1,21 @@
+{
+    "python.pythonPath": ".venv\\Scripts\\python.exe",
+    "python.testing.pyTestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./tests",
+        "-p",
+        "test_*.py"
+    ],
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintArgs":[],
+    "python.linting.enabled": true,
+    "cSpell.words": [
+        "iptv",
+        "rtype"
+    ],
+    "python.linting.pep8Enabled": false
+}

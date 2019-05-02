@@ -8,5 +8,9 @@ RUN sudo apt-get update && sudo apt-get install -y \
   gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
   gstreamer1.0-plugins-bad gstreamer1.0-libav
 
-# friendly shell
-RUN sudo apt-get install -y bash-completion command-not-found psmisc htop
+RUN sudo apt-get install -y bash-completion command-not-found psmisc htop vim
+
+RUN sudo pip install ptvsd
+EXPOSE 5678
+COPY mytest-ptvsd.py /opt/mytest-ptvsd.py
+CMD [ "x11vnc", "-forever" ]
