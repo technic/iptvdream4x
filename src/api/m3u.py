@@ -12,6 +12,7 @@ from __future__ import print_function
 
 # system imports
 import os
+from time import mktime
 
 # plugin imports
 from abstract_api import OfflineFavourites
@@ -33,12 +34,17 @@ class M3UProvider(OfflineFavourites):
 		self.playlist_url = ""
 		self.channels = {}
 		self.groups = {}
+		# map from channel ids in playlist to epg server ids
 		self.channels_data = {}
+		# map from xmltv keys to epg server ids 
 		self.tvg_map = {}
+		# map from epg server ids to channel ids
+		self.tvg_ids = {}
 		self._domain = ''
 		self._key = ''
 
-	def start(self):
+	def _locatePlaylist(self):
+		"""Returns path to the playlist file"""
 		try:
 			from Tools.Directories import resolveFilename, SCOPE_SYSETC
 			path = resolveFilename(SCOPE_SYSETC, 'iptvdream')
@@ -48,10 +54,13 @@ class M3UProvider(OfflineFavourites):
 		m3u8 = os.path.join(path, self.playlist)
 		if not os.path.exists(m3u8):
 			raise APIException("%s playlist not found! Please copy your playlist to %s." % (self.NAME, m3u8))
+		return m3u8
 
+	def start(self):
 		import re
 		url_regexp = re.compile(r"https?://([\w.]+)/iptv/(\w+)/\d+/index.m3u8")
 
+		m3u8 = self._locatePlaylist()
 		with open(m3u8) as f:
 			for line in f:
 				line = line.strip()
@@ -82,16 +91,18 @@ class M3UProvider(OfflineFavourites):
 				raise APIException(e)
 
 	def _parsePlaylist(self, lines):
+		self.tvg_ids = {}
 		group_names = {}
 		num = 0
 
 		name = ""
 		group = "Unknown"
-		cid = None
+		tvg = None
 
 		import re
 		tvg_regexp = re.compile('#EXTINF:.*tvg-id="([^"]*)"')
 		group_regexp = re.compile('#EXTINF:.*group-title="([^"]*)"')
+		url_regexp = re.compile(r"https?://[\w.]+/iptv/\w+/(\d+)/index.m3u8")
 
 		for line in lines:
 			# print(line)
@@ -102,15 +113,14 @@ class M3UProvider(OfflineFavourites):
 					if self.tvg_map:
 						k = unicode(m.group(1))
 						try:
-							cid = self.tvg_map[k]
-							# print("found", cid, "for", k)
+							tvg = self.tvg_map[k]
 						except KeyError:
-							cid = None
+							tvg = None
 							self.trace("unknown tvg-id", k)
 					else:
-						cid = int(m.group(1))
+						tvg = int(m.group(1))
 				else:
-					cid = None
+					tvg = None
 				m = group_regexp.match(line)
 				if m:
 					group = m.group(1)
@@ -122,7 +132,7 @@ class M3UProvider(OfflineFavourites):
 				continue
 			elif not line.strip():
 				continue
-			elif cid is not None:
+			else:
 				url = line.strip().replace("localhost", self._domain).replace("00000000000000", self._key)
 				assert url.find("://") > 0, "line: " + url
 				try:
@@ -132,13 +142,24 @@ class M3UProvider(OfflineFavourites):
 					gid = len(group_names)
 					group_names[group] = gid
 					g = self.groups[gid] = Group(gid, group.decode('utf-8').capitalize().encode('utf-8'), [])
-
-				num += 1
-				c = Channel(cid, gid, name, num, True)
-				self.channels[cid] = c
-				g.channels.append(c)
-				self.channels_data[cid] = {'tvg': cid, 'url': url}
-
+				
+				m = url_regexp.match(line)
+				if m:
+					cid = int(m.group(1))
+					num += 1
+					c = Channel(cid, gid, name, num, True)
+					self.channels[cid] = c
+					g.channels.append(c)
+					self.channels_data[cid] = {'tvg': tvg, 'url': url}
+					if tvg is not None:
+						try:
+							self.tvg_ids[tvg].append(cid)
+						except KeyError:
+							self.tvg_ids[tvg] = [cid]
+				else:
+					self.trace("Failed to parse url:", line)
+					continue
+		
 		self.trace("Loaded {} channels".format(len(self.channels)))
 		# all_ch = sorted(self.channels.values(), key=lambda k: getattr(k, 'number'))
 		# self.groups[-1] = Group(gid=-1, title=_("All channels"), channels=all_ch)
@@ -159,9 +180,16 @@ class M3UProvider(OfflineFavourites):
 				e['title'].encode('utf-8'), e['description'].encode('utf-8')), data['data'])
 
 	def getChannelsEpg(self, cids):
-		data = self.getJsonData(self.site + "/epg_list?", {"time": syncTime().strftime("%s")})
+		t = mktime(syncTime().timetuple())
+		data = self.getJsonData(self.site + "/epg_list?", {"time": int(t)})
 		for c in data['data']:
-			cid = c['channel_id']
-			yield cid, map(lambda e: EPG(
-				int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
-				e['description'].encode('utf-8')), c['programs'])
+			tvg = c['channel_id']
+			try:
+				cids = self.tvg_ids[tvg]
+			except KeyError:
+				# self.trace("Unknown teleguide id", tvg)
+				continue
+			for cid in self.tvg_ids[tvg]:
+				yield cid, map(lambda e: EPG(
+					int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
+					e['description'].encode('utf-8')), c['programs'])
