@@ -10,6 +10,7 @@ src/keymap.xml
 # python
 *.py[cod]
 .venv/
+__pycache__/
 # backup files
 *~
 # linux stuff
