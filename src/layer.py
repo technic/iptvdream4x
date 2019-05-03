@@ -4,13 +4,17 @@
 
 from __future__ import print_function
 
-from enigma import eTimer as eTimerEnigma
+try:
+	from enigma import eTimer as eTimerEnigma
+except ImportError as ex:
+	print("Assuming test environment due to exception:", ex)
+	from tests.timer import eTimerTwisted as eTimerEnigma
 
 if hasattr(eTimerEnigma, 'callback'):
 	print("[IPtvDream] enigma2 SigC")
 	enigma2Qt = False
 	eTimer = eTimerEnigma
-else:
+elif hasattr(eTimerEnigma, 'timeout'):
 	print("[IPtvDream] enigma2 Qt")
 	enigma2Qt = True
 
@@ -23,6 +27,11 @@ else:
 		def fire(self):
 			for f in self.callback:
 				f()
+
+else:
+	print("[IPtvDream] enigma2 Mock")
+	enigma2Qt = False
+	eTimer = eTimerEnigma
 
 
 try:
