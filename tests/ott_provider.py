@@ -26,6 +26,7 @@ class TestOTTProvider(TestCase):
         with open(os.path.join(os.path.dirname(__file__), 'secret.json')) as f:
             secret = json.load(f)[self.ProviderClass.NAME]
         self._db = self.ProviderClass(secret['user'], secret['pass'])  # type: AbstractStream
+        self._db.start()
 
     def test_setChannelsList(self):
         self._db.setChannelsList()
