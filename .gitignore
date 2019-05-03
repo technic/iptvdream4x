@@ -10,6 +10,7 @@ src/keymap.xml
 # python
 *.py[cod]
 .venv/
+.ropeproject/
 __pycache__/
 # backup files
 *~
