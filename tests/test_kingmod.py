@@ -10,9 +10,9 @@
 
 from __future__ import print_function
 
-from ott_provider import TestOTTProvider
+import ott_provider
 from src.api.kingmodiptv import OTTProvider
 
 
-class TestKingMod(TestOTTProvider):
+class TestKingMod(ott_provider.TestOTTProvider):
     ProviderClass = OTTProvider

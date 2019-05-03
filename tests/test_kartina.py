@@ -10,9 +10,9 @@
 
 from __future__ import print_function
 
-from ott_provider import TestOTTProvider
+import ott_provider
 from src.api.kartina import OTTProvider
 
 
-class TestKartina(TestOTTProvider):
+class TestKartina(ott_provider.TestOTTProvider):
     ProviderClass = OTTProvider
