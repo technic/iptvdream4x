@@ -9,6 +9,8 @@ typing = "*"
 pylint = "<2.0.0"
 pipenv = "*"
 ptvsd = "*"
+rope = "*"
+autopep8 = "*"
 
 [packages]
 attrs = "==18.2.0"
