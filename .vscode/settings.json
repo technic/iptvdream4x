@@ -15,9 +15,10 @@
     "python.linting.enabled": true,
     "cSpell.words": [
         "iptv",
+        "iptvdream",
         "rtype"
     ],
-    "python.linting.pep8Enabled": false,
+    "python.linting.pep8Enabled": true,
     // enigma2 legacy style
     "[python]": {
         "editor.insertSpaces": false,
