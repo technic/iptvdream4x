@@ -142,20 +142,22 @@ class M3UProvider(OfflineFavourites):
 					gid = len(group_names)
 					group_names[group] = gid
 					g = self.groups[gid] = Group(gid, group.decode('utf-8').capitalize().encode('utf-8'), [])
-				
+		
+				num += 1
 				m = url_regexp.match(line)
 				if m:
 					cid = int(m.group(1))
-					num += 1
-					c = Channel(cid, gid, name, num, True)
-					self.channels[cid] = c
-					g.channels.append(c)
-					self.channels_data[cid] = {'tvg': tvg, 'url': url}
-					if tvg is not None:
-						try:
-							self.tvg_ids[tvg].append(cid)
-						except KeyError:
-							self.tvg_ids[tvg] = [cid]
+				else:
+					cid = num
+				c = Channel(cid, gid, name, num, True)
+				self.channels[cid] = c
+				g.channels.append(c)
+				self.channels_data[cid] = {'tvg': tvg, 'url': url}
+				if tvg is not None:
+					try:
+						self.tvg_ids[tvg].append(cid)
+					except KeyError:
+						self.tvg_ids[tvg] = [cid]
 				else:
 					self.trace("Failed to parse url:", line)
 					continue
