@@ -1191,7 +1191,7 @@ class IPtvDreamEpg(Screen):
 		if self.cid is None:
 			return
 
-		d = syncTime()+secTd(self.shift)+timedelta(self.day)
+		d = syncTime() + secTd(self.shift) + timedelta(self.day)
 		epg_list = self.db.channels[self.cid].epgDay(d)
 		if len(epg_list) == 0:
 			try:
