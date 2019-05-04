@@ -47,13 +47,14 @@ class OTTProvider(M3UProvider):
 
 	def _parsePlaylist(self, lines):
 		# Copy of M3U class with some modifications
+		self.tvg_ids = {}
 		group_names = {}
 		num = 0
 
 		name = ""
 		group = "Unknown"
 		archive = False
-		cid = None
+		tvg = None
 
 		import re
 		tvg_regexp = re.compile('#EXTINF:.*tvg-id="([^"]*)"')
@@ -69,15 +70,14 @@ class OTTProvider(M3UProvider):
 					if self.tvg_map:
 						k = unicode(m.group(1))
 						try:
-							cid = self.tvg_map[k]
-							# print("found", cid, "for", k)
+							tvg = self.tvg_map[k]
 						except KeyError:
-							cid = None
+							tvg = None
 							self.trace("unknown tvg-id", k)
 					else:
-						cid = int(m.group(1))
+						tvg = int(m.group(1))
 				else:
-					cid = None
+					tvg = None
 				m = group_regexp.match(line)
 				if m:
 					group = m.group(1)
@@ -94,7 +94,7 @@ class OTTProvider(M3UProvider):
 				continue
 			elif not line.strip():
 				continue
-			elif cid is not None:
+			else:
 				url = line.strip().replace("localhost", self._domain).replace("00000000000000", self._key)
 				assert url.find("://") > 0, "line: " + url
 				try:
@@ -106,9 +106,15 @@ class OTTProvider(M3UProvider):
 					g = self.groups[gid] = Group(gid, group.decode('utf-8').capitalize().encode('utf-8'), [])
 
 				num += 1
+				cid = num
 				c = Channel(cid, gid, name, num, archive)
 				self.channels[cid] = c
 				g.channels.append(c)
-				self.channels_data[cid] = {'tvg': cid, 'url': url}
+				self.channels_data[cid] = {'tvg': tvg, 'url': url}
+				if tvg is not None:
+					try:
+						self.tvg_ids[tvg].append(cid)
+					except KeyError:
+						self.tvg_ids[tvg] = [cid]
 
 		self.trace("Loaded {} channels".format(len(self.channels)))
