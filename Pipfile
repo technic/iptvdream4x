@@ -11,6 +11,7 @@ pipenv = "*"
 ptvsd = "*"
 rope = "*"
 autopep8 = "*"
+pydocstyle = "*"
 
 [packages]
 attrs = "==18.2.0"
