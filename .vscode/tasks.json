@@ -11,7 +11,8 @@
                 "./skin-post.py",
                 "skin/skin.xml",
                 "skin/iptvdream.xml"
-            ]
+            ],
+            "group": "build",
         },
         {
             "label": "Docker kill enigma2",
