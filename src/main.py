@@ -1263,7 +1263,7 @@ class IPtvDreamEpgInfo(Screen):
 
 		self.setTitle("%d. %s" % (channel.number, channel.name))
 		self["epgName"] = Label(entry.name)
-		self["epgDescription"] = ScrollLabel(entry.description)
+		self["epgDescription"] = ScrollLabel(entry.description or _("No detailed information"))
 		self["epgTime"] = Label(entry.begin.strftime("%a %H:%M"))
 		self["epgDate"] = Label(entry.begin.strftime("%d.%m.%Y"))
 		self["epgDuration"] = Label()
