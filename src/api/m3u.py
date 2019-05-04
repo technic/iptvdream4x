@@ -13,10 +13,10 @@ from __future__ import print_function
 # system imports
 import os
 from time import mktime
+from json import loads as json_loads
 
 # plugin imports
 from abstract_api import OfflineFavourites
-from json import loads as json_loads
 from ..utils import syncTime, APIException, EPG, Channel, Group
 
 
@@ -36,7 +36,7 @@ class M3UProvider(OfflineFavourites):
 		self.groups = {}
 		# map from channel ids in playlist to epg server ids
 		self.channels_data = {}
-		# map from xmltv keys to epg server ids 
+		# map from xmltv keys to epg server ids
 		self.tvg_map = {}
 		# map from epg server ids to channel ids
 		self.tvg_ids = {}
@@ -189,7 +189,7 @@ class M3UProvider(OfflineFavourites):
 			except KeyError:
 				# self.trace("Unknown teleguide id", tvg)
 				continue
-			for cid in self.tvg_ids[tvg]:
+			for cid in cids:
 				yield cid, map(lambda e: EPG(
 					int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
 					e['description'].encode('utf-8')), c['programs'])
