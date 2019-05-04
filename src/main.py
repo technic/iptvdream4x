@@ -1129,8 +1129,7 @@ class IPtvDreamChannels(Screen):
 		for i, channel in enumerate(self.list.list):
 			if channel.cid == cid:
 				return i
-		else:
-			return None
+		return None
 
 	def goToNumber(self, num):
 		cid = self.db.findNumber(num)
