@@ -8,6 +8,8 @@
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 
+from __future__ import print_function
+
 from Components.config import ConfigText
 from Components.Sources.StaticText import StaticText
 from skin import colorNames, SkinError
