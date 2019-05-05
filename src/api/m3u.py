@@ -158,9 +158,6 @@ class M3UProvider(OfflineFavourites):
 						self.tvg_ids[tvg].append(cid)
 					except KeyError:
 						self.tvg_ids[tvg] = [cid]
-				else:
-					self.trace("Failed to parse url:", line)
-					continue
 		
 		self.trace("Loaded {} channels".format(len(self.channels)))
 		# all_ch = sorted(self.channels.values(), key=lambda k: getattr(k, 'number'))
