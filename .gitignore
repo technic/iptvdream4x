@@ -18,7 +18,9 @@ __pycache__/
 .directory
 # temprorary ci file
 *.yml.tmp
+# Private configuration
 tests/secret.json
+/*.m3u8
 # Twisted tests
 _trial_temp*
 
