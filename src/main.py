@@ -20,7 +20,7 @@ from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 from Components.Slider import Slider
 from Components.Button import Button
-from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
+from Components.ServiceEventTracker import InfoBarBase
 from Components.Input import Input
 from Components.MenuList import MenuList
 from Components.GUIComponent import GUIComponent
@@ -55,7 +55,7 @@ from common import StaticTextService
 from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin
 from api.abstract_api import AbstractStream
 from loc import translate as _
-from common import parseColor
+from common import parseColor, ShowHideScreen, AutoAudioSelection
 from standby import standbyNotifier
 from lib.epg import EpgProgress
 
@@ -68,106 +68,6 @@ EPG_UPDATE_INTERVAL = 60  # Seconds, in channel list.
 PROGRESS_TIMER = 1000*60  # Update progress in infobar.
 PROGRESS_SIZE = 500
 ARCHIVE_TIME_FIX = 5  # sec. When archive paused, we could miss some video
-AUTO_AUDIOSELECT = True
-
-
-#  Reimplementation of InfoBarShowHide
-class ShowHideScreen:
-	STATE_HIDDEN = 0
-	STATE_SHOWN = 1
-
-	def __init__(self):
-		# super(ShowHideScreen, self).__init__(session)
-		self.__state = self.STATE_SHOWN
-
-		self["ShowHideActions"] = ActionMap(["InfobarShowHideActions"], {
-				"toggleShow": self.toggleShow,
-				"hide": self.hide,
-			}, 1)  # lower prio to make it possible to override ok and cancel..
-
-		self.hideTimer = eTimer()
-		self.hideTimer.callback.append(self.doTimerHide)
-		self.hideTimer.start(5000, True)
-
-		self.onShow.append(self.__onShow)
-		self.onHide.append(self.__onHide)
-		self.__locked = 0
-
-	def serviceStarted(self):
-		if self.execing:
-			if config.usage.show_infobar_on_zap.value:
-				self.doShow()
-
-	def __onShow(self):
-		self.__state = self.STATE_SHOWN
-		self.startHideTimer()
-
-	def startHideTimer(self):
-		if self.__state == self.STATE_SHOWN:
-			idx = config.usage.infobar_timeout.index
-			if idx:
-				self.hideTimer.start(idx*1000, True)
-
-	def __onHide(self):
-		self.__state = self.STATE_HIDDEN
-
-	def doShow(self):
-		self.show()
-		self.startHideTimer()
-
-	def doTimerHide(self):
-		self.hideTimer.stop()
-		if self.__state == self.STATE_SHOWN:
-			self.hide()
-
-	def toggleShow(self):
-		if self.__state == self.STATE_SHOWN:
-			self.hide()
-			self.hideTimer.stop()
-		elif self.__state == self.STATE_HIDDEN:
-			self.show()
-
-	def lockShow(self):
-		self.__locked = self.__locked + 1
-		if self.execing:
-			self.show()
-			self.hideTimer.stop()
-
-	def unlockShow(self):
-		self.__locked = self.__locked - 1
-		if self.execing:
-			self.startHideTimer()
-
-
-class IPtvDreamAudio(Screen):
-	def __init__(self, session):
-		super(IPtvDreamAudio, self).__init__(session)
-		self.__ev_tracker = ServiceEventTracker(screen=self, eventmap={
-				iPlayableService.evUpdatedInfo: self.audioSelect,
-				iPlayableService.evStart: self.audioClear
-			})
-		self.audio_selected = False
-
-	def audioSelect(self):
-		print("[IPtvDreamAudio] select")
-		if self.audio_selected or not AUTO_AUDIOSELECT:
-			return
-		self.audio_selected = True
-		service = self.session.nav.getCurrentService()
-		audio = service and service.audioTracks()
-		n = audio and audio.getNumberOfTracks() or 0
-		if n > 0:
-			selected_audio = audio.getCurrentTrack()
-			for x in range(n):
-				language = audio.getTrackInfo(x).getLanguage()
-				print("[IPtvDreamAudio] scan langstr:", x, language)
-				if language.find('rus') > -1 and x != selected_audio:
-					audio.selectTrack(x)
-					break
-
-	def audioClear(self):
-		print("[IPtvDreamAudio] clear")
-		self.audio_selected = False
 
 
 class NumberZap(NumberZapProxy):
@@ -180,9 +80,8 @@ class NumberZap(NumberZapProxy):
 
 
 class IPtvDreamStreamPlayer(
-		Screen, ShowHideScreen, InfoBarBase, InfoBarMenu, InfoBarPlugins,
-		InfoBarExtensions, InfoBarAudioSelection, InfoBarNotifications):
-
+		ShowHideScreen, AutoAudioSelection,
+		InfoBarBase, InfoBarMenu, InfoBarPlugins, InfoBarExtensions, InfoBarNotifications):
 	"""
 	:type channels: IPtvDreamChannels
 	"""
@@ -190,14 +89,12 @@ class IPtvDreamStreamPlayer(
 	ALLOW_SUSPEND = True
 
 	def __init__(self, session, db):
-		Screen.__init__(self, session)
+		super(IPtvDreamStreamPlayer, self).__init__(session)
 		InfoBarBase.__init__(self, steal_current_service=True)
 		InfoBarMenu.__init__(self)
 		InfoBarExtensions.__init__(self)
 		InfoBarPlugins.__init__(self)
-		InfoBarAudioSelection.__init__(self)
 		InfoBarNotifications.__init__(self)
-		ShowHideScreen.__init__(self)  # Use myInfoBar because image developers modify InfoBarGenerics
 
 		trace("start stream player")
 		self.db = db
