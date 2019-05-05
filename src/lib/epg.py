@@ -58,5 +58,5 @@ class EpgProgress(Source):
 			self.updateProgress()
 
 	def destroy(self):
-		self._timer.stop()
+		self._timer.callback.remove(self.updateProgress)
 		super(EpgProgress, self).destroy()
