@@ -139,7 +139,7 @@ class EPG(object):
 		self.__dict__[key] = value
 
 	def __repr__(self):
-		return self.begin.strftime("%H:%M") + "-" + self.end.strftime("%H:%M") + "|" + self.name
+		return "%s-%s|%s" % (self.begin.strftime("%H:%M"), self.end.strftime("%H:%M"), self.name)
 
 
 class ConfEntry(object):
