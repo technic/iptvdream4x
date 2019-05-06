@@ -45,14 +45,14 @@ from skin import parseFont
 from datetime import datetime, timedelta
 try:
 	# noinspection PyUnresolvedReferences
-	from typing import Callable, Optional, List
+	from typing import Callable, Optional, List, Tuple  # pylint: disable=unused-import 
 except ImportError:
 	pass
 
 # plugin imports
 from layer import eTimer
 from common import StaticTextService
-from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin
+from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG
 from api.abstract_api import AbstractStream
 from loc import translate as _
 from common import parseColor, ShowHideScreen, AutoAudioSelection
@@ -587,7 +587,7 @@ class ChannelList(MenuList):
 
 	def buildChannelEntry(self, entry):
 		"""
-		:param (utils.Channel, utils.EPG) entry:
+		:type entry: Tuple[utils.Channel, utils.EPG]
 		"""
 		c, e = entry
 		defaultFlag = RT_HALIGN_LEFT | RT_VALIGN_CENTER
@@ -843,7 +843,9 @@ class IPtvDreamChannels(Screen):
 			self.close(cid, time)
 
 	def updatePrograms(self, data):
-		# type: (int, EPG) -> None
+		"""
+		:type data: List[Tuple[int, EPG]]
+		"""
 		if self.mode == self.GROUPS:
 			return
 		for (cid, epg) in data:
