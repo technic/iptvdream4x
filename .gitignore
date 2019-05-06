@@ -24,6 +24,9 @@ tests/secret.json
 # Twisted tests
 _trial_temp*
 
+# VSCode IDE
+.vscode/tags
+
 # JetBrains IDE
 .idea/workspace.xml
 .idea/tasks.xml
