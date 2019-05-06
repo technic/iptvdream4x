@@ -85,6 +85,7 @@ class IPtvDreamStreamPlayer(
 		InfoBarBase, InfoBarMenu, InfoBarPlugins, InfoBarExtensions, InfoBarNotifications):
 	"""
 	:type channels: IPtvDreamChannels
+	:type db: AbstractStream
 	"""
 
 	ALLOW_SUSPEND = True
@@ -648,7 +649,7 @@ class ChannelList(MenuList):
 		return lst
 
 
-class History:
+class History(object):
 	"""
 	:type _history: list[HistoryEntry]
 	"""
