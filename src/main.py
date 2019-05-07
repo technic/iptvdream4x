@@ -45,7 +45,7 @@ from skin import parseFont
 from datetime import datetime, timedelta
 try:
 	# noinspection PyUnresolvedReferences
-	from typing import Callable, Optional, List, Tuple  # pylint: disable=unused-import 
+	from typing import Callable, Optional, List, Tuple  # pylint: disable=unused-import
 except ImportError:
 	pass
 
