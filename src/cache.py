@@ -71,7 +71,10 @@ class LiveEpgWorker(object):
 			self._runCallbacks(set(self._epg.keys()).intersection(set(to_update)))
 
 	def _runCallbacks(self, channel_ids):
-		new_data = [(cid, self._epg[cid][0]) for cid in channel_ids]
+		new_data = []
+		for cid in channel_ids:
+			if self._epg[cid]:
+				new_data.append((cid, self._epg[cid][0]))
 		for func in self.onUpdate:
 			func(new_data)
 
