@@ -13,8 +13,13 @@ from __future__ import print_function
 from datetime import datetime, timedelta
 
 # from api.abstract_api import AbstractStream
-from utils import trace, APIException
+from utils import trace, APIException, EPG
 from layer import eTimer
+
+try:
+	from typing import List, Dict, Callable
+except ImportError:
+	pass
 
 
 class LiveEpgWorker(object):
@@ -29,7 +34,7 @@ class LiveEpgWorker(object):
 		self.db = db
 		self._timer = eTimer()
 		self._timer.callback.append(self.update)
-		self._epg = {}
+		self._epg = {}  # type: Dict[int, List[EPG]]
 		if len(self.db.channels):
 			self.update()
 		else:
