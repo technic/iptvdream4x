@@ -94,7 +94,7 @@ class OTTProvider(M3UProvider):
 				except KeyError:
 					gid = len(group_names)
 					group_names[group] = gid
-					g = self.groups[gid] = Group(gid, group.decode('utf-8').encode('utf-8'), [])
+					g = self.groups[gid] = Group(gid, group, [])
 
 				num += 1
 				cid = num

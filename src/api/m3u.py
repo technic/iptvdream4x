@@ -141,7 +141,7 @@ class M3UProvider(OfflineFavourites):
 				except KeyError:
 					gid = len(group_names)
 					group_names[group] = gid
-					g = self.groups[gid] = Group(gid, group.decode('utf-8').capitalize().encode('utf-8'), [])
+					g = self.groups[gid] = Group(gid, group, [])
 		
 				num += 1
 				m = url_regexp.match(line)
