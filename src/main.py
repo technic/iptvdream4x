@@ -758,6 +758,14 @@ class IPtvDreamChannels(Screen):
 		self._worker.onUpdate.append(self.updatePrograms)
 		self.onClose.append(self._worker.destroy)
 
+		def workerStandby(sleep):
+			if sleep:
+				self._worker.stop()
+			else:
+				self._worker.update()
+		standbyNotifier.onStandbyChanged.append(workerStandby)
+		self.onClose.append(lambda: standbyNotifier.onStandbyChanged.remove(workerStandby))
+
 		self["packetExpire"] = Label()
 
 		self["actions"] = ActionMap(

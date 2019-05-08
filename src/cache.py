@@ -89,6 +89,7 @@ class LiveEpgWorker(object):
 		self._timer.stop()
 
 	def stop(self):
+		self.trace("Stop.")
 		self._timer.stop()
 
 	def get(self, cid):
