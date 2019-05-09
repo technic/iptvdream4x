@@ -19,7 +19,7 @@ __pycache__/
 # temprorary ci file
 *.yml.tmp
 # Private configuration
-tests/secret.json
+secret.json
 /*.m3u8
 # Twisted tests
 _trial_temp*

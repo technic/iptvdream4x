@@ -73,6 +73,22 @@
             "dependsOn": [
                 "Skin post", "Copy keymap"
             ]
+        },
+        {
+            "label": "Upload package to device",
+            "type": "shell",
+            "command": "${config:python.pythonPath}",
+            "args": ["scripts/box-upload.py"],
+            "problemMatcher": [],
+            "group": "build",
+        },
+        {
+            "label": "Start enigma2 on device",
+            "type": "shell",
+            "command": "${config:python.pythonPath}",
+            "args": ["scripts/box-run.py"],
+            "problemMatcher": [],
+            "dependsOn": "Upload package to device",
         }
     ]
 }
