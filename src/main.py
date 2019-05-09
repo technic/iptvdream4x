@@ -1082,6 +1082,10 @@ class IPtvDreamEpg(Screen):
 			["OkCancelActions", "IPtvDreamEpgListActions", "ColorActions"], {
 				"cancel": self.exit,
 				"ok": self.archive,
+				"up": self.up,
+				"down": self.down,
+				"pageUp": self.pageUp,
+				"pageDown": self.pageDown,
 				"nextDay": self.nextDay,
 				"prevDay": self.prevDay,
 				"green": self.showInfo,
@@ -1155,6 +1159,36 @@ class IPtvDreamEpg(Screen):
 
 	def exit(self):
 		self.close()
+
+	def up(self):
+		idx = self.list.getIndex()
+		if idx == 0:
+			self.prevDay()
+			self.list.setIndex(self.list.count() - 1)
+		else:
+			self.list.selectPrevious()
+
+	def down(self):
+		idx = self.list.getIndex()
+		if idx == self.list.count() - 1 or self.list.count() == 0:
+			self.nextDay()
+		else:
+			self.list.selectNext()
+
+	def pageUp(self):
+		idx = self.list.getIndex()
+		if idx == 0:
+			self.prevDay()
+			self.list.setIndex(self.list.count() - 1)
+		else:
+			self.list.pageUp()
+
+	def pageDown(self):
+		idx = self.list.getIndex()
+		if idx == self.list.count() - 1 or self.list.count() == 0:
+			self.nextDay()
+		else:
+			self.list.pageDown()
 
 	def nextDay(self):
 		self.day += 1
