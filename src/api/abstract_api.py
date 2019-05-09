@@ -16,6 +16,11 @@ import urllib
 import urllib2
 from json import loads as json_loads
 from os import path as os_path
+try:
+	from typing import Dict
+except ImportError:
+	pass
+
 from xml.etree.cElementTree import fromstring
 from ..utils import getHwAddr, syncTime, Group, Channel, APIException, EPG
 from datetime import datetime
@@ -167,11 +172,6 @@ class AbstractAPI(object):
 
 
 class AbstractStream(AbstractAPI):
-	"""
-	:type groups: dict[int, Group]
-	:type channels: dict[int, Channel]
-	"""
-
 	SERVICE = 1
 	URL_DYNAMIC = True
 	Sort_N = 0
@@ -180,14 +180,14 @@ class AbstractStream(AbstractAPI):
 
 	def __init__(self, username, password):
 		super(AbstractStream, self).__init__(username, password)
-		self.channels = {}
-		self.groups = {}
+		self.channels = {}  # type: Dict[int, Channel]
+		self.groups = {}  # type: Dict[int, Group]
 		self.favourites = []
 		self.got_favourites = False
-
+	
 	def setChannelsList(self):
 		pass
-	
+
 	def addFav(self, cid):
 		if not self.favourites.count(cid):
 			self.favourites.append(cid)

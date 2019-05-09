@@ -650,13 +650,9 @@ class ChannelList(MenuList):
 
 
 class History(object):
-	"""
-	:type _history: list[HistoryEntry]
-	"""
-
 	def __init__(self, size):
 		self._size = size
-		self._history = []
+		self._history = []  # type: List[HistoryEntry]
 		self._index = -1
 
 	def isEmpty(self):
@@ -851,9 +847,7 @@ class IPtvDreamChannels(Screen):
 			self.close(cid, time)
 
 	def updatePrograms(self, data):
-		"""
-		:type data: List[Tuple[int, EPG]]
-		"""
+		# type: (List[Tuple[int, EPG]]) -> None
 		if self.mode == self.GROUPS:
 			return
 		for (cid, epg) in data:
@@ -1092,7 +1086,7 @@ class IPtvDreamEpg(Screen):
 				"red": self.archive
 			}, -1)
 
-		self.db = db
+		self.db = db  # type: AbstractStream
 		self.cid = cid
 		self.shift = shift
 		self.day = 0

@@ -25,13 +25,11 @@ except ImportError:
 class LiveEpgWorker(object):
 	"""
 	This class always has most recent live epg for all channels
-	:type db: AbstractStream
-	:type onUpdate: List[Callable[[int, utils.EPG], None]]
 	"""
 
 	def __init__(self, db):
-		self.onUpdate = []
-		self.db = db
+		self.onUpdate = []  # type: List[Callable[ [List[Tuple[int, EPG]]], None ]]
+		self.db = db  # type: AbstractStream
 		self._timer = eTimer()
 		self._timer.callback.append(self.update)
 		self._epg = {}  # type: Dict[int, List[EPG]]
