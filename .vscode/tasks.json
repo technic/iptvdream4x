@@ -4,6 +4,13 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Copy keymap",
+            "type": "shell",
+            "command": "cp",
+            "args": ["${workspaceRoot}/src/keymap_enigma.xml", "${workspaceRoot}/src/keymap.xml"],
+            "group": "build",
+        },
+        {
             "label": "Skin post",
             "type": "process",
             "command": "${config:python.pythonPath}",
@@ -64,7 +71,7 @@
                 ]
             },
             "dependsOn": [
-                "Skin post"
+                "Skin post", "Copy keymap"
             ]
         }
     ]
