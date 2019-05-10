@@ -52,12 +52,12 @@ class NewrusAPI(AbstractAPI):
 
 class OTTProvider(AbstractStream, NewrusAPI):
 	NAME = "NewrusTV"
-	MODE = MODE_STREAM	
+	MODE = MODE_STREAM
 	HAS_PIN = True
-	
+
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-	
+
 	def setChannelsList(self):
 		data = self.getJsonData(self.site + "/channel_list.php?", {})
 		num = 0
