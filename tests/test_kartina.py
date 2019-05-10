@@ -15,4 +15,4 @@ from src.api.kartina import OTTProvider
 
 
 class TestKartina(ott_provider.TestOTTProvider):
-    ProviderClass = OTTProvider
+	ProviderClass = OTTProvider
