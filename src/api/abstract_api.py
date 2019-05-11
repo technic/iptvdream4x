@@ -191,11 +191,15 @@ class AbstractStream(AbstractAPI):
 	def addFav(self, cid):
 		if not self.favourites.count(cid):
 			self.favourites.append(cid)
-			self.uploadFavourites(self.favourites, cid, True)
+			self.uploadFavourites(self.favourites)
 
 	def rmFav(self, cid):
 		self.favourites.remove(cid)
-		self.uploadFavourites(self.favourites, cid, False)
+		self.uploadFavourites(self.favourites)
+
+	def setFavourites(self, favourites):
+		self.favourites = favourites
+		self.uploadFavourites(self.favourites)
 
 	def loadChannelsEpg(self, cids):
 		for cid, programs in self.getChannelsEpg(cids):
@@ -231,8 +235,9 @@ class AbstractStream(AbstractAPI):
 
 	def selectFavourites(self):
 		if not self.got_favourites:
-			s = set(self.getFavourites()).intersection(self.channels.keys())
-			self.favourites = list(s)
+			keys = set(self.channels.keys())
+			favourites = self.getFavourites()
+			self.favourites = [cid for cid in favourites if cid in keys]
 			self.got_favourites = True
 		return [self.channels[cid] for cid in self.favourites]
 	
@@ -285,11 +290,9 @@ class AbstractStream(AbstractAPI):
 		"""
 		return []
 
-	def uploadFavourites(self, current, cid, added):
+	def uploadFavourites(self, current):
 		"""
 		:param list[int] current: list of current favourites
-		:param int cid: channel id that was just added or removed
-		:param bool added: whether channel should be in favourites
 		"""
 		pass
 
@@ -320,7 +323,7 @@ class OfflineFavourites(AbstractStream):
 				fav.append(cid)
 			return fav
 
-	def uploadFavourites(self, current, cid, added):
+	def uploadFavourites(self, current):
 		try:
 			with open(self._favorites_file, 'w') as f:
 				f.write(','.join(map(str, current)))

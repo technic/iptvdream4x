@@ -568,6 +568,32 @@ class ChannelList(MenuList):
 		self.list[index] = self.buildChannelEntry(channel)
 		self.l.invalidateEntry(index)
 
+	def moveUp(self):
+		index = self.getSelectedIndex()
+		if index == 0:
+			return
+		self.list[index - 1], self.list[index] = self.list[index], self.list[index - 1]
+		self.l.invalidateEntry(index - 1)
+		self._updateIndexMap(index - 1)
+		self.l.invalidateEntry(index)
+		self._updateIndexMap(index)
+		self.up()
+
+	def moveDown(self):
+		index = self.getSelectedIndex()
+		if index + 1 == len(self.list):
+			return
+		self.list[index], self.list[index + 1] = self.list[index + 1], self.list[index]
+		self.l.invalidateEntry(index)
+		self._updateIndexMap(index)
+		self.l.invalidateEntry(index + 1)
+		self._updateIndexMap(index + 1)
+		self.down()
+
+	def _updateIndexMap(self, i):
+		cid = self.list[i][0].cid
+		self.index[cid] = i
+
 	def highlight(self, cid):
 		self.highlight_cid = cid
 
@@ -727,7 +753,7 @@ class IPtvDreamChannels(Screen):
 
 		trace("channels init")
 		self.history = History(10)
-		self.db = db
+		self.db = db  # type: AbstractStream
 		self.player_ref = player_ref
 		from manager import manager
 		self.cfg = manager.getConfig(self.db.NAME)
@@ -786,7 +812,17 @@ class IPtvDreamChannels(Screen):
 		self.gid = None
 		self.saved_state = None
 
-		self.editMoving = False
+		self.edit_mode = False
+		self.marked = False  # Whether current entry is marked (in edit mode)
+		self["move_actions"] = ActionMap(
+			["OkCancelActions", "DirectionActions", "IPtvDreamChannelListActions"], {
+				"cancel": self.finishEditing,
+				"ok": self.toggleMarkForMoving,
+				"up": self.moveUp,
+				"down": self.moveDown,
+				"contextMenu": self.showMenu,
+				"addFavourites": self.addRemoveFavourites,
+			}, -1)
 
 		if self.db.packet_expire is not None:
 			self["packetExpire"].setText(_("Payment expires: ") + self.db.packet_expire.strftime("%d.%m.%Y"))
@@ -873,7 +909,8 @@ class IPtvDreamChannels(Screen):
 
 	def fillList(self):
 		title = [self.db.NAME]
-		self.list.highlight(self.player_ref.cid)
+		# Highlight is used for edit mode
+		# self.list.highlight(self.player_ref.cid)
 		order = self.order_config.getValue()
 
 		if self.mode == self.GROUPS:
@@ -896,9 +933,6 @@ class IPtvDreamChannels(Screen):
 			self["key_yellow"].setText(_("Add"))
 
 	def selectionChanged(self):
-		if self.editMoving:
-			return
-
 		channel = self.getSelected()
 		trace("selection =", channel)
 
@@ -997,6 +1031,10 @@ class IPtvDreamChannels(Screen):
 				actions += [
 					(_('Remove "%s" from favourites') % current.name, self.addRemoveFavourites),
 				]
+				if not self.edit_mode:
+					actions += [(_("Enter edit mode"), self.confirmStartEditing)]
+				else:
+					actions += [(_("Exit edit mode"), self.notifyFinishEditing)]
 
 		def cb(entry=None):
 			if entry is not None:
@@ -1012,6 +1050,63 @@ class IPtvDreamChannels(Screen):
 	def sortByName(self):
 		self.order_config.setValue('name')
 		self.fillList()
+
+	def confirmStartEditing(self):
+		def cb(ret):
+			if ret:
+				self.startEditing()
+		message = _(
+			"In the editing mode you can reorder your favourites list. Quick help:\n"
+			"- Select channel that you want to put to a new position.\n"
+			"- Press OK to start moving the channel around with arrow buttons.\n"
+			"- Press OK again to fix the position of the channel.\n"
+			"- Press EXIT when done.\n"
+			"Start editing mode?"
+		)
+		self.session.openWithCallback(cb, MessageBox, _(message), MessageBox.TYPE_YESNO)
+
+	def startEditing(self):
+		"""Start reordering of channels in the favourites list"""
+		self.edit_mode = True
+		self["actions"].setEnabled(False)
+		self["move_actions"].setEnabled(True)
+
+	def toggleMarkForMoving(self):
+		if self.marked:
+			self.marked = False
+			self.list.highlight(None)
+		else:
+			self.marked = True
+			channel = self.getSelected()
+			if channel:
+				self.list.highlight(channel.cid)
+
+	def moveUp(self):
+		if self.marked:
+			self.list.moveUp()
+		else:
+			self.list.up()
+
+	def moveDown(self):
+		if self.marked:
+			self.list.moveDown()
+		else:
+			self.list.down()
+
+	def notifyFinishEditing(self):
+		self.session.openWithCallback(
+			lambda ret: self.finishEditing(),
+			MessageBox, _("Exiting edit mode"), MessageBox.TYPE_INFO, timeout=5)
+
+	def finishEditing(self):
+		self.edit_mode = False
+		self["actions"].setEnabled(True)
+		self["move_actions"].setEnabled(False)
+		try:
+			self.db.setFavourites([entry[0].cid for entry in self.list.list])
+		except APIException as ex:
+			self.session.open(
+				MessageBox, "%s\n%s" % (_("Failed to save favourites list."), str(e)), MessageBox.TYPE_ERROR)
 
 	def showEpgList(self):
 		channel = self.getSelected()
