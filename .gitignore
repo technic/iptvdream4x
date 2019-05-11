@@ -12,6 +12,7 @@ src/keymap.xml
 .venv/
 .ropeproject/
 __pycache__/
+Pipfile.lock
 # backup files
 *~
 # linux stuff
