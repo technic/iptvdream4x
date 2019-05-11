@@ -59,6 +59,7 @@ from common import parseColor, ShowHideScreen, AutoAudioSelection
 from standby import standbyNotifier
 from cache import LiveEpgWorker
 from lib.epg import EpgProgress
+from lib.tv import SortOrderSettings
 
 SKIN_PATH = resolveFilename(SCOPE_SKIN, 'IPtvDream')
 ENIGMA_CONF_PATH = resolveFilename(SCOPE_SYSETC, 'enigma2')
@@ -780,6 +781,7 @@ class IPtvDreamChannels(Screen):
 
 		self.list.onSelectionChanged.append(self.selectionChanged)
 
+		self.order_config = SortOrderSettings()
 		self.mode = self.GROUPS
 		self.gid = None
 		self.saved_state = None
@@ -872,15 +874,16 @@ class IPtvDreamChannels(Screen):
 	def fillList(self):
 		title = [self.db.NAME]
 		self.list.highlight(self.player_ref.cid)
+		order = self.order_config.getValue()
 
 		if self.mode == self.GROUPS:
 			self.fillGroupsList()
 			title.append(_("Groups"))
 		elif self.mode == self.GROUP:
-			self.setChannels(self.db.selectChannels(self.gid))
+			self.setChannels(self.db.selectChannels(self.gid, sort_key=order))
 			title.append(self.db.groups[self.gid].title)
 		elif self.mode == self.ALL:
-			self.setChannels(self.db.selectAll())
+			self.setChannels(self.db.selectAll(sort_key=order))
 			title.append(_("All channels"))
 		elif self.mode == self.FAV:
 			self.setChannels(self.db.selectFavourites())
@@ -978,14 +981,37 @@ class IPtvDreamChannels(Screen):
 			self.db.addFav(channel.cid)
 
 	def showMenu(self):
-		lst = []
-		self.session.openWithCallback(self.showMenuCB, ChoiceBox, _("Context menu"), lst)
+		actions = []
+		current = self.getSelected()
+		if self.mode in [self.ALL, self.GROUP]:
+			actions += [
+				(_("Sort by number"), self.sortByNumber),
+				(_("Sort by name"), self.sortByName),
+			]
+			if current:
+				actions += [
+					(_('Add "%s" to favourites') % current.name, self.addRemoveFavourites),
+				]
+		if self.mode == self.FAV:
+			if current:
+				actions += [
+					(_('Remove "%s" from favourites') % current.name, self.addRemoveFavourites),
+				]
 
-	def showMenuCB(self, entry=None):
-		if entry is None:
-			return
-		entry = entry[1]
-		trace("context cb", entry)
+		def cb(entry=None):
+			if entry is not None:
+				func = entry[1]
+				func()
+		if actions:
+			self.session.openWithCallback(cb, ChoiceBox, _("Context menu"), actions)
+
+	def sortByNumber(self):
+		self.order_config.setValue('number')
+		self.fillList()
+
+	def sortByName(self):
+		self.order_config.setValue('name')
+		self.fillList()
 
 	def showEpgList(self):
 		channel = self.getSelected()
