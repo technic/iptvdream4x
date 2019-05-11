@@ -29,3 +29,9 @@ def f(x):
     return None
 ```
 Works and `foo.bar.baz` modules are imported.
+
+# Git workflow
+We want `git push` command to upload tags, so that CI system can trigger release build
+```
+git config --global push.followTags true
+```
