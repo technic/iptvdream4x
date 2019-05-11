@@ -12,6 +12,7 @@ RUN sudo apt-get install -y bash-completion command-not-found psmisc htop vim wp
 
 RUN echo "config.skin.primary_skin=PLi-HD/skin.xml" >> /etc/enigma2/settings \
  && echo "config.misc.do_overscanwizard=false" >> /etc/enigma2/settings
+RUN mkdir /etc/iptvdream
 
 # See: https://github.com/Microsoft/ptvsd/pull/1403
 # RUN sudo pip install ptvsd
