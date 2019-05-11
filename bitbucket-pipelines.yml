@@ -33,9 +33,11 @@ pipelines:
           deployment: staging
           script:
             - apt-get update && apt-get install -y gettext rsync
+            - pip install requests
             - make
             - make DEB=y
             - rsync -rt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
             - export API_URL="https://api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads"
             - curl -X POST -u "${BB_AUTH_STRING}" "${API_URL}" -F files=@"$(find packages/ -name '*.ipk')"
             - curl -X POST -u "${BB_AUTH_STRING}" "${API_URL}" -F files=@"$(find packages/ -name '*.deb')"
+            - python ./scripts/telegram-bot.py
