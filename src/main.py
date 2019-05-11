@@ -1043,13 +1043,21 @@ class IPtvDreamChannels(Screen):
 		if actions:
 			self.session.openWithCallback(cb, ChoiceBox, _("Context menu"), actions)
 
-	def sortByNumber(self):
-		self.order_config.setValue('number')
+	def sortBy(self, what):
+		channel = self.getSelected()
+		if channel is None:
+			return
+		self.order_config.setValue(what)
 		self.fillList()
+		index = self.findChannelIndex(channel.cid)
+		if index:
+			self.list.moveToIndex(index)
+
+	def sortByNumber(self):
+		self.sortBy('number')
 
 	def sortByName(self):
-		self.order_config.setValue('name')
-		self.fillList()
+		self.sortBy('name')
 
 	def confirmStartEditing(self):
 		def cb(ret):
