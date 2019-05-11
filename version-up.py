@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """ Increase version and commit changes to git """
 
@@ -9,6 +10,35 @@ import re
 import sys
 
 versionFile = "src/dist.py"
+readmeFile = "README.md"
+
+
+def check_readme(version):
+	version = '.'.join(map(str, version))
+	changelog = []
+	copying = False
+	r = re.compile(r'^# %s\s+$' % version)
+	with open(readmeFile) as f:
+		lines = f.readlines()
+		for line in lines:
+			if r.match(line):
+				copying = True
+			elif line.startswith('#'):
+				copying = False
+			elif copying:
+				line = line.rstrip()
+				if line:
+					changelog.append(line)
+	if not changelog:
+		raise Exception("Please provide release notes for version %s" % version)
+
+	print("\nChangelog markdown:")
+	print("# Version %s" % version)
+	print("\n".join(changelog))
+	print("\nChangelog bb:")
+	print("[size=18pt]Версия %s[/size]" % version)
+	print("\n".join(changelog))
+
 
 if __name__ == "__main__":
 	subprocess.check_call(['git', 'reset'])
@@ -31,6 +61,8 @@ if __name__ == "__main__":
 					nextVer[1] += 1
 					lines[i] = 'VERSION = "%s"' % '.'.join(map(str, nextVer))
 					print("Update to", lines[i])
+
+		check_readme(nextVer)
 
 		with open(versionFile, 'w') as f:
 			f.writelines(lines)
