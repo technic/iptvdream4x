@@ -1114,7 +1114,7 @@ class IPtvDreamChannels(Screen):
 			self.db.setFavourites([entry[0].cid for entry in self.list.list])
 		except APIException as ex:
 			self.session.open(
-				MessageBox, "%s\n%s" % (_("Failed to save favourites list."), str(e)), MessageBox.TYPE_ERROR)
+				MessageBox, "%s\n%s" % (_("Failed to save favourites list."), str(ex)), MessageBox.TYPE_ERROR)
 
 	def showEpgList(self):
 		channel = self.getSelected()
