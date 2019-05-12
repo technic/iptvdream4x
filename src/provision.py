@@ -24,7 +24,7 @@ except ImportError as e:
 	def _(text):
 		return text
 
-# Revision of aplied provision (setup) tasks
+# Revision of applied provision (setup) tasks
 config.plugins.IPtvDream.provision_r = ConfigInteger(0)
 
 
