@@ -18,15 +18,18 @@ from Screens.MessageBox import MessageBox
 from Components.Console import Console
 from Components.config import config, ConfigInteger
 
-from loc import translate as _
-from utils import trace as _trace
+try:
+	from loc import translate as _
+except ImportError as e:
+	def _(text):
+		return text
 
 # Revision of aplied provision (setup) tasks
 config.plugins.IPtvDream.provision_r = ConfigInteger(0)
 
 
 def trace(*args):
-	_trace("Setup:", *args)
+	trace("[IPtvDream] Provision:", *args)
 
 
 def commandExists(command):
