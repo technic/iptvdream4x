@@ -30,7 +30,7 @@ config.plugins.IPtvDream.provision_r = ConfigInteger(0)
 
 
 def trace(*args):
-	trace("[IPtvDream] Provision:", *args)
+	print("[IPtvDream] Provision:", *args)
 
 
 def commandExists(command):
