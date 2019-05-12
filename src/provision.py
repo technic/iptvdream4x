@@ -16,7 +16,7 @@ import os
 
 from Screens.MessageBox import MessageBox
 from Components.Console import Console
-from Components.config import config, ConfigInteger
+from Components.config import config, ConfigInteger, ConfigSubsection
 
 try:
 	from loc import translate as _
@@ -25,6 +25,7 @@ except ImportError as e:
 		return text
 
 # Revision of applied provision (setup) tasks
+config.plugins.IPtvDream = ConfigSubsection()
 config.plugins.IPtvDream.provision_r = ConfigInteger(0)
 
 
