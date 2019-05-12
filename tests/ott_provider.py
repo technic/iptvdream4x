@@ -24,8 +24,12 @@ class TestOTTProvider(TestCase):
     def setUp(self):
         import os
         with open(os.path.join(os.path.dirname(__file__), 'secret.json')) as f:
-            secret = json.load(f)[self.ProviderClass.NAME]
-        self._db = self.ProviderClass(secret['user'], secret['pass'])  # type: AbstractStream
+            secret = json.load(f)
+        if self.ProviderClass.HAS_LOGIN:
+            secret = secret[self.ProviderClass.NAME]
+            self._db = self.ProviderClass(secret['user'], secret['pass'])  # type: AbstractStream
+        else:
+            self._db = self.ProviderClass("", "")
         self._db.start()
 
     def test_setChannelsList(self):
@@ -34,6 +38,7 @@ class TestOTTProvider(TestCase):
             self.assertIsInstance(g, Group)
         for c in self._db.selectAll():
             self.assertIsInstance(c, Channel)
+        self.assertGreater(len(self._db.selectAll()), 20)
         print(self._db.selectAll())
 
     def test_getStreamUrl(self):

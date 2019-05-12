@@ -56,10 +56,11 @@ class M3UProvider(OfflineFavourites):
 			raise APIException("%s playlist not found! Please copy your playlist to %s." % (self.NAME, m3u8))
 		return m3u8
 
-	def start(self):
-		import re
-		url_regexp = re.compile(r"https?://([\w.]+)/iptv/(\w+)/\d+/index.m3u8")
-
+	def _extractKeyFromPlaylist(self, url_regexp):
+		"""
+		Extracts domain and key information from m3u playlist
+		:param url_regexp: pattern obtained by re.compile() containing domain and key groups
+		"""
 		m3u8 = self._locatePlaylist()
 		with open(m3u8) as f:
 			for line in f:
@@ -72,6 +73,11 @@ class M3UProvider(OfflineFavourites):
 					break
 		if not (self._domain and self._key):
 			raise APIException("Failed to parse %s playlist located at %s." % (self.NAME, m3u8))
+
+	def start(self):
+		import re
+		url_regexp = re.compile(r"https?://([\w.]+)/iptv/(\w+)/\d+/index.m3u8")
+		self._extractKeyFromPlaylist(url_regexp)
 
 	def setChannelsList(self):
 		self._downloadTvgMap()
@@ -133,7 +139,7 @@ class M3UProvider(OfflineFavourites):
 			elif not line.strip():
 				continue
 			else:
-				url = line.strip().replace("localhost", self._domain).replace("00000000000000", self._key)
+				url = line.strip()
 				assert url.find("://") > 0, "line: " + url
 				try:
 					gid = group_names[group]
@@ -148,10 +154,12 @@ class M3UProvider(OfflineFavourites):
 				if m:
 					cid = int(m.group(1))
 				else:
-					cid = num
+					cid = hash(url)
+					self.trace("Failed to get cid from url", url)
 				c = Channel(cid, gid, name, num, True)
 				self.channels[cid] = c
 				g.channels.append(c)
+				url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
 				self.channels_data[cid] = {'tvg': tvg, 'url': url}
 				if tvg is not None:
 					try:

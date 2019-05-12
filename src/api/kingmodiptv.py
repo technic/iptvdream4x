@@ -106,7 +106,7 @@ class OTTProvider(M3UProvider):
 					g = self.groups[gid] = Group(gid, group.decode('utf-8').capitalize().encode('utf-8'), [])
 
 				num += 1
-				cid = num
+				cid = num  # TODO: use url_regexp
 				c = Channel(cid, gid, name, num, archive)
 				self.channels[cid] = c
 				g.channels.append(c)
