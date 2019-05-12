@@ -32,12 +32,15 @@ def check_readme(version):
 	if not changelog:
 		raise Exception("Please provide release notes for version %s" % version)
 
-	print("\nChangelog markdown:")
-	print("# Version %s" % version)
-	print("\n".join(changelog))
+	changelog = "\n".join(["[size=18pt]Версия %s[/size]" % version] + changelog)
 	print("\nChangelog bb:")
-	print("[size=18pt]Версия %s[/size]" % version)
-	print("\n".join(changelog))
+	print(changelog)
+	return changelog
+
+
+def clip(s):
+	subprocess.Popen(['clip'], stdin=subprocess.PIPE).communicate(s)
+	print("Copied to clipboard")
 
 
 if __name__ == "__main__":
@@ -62,7 +65,7 @@ if __name__ == "__main__":
 					lines[i] = 'VERSION = "%s"' % '.'.join(map(str, nextVer))
 					print("Update to", lines[i])
 
-		check_readme(nextVer)
+		log = check_readme(nextVer)
 
 		with open(versionFile, 'w') as f:
 			f.writelines(lines)
@@ -75,4 +78,11 @@ if __name__ == "__main__":
 		subprocess.check_call(['git', 'commit', '-m', 'version up %s' % ver])
 		subprocess.check_call(['git', 'tag', '-a', 'v/%s' % ver, '-m', 'version up %s' % ver])
 
-	print("Done.")
+	print("Done.\n")
+
+	if sys.platform == 'win32':
+		clip(log)
+		import json
+		with open('secret.json') as f:
+			url = json.load(f)['forum']
+		subprocess.check_call(["C:/Program Files/Mozilla Firefox/firefox.exe", url])
