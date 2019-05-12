@@ -9,6 +9,7 @@
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 
+from __future__ import print_function
 
 # enigma2 imports
 from Screens.Screen import Screen
@@ -207,7 +208,9 @@ class Manager(object):
 		trace("Config generated for", self.config.keys())
 
 	def getList(self):
-		return [{'name': v.NAME, 'title': v.TITLE} for v in self.apiDict.values()]
+		return sorted(
+			({'name': v.NAME, 'title': v.TITLE} for v in self.apiDict.values()),
+			key=lambda item: item['name'])
 
 	def getApi(self, name):
 		return self.apiDict[name]
