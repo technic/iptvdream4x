@@ -11,7 +11,7 @@ import requests
 def check_readme():
 	changelog = []
 	copying = False
-	r = re.compile(r'^# (\d+\.\d+)\s+$')
+	r = re.compile(r'^## (\d+\.\d+)\s+$')
 	with open("README.md") as f:
 		lines = f.readlines()
 		for line in lines:

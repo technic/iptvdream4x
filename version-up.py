@@ -17,7 +17,7 @@ def check_readme(version):
 	version = '.'.join(map(str, version))
 	changelog = []
 	copying = False
-	r = re.compile(r'^# %s\s+$' % version)
+	r = re.compile(r'^## %s\s+$' % version)
 	with open(readmeFile) as f:
 		lines = f.readlines()
 		for line in lines:
