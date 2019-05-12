@@ -113,7 +113,3 @@ class OTTProvider(M3UProvider):
 					continue
 
 		self.trace("Loaded {} channels".format(len(self.channels)))
-		# all_ch = sorted(self.channels.values(), key=lambda k: getattr(k, 'number'))
-		# self.groups[-1] = Group(gid=-1, title=_("All channels"), channels=all_ch)
-		# self.groups[-2] = Group(gid=-2, title=_("Favourites"), channels=[])
-		# print(self.channels, self.groups)

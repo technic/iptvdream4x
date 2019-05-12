@@ -160,10 +160,6 @@ class M3UProvider(OfflineFavourites):
 						self.tvg_ids[tvg] = [cid]
 		
 		self.trace("Loaded {} channels".format(len(self.channels)))
-		# all_ch = sorted(self.channels.values(), key=lambda k: getattr(k, 'number'))
-		# self.groups[-1] = Group(gid=-1, title=_("All channels"), channels=all_ch)
-		# self.groups[-2] = Group(gid=-2, title=_("Favourites"), channels=[])
-		# print(self.channels, self.groups)
 
 	def getStreamUrl(self, cid, pin, t=None):
 		url = self.channels_data[cid]['url']
