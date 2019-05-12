@@ -42,9 +42,9 @@ def check_readme(version):
 
 if __name__ == "__main__":
 	subprocess.check_call(['git', 'reset'])
-	c = subprocess.call(['git', 'diff', '--exit-code', '--', versionFile])
+	c = subprocess.call(['git', 'diff', '--exit-code', '--', versionFile, readmeFile])
 	if c != 0:
-		print("Aborted because %s has modifications!" % versionFile)
+		print("Aborted because %s or %s has modifications!" % (versionFile, readmeFile))
 		sys.exit(1)
 	else:
 		nextVer = None
