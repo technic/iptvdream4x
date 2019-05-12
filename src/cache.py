@@ -54,11 +54,11 @@ class LiveEpgWorker(object):
 		if to_update:
 			try:
 				data = self.db.getChannelsEpg(to_update)
+				self._epg.update(data)
 			except APIException as ex:
 				self.trace("get data failed!", ex)
 				return self._timer.startLongTimer(60)  # retry in one minute
 
-			self._epg.update(data)
 			if not self._epg:
 				self.trace("empty data! Stop.")
 				return
