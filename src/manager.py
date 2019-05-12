@@ -323,31 +323,19 @@ class Runner(object):
 	def __init__(self):
 		self._running = False
 
-	@staticmethod
-	def provision(session, start):
-		from provision import ProvisionScreen
-		if ProvisionScreen.provisionRequired():
-			session.openWithCallback(start, ProvisionScreen)
-		else:
-			start()
-
 	def runPlugin(self, session, name):
-		def start():
-			if not self._running:
-				self._running = True
-				session.openWithCallback(self.closed, PluginStarter, name)
-			else:
-				self.showWarning(session)
-		self.provision(session, start)
+		if not self._running:
+			self._running = True
+			session.openWithCallback(self.closed, PluginStarter, name)
+		else:
+			self.showWarning(session)
 
 	def runManager(self, session):
-		def start():
-			if not self._running:
-				self._running = True
-				session.openWithCallback(self.closed, IPtvDreamManager)
-			else:
-				self.showWarning(session)
-		self.provision(session, start)
+		if not self._running:
+			self._running = True
+			session.openWithCallback(self.closed, IPtvDreamManager)
+		else:
+			self.showWarning(session)
 
 	def closed(self, *args):
 		self._running = False

@@ -55,18 +55,26 @@ def checkUpdate(session, callback):
 	session.openWithCallback(run, UpdaterScreen)
 
 
+def provision(session, run):
+	from provision import ProvisionScreen
+	if ProvisionScreen.provisionRequired():
+		session.openWithCallback(run, ProvisionScreen)
+	else:
+		run()
+
+
 def pluginRun(name, session, **kwargs):
 	def run():
 		from manager import runner
 		runner.runPlugin(session, name)
-	checkUpdate(session, run)
+	checkUpdate(session, lambda: provision(session, run))
 
 
 def managerRun(session, **kwargs):
 	def run():
 		from manager import runner
 		runner.runManager(session)
-	checkUpdate(session, run)
+	checkUpdate(session, lambda: provision(session, run))
 
 
 def makeMenuEntry(name, menuid):
