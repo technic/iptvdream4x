@@ -25,6 +25,7 @@ PyHamcrest = "==1.9.0"
 "zope.interface" = "==4.6.0"
 twisted = "*"
 pywin32 = "*"
+requests = "*"
 
 [requires]
 python_version = "2.7"
