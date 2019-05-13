@@ -9,6 +9,8 @@
 # Software Foundation; either version 2, or (at your option) any later
 # version.
 
+from __future__ import print_function
+
 import socket
 import zlib
 import cookielib
@@ -293,9 +295,14 @@ class AbstractStream(AbstractAPI):
 		pass
 
 	def getSettings(self):
+		""" Return setting id to ConfEntry object dict """
 		return {}
 
-	def pushSettings(self, sett):
+	def pushSettings(self, settings):
+		"""
+		Push settings to server for key to value dict
+		:type settings: typing.Dict[str, str]
+		"""
 		pass
 
 

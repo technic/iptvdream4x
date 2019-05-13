@@ -11,7 +11,7 @@
 from __future__ import print_function
 
 from twisted.trial.unittest import TestCase
-from src.utils import Group, Channel, EPG
+from src.utils import Group, Channel, EPG, ConfEntry, ConfInteger, ConfSelection
 from src.api.abstract_api import AbstractStream
 from typing import Type
 import json
@@ -64,3 +64,16 @@ class TestOTTProvider(TestCase):
         for entry in programs:
             self.assertIsInstance(entry, EPG)
             self.assertLessEqual(entry.begin, entry.end)
+
+    def test_settings(self):
+        s = self._db.getSettings()
+        self.assertIsInstance(s, dict)
+        to_push = {}
+        for k, v in s.items():
+            self.assertIsInstance(k, str)
+            self.assertIsInstance(v, ConfEntry)
+            if isinstance(v, ConfInteger):
+                to_push[k] = v.limits[0]
+            elif isinstance(v, ConfSelection):
+                to_push[k] = v.choices[0][0]
+        self._db.pushSettings(to_push)

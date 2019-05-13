@@ -60,6 +60,7 @@ from standby import standbyNotifier
 from cache import LiveEpgWorker
 from lib.epg import EpgProgress
 from lib.tv import SortOrderSettings
+from settings import IPtvDreamApiConfig
 
 SKIN_PATH = resolveFilename(SCOPE_SKIN, 'IPtvDream')
 ENIGMA_CONF_PATH = resolveFilename(SCOPE_SYSETC, 'enigma2')
@@ -1036,6 +1037,8 @@ class IPtvDreamChannels(Screen):
 				else:
 					actions += [(_("Exit edit mode"), self.notifyFinishEditing)]
 
+		actions += [(_("Open settings"), self.openSettings)]
+
 		def cb(entry=None):
 			if entry is not None:
 				func = entry[1]
@@ -1182,6 +1185,9 @@ class IPtvDreamChannels(Screen):
 		self.list.moveToIndex(idx)
 		self.history.append(self.createHistoryEntry())
 		return cid
+
+	def openSettings(self):
+		self.session.open(IPtvDreamApiConfig, self.db)
 
 
 class IPtvDreamEpg(Screen):

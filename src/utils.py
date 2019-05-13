@@ -143,23 +143,44 @@ class EPG(object):
 
 
 class ConfEntry(object):
-	def __init__(self, name, title):
-		pass
+	def __init__(self, title):
+		"""
+		Base class for api configuration
+		:type title: str
+		"""
+		self.title = title
 
 
-class ConfInteger:
-	def __init__(self, name, title, value, limits):
-		pass
+class ConfInteger(ConfEntry):
+	def __init__(self, title, value, limits):
+		"""
+		:type value: int
+		:type limits: typing.Tuple[int, int]
+		"""
+		super(ConfInteger, self).__init__(title)
+		self.value = value
+		self.limits = limits
 
 
-class ConfString:
-	def __init__(self, name, title, value):
-		pass
+class ConfString(ConfEntry):
+	def __init__(self, title, value):
+		"""
+		:type value: str
+		"""
+		super(ConfString, self).__init__(title)
+		self.value = value
 
 
-class ConfSelection:
-	def __init__(self, name, title, value, values):
-		pass
+class ConfSelection(ConfEntry):
+	def __init__(self, title, value, choices):
+		"""
+		choices should be list of (value, description) tuples
+		:type value: str
+		:type choices: List[Tuple[str, str]]
+		"""
+		super(ConfSelection, self).__init__(title)
+		self.value = value
+		self.choices = choices
 
 
 class EPGDB(object):
