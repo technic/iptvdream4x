@@ -24,7 +24,7 @@ except ImportError:
 	pass
 
 from xml.etree.cElementTree import fromstring
-from ..utils import getHwAddr, syncTime, Group, Channel, APIException, EPG
+from ..utils import getHwAddr, syncTime, Group, Channel, APIException, APILoginFailed, EPG
 from datetime import datetime
 from urllib import urlencode
 from twisted.internet.defer import Deferred, succeed
@@ -130,7 +130,10 @@ class AbstractAPI(object):
 			if reauthOnError and not fromauth:
 				return self.getJsonData(url, params, name)
 			error = json['error']
-			raise APIException(str(error['code']) + ": " + error['message'].encode('utf-8'))
+			if str(error['code']) in ['ACC_WRONG', 'AСС_EMPTY']:
+				raise APILoginFailed(str(error['code']) + ": " + error['message'].encode('utf-8'))
+			else:
+				raise APIException(str(error['code']) + ": " + error['message'].encode('utf-8'))
 		self.trace("getJsonData ok")
 		return json
 
