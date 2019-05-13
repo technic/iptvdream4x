@@ -134,36 +134,6 @@ class AbstractAPI(object):
 		self.trace("getJsonData ok")
 		return json
 
-	def getXmlData(self, url, params, name='', fromauth=None):
-		reauthOnError = True
-		if not self.sid and not fromauth:
-			reauthOnError = False
-			self.cookiejar.clear()
-			self.authorize()
-		elif fromauth:
-			self.cookiejar.clear()
-		
-		self.trace("Getting %s" % name)
-		try:
-			reply = self.readHttp(url+urllib.urlencode(params))
-		except IOError as e:
-			self.sid = None
-			raise APIException(e)
-
-		try:
-			root = fromstring(reply)
-		except SyntaxError as e:
-			raise APIException("Failed to parse xml response: %s" % str(e))
-
-		err = root.find('error')
-		if err:
-			self.sid = None
-			self.cookiejar.clear()
-			if reauthOnError and not fromauth:
-				return self.getXmlData(url, params, name)
-			raise APIException(err.find('code').text.encode('utf-8')+" "+err.find('message').text.encode('utf-8'))
-		return root
-
 	def trace(self, *args):
 		"""Use for API debug"""
 		print("[IPtvDream] %s: %s" % (self.NAME, " ".join(map(str, args))))
