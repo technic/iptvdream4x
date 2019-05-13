@@ -165,10 +165,6 @@ class AbstractAPI(object):
 	def trace(self, *args):
 		"""Use for API debug"""
 		print("[IPtvDream] %s: %s" % (self.NAME, " ".join(map(str, args))))
-	
-	def get_hashID(self):
-		return int(hash(self.NAME) & 0xffffff)
-	hashID = property(get_hashID)
 
 
 class AbstractStream(AbstractAPI):
