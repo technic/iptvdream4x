@@ -49,6 +49,10 @@ class ConfigNumberText(ConfigText):
 	def onSelect(self, session):
 		self.allmarked = (self.value != "")
 
+	def handleKey(self, key):
+		self.timeout()  # Allow to input next key immediately
+		return super(ConfigNumberText, self).handleKey(key)
+
 
 def parseColor(s):  # FIXME: copy-paste form skin source
 	if s[0] != '#':
