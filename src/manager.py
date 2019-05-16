@@ -36,7 +36,7 @@ import os
 from dist import NAME, VERSION
 from utils import trace, APIException, APILoginFailed
 from loc import translate as _
-from settings import IPtvDreamConfig
+from settings import IPtvDreamConfig, IPtvDreamApiConfig
 from main import IPtvDreamStreamPlayer
 
 PLAYERS = [('1', "enigma2 ts (1)"), ('4097', "gstreamer (4097)"), ('5002', "exteplayer3 (5002)")]
@@ -139,8 +139,14 @@ class PluginStarter(Screen):
 	def finished(self, ret):
 		if ret == 'settings':
 			self.login()
+		elif ret == 'provider_settings':
+			self.openProviderSettings()
 		else:
 			self.exit()
+
+	def openProviderSettings(self):
+		if self.db:
+			self.session.openWithCallback(lambda ret=None: self.start(), IPtvDreamApiConfig, self.db)
 
 	def exit(self):
 		self.close()

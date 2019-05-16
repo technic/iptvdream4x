@@ -60,7 +60,6 @@ from standby import standbyNotifier
 from cache import LiveEpgWorker
 from lib.epg import EpgProgress
 from lib.tv import SortOrderSettings
-from settings import IPtvDreamApiConfig
 
 SKIN_PATH = resolveFilename(SCOPE_SKIN, 'IPtvDream')
 ENIGMA_CONF_PATH = resolveFilename(SCOPE_SYSETC, 'enigma2')
@@ -401,7 +400,13 @@ class IPtvDreamStreamPlayer(
 
 	def showList(self):
 		self.session.execDialog(self.channels)
-		self.channels.callback = self.channelSelected
+		self.channels.callback = self.listClosed
+
+	def listClosed(self, cid=None, time=None, action=None):
+		if action is None:
+			self.channelSelected(cid, time)
+		else:
+			self.exit(action)
 
 	def channelSelected(self, cid, time=None):
 		if cid is None:
@@ -1187,7 +1192,7 @@ class IPtvDreamChannels(Screen):
 		return cid
 
 	def openSettings(self):
-		self.session.open(IPtvDreamApiConfig, self.db)
+		self.close(None, None, 'provider_settings')
 
 
 class IPtvDreamEpg(Screen):
