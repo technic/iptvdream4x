@@ -161,6 +161,10 @@ class ConfInteger(ConfEntry):
 		self.value = value
 		self.limits = limits
 
+	def safeSetValue(self, value):
+		if self.limits[0] <= value <= self.limits[1]:
+			self.value = value
+
 
 class ConfString(ConfEntry):
 	def __init__(self, title, value):
@@ -181,6 +185,10 @@ class ConfSelection(ConfEntry):
 		super(ConfSelection, self).__init__(title)
 		self.value = value
 		self.choices = choices
+
+	def safeSetValue(self, value):
+		if value in [c[0] for c in self.choices]:
+			self.value = value
 
 
 class EPGDB(object):

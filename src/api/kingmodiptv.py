@@ -10,13 +10,21 @@
 
 from __future__ import print_function
 
-# plugin imports
-from m3u import M3UProvider
-from ..utils import APIException, APILoginFailed, Channel, Group
+# system imports
 from urllib2 import HTTPError
 
+# plugin imports
+from m3u import M3UProvider
+from abstract_api import JsonSettings
+from ..utils import APIException, APILoginFailed, Channel, Group, ConfSelection
+try:
+	from ..loc import translate as _
+except ImportError:
+	def _(text):
+		return text
 
-class OTTProvider(M3UProvider):
+
+class OTTProvider(M3UProvider, JsonSettings):
 	NAME = "KingModIPTV"
 	HAS_LOGIN = True
 	TVG_MAP = True
@@ -25,7 +33,9 @@ class OTTProvider(M3UProvider):
 		super(OTTProvider, self).__init__(username, password)
 		self.site = "http://iptvdream.zapto.org/epg-king/"
 		self.playlist = ""
-		self.playlist_url = "http://pl.kingmodiptv.top/%s/%s/tv.m3u" % (username, password)
+		s = self.getSettings()
+		self.playlist_url = "http://%s.kingmodiptv.top/%s/%s/%s/tv.m3u" % (
+			s['server'].value, s['quality'].value, username, password)
 
 	def setChannelsList(self):
 		# Channels are downloaded during start, to allow handling login exceptions
@@ -118,3 +128,26 @@ class OTTProvider(M3UProvider):
 						self.tvg_ids[tvg] = [cid]
 
 		self.trace("Loaded {} channels".format(len(self.channels)))
+
+	def getSettings(self):
+		settings = {
+			'server': ConfSelection(
+				_("Server"), 'pl1',
+				[('pl1', "Server 1"), ('pl2', "Server 2"), ('pl3', "Server 3")]
+			),
+			'quality': ConfSelection(
+				_("Quality"), 'hi',
+				[('hi', _("High")), ('lo', _("Low"))]
+			),
+		}
+		for k, v in self._loadSettings().items():
+			try:
+				settings[k].safeSetValue(str(v))
+			except KeyError:
+				continue
+		return settings
+
+	def pushSettings(self, settings):
+		data = self._loadSettings()
+		data.update(settings)
+		self._saveSettings(data)

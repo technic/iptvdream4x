@@ -137,6 +137,14 @@ class AbstractAPI(object):
 		self.trace("getJsonData ok")
 		return json
 
+	def _resolveConfigurationFile(self, file_name):
+		try:
+			from Tools.Directories import resolveFilename, SCOPE_SYSETC
+			return resolveFilename(SCOPE_SYSETC, 'iptvdream/%s' % file_name)
+		except ImportError:
+			self.trace("error: cant locate configuration files")
+			return "/tmp/%s" % file_name
+
 	def trace(self, *args):
 		"""Use for API debug"""
 		print("[IPtvDream] %s: %s" % (self.NAME, " ".join(map(str, args))))
@@ -282,12 +290,7 @@ class AbstractStream(AbstractAPI):
 class OfflineFavourites(AbstractStream):
 	def __init__(self, username, password):
 		super(OfflineFavourites, self).__init__(username, password)
-		try:
-			from Tools.Directories import resolveFilename, SCOPE_SYSETC
-			self._favorites_file = resolveFilename(SCOPE_SYSETC, 'iptvdream/%s.txt' % self.NAME)
-		except ImportError:
-			self.trace("error: cant locate favourites files")
-			self._favorites_file = "/tmp/fav_%s.txt" % self.NAME
+		self._favorites_file = self._resolveConfigurationFile('%s.txt' % self.NAME)
 
 	def getFavourites(self):
 		if not os_path.isfile(self._favorites_file):
@@ -303,6 +306,27 @@ class OfflineFavourites(AbstractStream):
 		try:
 			with open(self._favorites_file, 'w') as f:
 				f.write(','.join(map(str, current)))
+		except Exception as e:
+			raise APIException(str(e))
+
+
+class JsonSettings(AbstractAPI):
+	def __init__(self, username, password):
+		super(JsonSettings, self).__init__(username, password)
+		self._settings_file = self._resolveConfigurationFile('%s.json' % self.NAME)
+
+	def _loadSettings(self):
+		from json import load as json_load
+		if not os_path.isfile(self._settings_file):
+			return {}
+		with open(self._settings_file) as f:
+			return json_load(f) or {}
+
+	def _saveSettings(self, settings):
+		from json import dump as json_dump
+		try:
+			with open(self._settings_file, 'w') as f:
+				json_dump(settings, f)
 		except Exception as e:
 			raise APIException(str(e))
 
