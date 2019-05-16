@@ -85,4 +85,4 @@ if __name__ == "__main__":
 		import json
 		with open('secret.json') as f:
 			url = json.load(f)['forum']
-		subprocess.check_call(["C:/Program Files/Mozilla Firefox/firefox.exe", url])
+		subprocess.call(["C:/Program Files/Mozilla Firefox/firefox.exe", url])
