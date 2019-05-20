@@ -23,5 +23,6 @@
     "[python]": {
         "editor.insertSpaces": false,
         "editor.tabSize": 4
-    }
+    },
+    "python.linting.flake8Enabled": false
 }
