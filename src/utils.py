@@ -150,6 +150,10 @@ class ConfEntry(object):
 		"""
 		self.title = title
 
+	def safeSetValue(self, value):
+		""" Override and do validation if required """
+		self.value = value
+
 
 class ConfInteger(ConfEntry):
 	def __init__(self, title, value, limits):
