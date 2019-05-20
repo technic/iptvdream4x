@@ -25,7 +25,6 @@ except ImportError as e:
 		return text
 
 # Revision of applied provision (setup) tasks
-config.plugins.IPtvDream = ConfigSubsection()
 config.plugins.IPtvDream.provision_r = ConfigInteger(0)
 
 
