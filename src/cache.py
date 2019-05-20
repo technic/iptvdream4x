@@ -57,7 +57,8 @@ class LiveEpgWorker(object):
 				self._epg.update(data)
 			except APIException as ex:
 				self.trace("get data failed!", ex)
-				return self._timer.startLongTimer(60)  # retry in one minute
+				self._timer.startLongTimer(60)  # retry in one minute
+				return
 
 			if not self._epg:
 				self.trace("empty data! Stop.")
