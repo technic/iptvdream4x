@@ -18,17 +18,16 @@ import urllib
 import urllib2
 from json import loads as json_loads
 from os import path as os_path
+from datetime import datetime
 try:
 	from typing import Dict
 except ImportError:
 	pass
 
-from xml.etree.cElementTree import fromstring
-from ..utils import getHwAddr, syncTime, Group, Channel, APIException, APILoginFailed, EPG
-from datetime import datetime
-from urllib import urlencode
 from twisted.internet.defer import Deferred, succeed
 from twisted.web.client import getPage
+
+from ..utils import getHwAddr, syncTime, Group, Channel, APIException, APILoginFailed, EPG
 from ..dist import VERSION
 
 MODE_STREAM = 0

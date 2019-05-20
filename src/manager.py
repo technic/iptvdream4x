@@ -11,29 +11,29 @@
 
 from __future__ import print_function
 
-# enigma2 imports
-from Screens.Screen import Screen
-from Screens.MessageBox import MessageBox
-from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
-	ConfigText, ConfigYesNo, ConfigSelection
-from Components.ActionMap import ActionMap
-from Components.Button import Button
-from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
-from Tools.Import import my_import
-from Tools.LoadPixmap import LoadPixmap
-from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER
-from Components.MenuList import MenuList
-from Screens.ChoiceBox import ChoiceBox
-from common import ConfigNumberText
-from skin import loadSkin
-from enigma import gFont, getDesktop, gMainDC, eSize
-
 # system imports
 from json import load as json_load
 import os
 
+# enigma2 imports
+from Screens.Screen import Screen
+from Screens.MessageBox import MessageBox
+from Screens.ChoiceBox import ChoiceBox
+from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
+	ConfigText, ConfigYesNo, ConfigSelection
+from Components.ActionMap import ActionMap
+from Components.Button import Button
+from Components.MenuList import MenuList
+from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
+from Tools.Import import my_import
+from Tools.LoadPixmap import LoadPixmap
+from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER
+from enigma import gFont, getDesktop, gMainDC, eSize
+from skin import loadSkin
+
 # plugin imports
 from dist import NAME, VERSION
+from common import ConfigNumberText
 from utils import trace, APIException, APILoginFailed
 from loc import translate as _
 from settings import IPtvDreamConfig, IPtvDreamApiConfig

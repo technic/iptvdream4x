@@ -41,3 +41,5 @@ except ImportError as e:
 		from enigma import SCALE_ASPECT as SCALE
 	except ImportError as e:
 		SCALE = 0
+
+__all__ = ['eTimer', 'SCALE']

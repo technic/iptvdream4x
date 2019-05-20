@@ -4,10 +4,11 @@
 Localization
 """
 
-from Components.Language import language
-from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 import os
 import gettext
+
+from Components.Language import language
+from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
 
 def localeInit():

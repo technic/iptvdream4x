@@ -149,7 +149,7 @@ class KtvStream(OfflineFavourites, KartinaAPI):
 	def getSettings(self):
 		return self.settings
 
-	def pushSettings(self, sett):
-		for x in sett:
+	def pushSettings(self, settings):
+		for x in settings:
 			params = {"var": x[0]['id'], "val": x[1]}
 			self.getData(self.site + "/settings_set?", params, "setting %s" % x[0]['id'])

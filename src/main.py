@@ -11,6 +11,14 @@
 
 from __future__ import print_function
 
+# system imports
+from datetime import timedelta
+try:
+	# noinspection PyUnresolvedReferences
+	from typing import Callable, Optional, List, Tuple  # pylint: disable=unused-import
+except ImportError:
+	pass
+
 # enigma2 imports
 from Components.Sources.List import List as ListSource
 from Components.Sources.Boolean import Boolean
@@ -24,8 +32,7 @@ from Components.ServiceEventTracker import InfoBarBase
 from Components.Input import Input
 from Components.MenuList import MenuList
 from Components.GUIComponent import GUIComponent
-from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions,\
-	InfoBarAudioSelection, InfoBarNotifications
+from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions, InfoBarNotifications
 from Screens.Screen import Screen
 from Screens.InfoBarGenerics import NumberZap as NumberZapProxy
 from Screens.MessageBox import MessageBox
@@ -37,17 +44,9 @@ from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, S
 
 # enigma2 core imports
 from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, \
-	gFont, eLabel, eSize, ePoint, iPlayableService
+	eLabel, eSize, ePoint
 from enigma import eServiceReference
 from skin import parseFont
-
-# system imports
-from datetime import datetime, timedelta
-try:
-	# noinspection PyUnresolvedReferences
-	from typing import Callable, Optional, List, Tuple  # pylint: disable=unused-import
-except ImportError:
-	pass
 
 # plugin imports
 from layer import eTimer

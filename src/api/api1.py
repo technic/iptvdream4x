@@ -9,18 +9,21 @@
 # Software Foundation; either version 2, or (at your option) any later
 # version.
 
-from twisted.internet.defer import maybeDeferred, succeed
-from abstract_api import MODE_STREAM, MODE_VIDEOS, AbstractAPI, AbstractStream, CallbackCore
+from __future__ import print_function
+
+from urllib import urlencode
+from json import loads as json_loads
 from datetime import datetime
 from hashlib import md5
+from twisted.internet.defer import maybeDeferred, succeed
+
+from abstract_api import MODE_STREAM, MODE_VIDEOS, AbstractAPI, AbstractStream, CallbackCore
 from ..utils import tdSec, APIException, EPG, Group, Channel
 try:
 	from ..loc import translate as _
 except ImportError:
 	def _(text):
 		return text
-from urllib import urlencode
-from json import loads as json_loads
 
 
 class TeleportAPI(AbstractAPI):
@@ -37,7 +40,7 @@ class TeleportAPI(AbstractAPI):
 	def start(self):
 		self.authorize()
 
-	def authorize(self, params=None):
+	def authorize(self):
 		self.trace("Username is", self.username)
 		md5pass = md5(md5(self.username).hexdigest() + md5(self.password).hexdigest()).hexdigest()
 		params = {"login": self.username, "pass": md5pass, "with_cfg": '', "with_acc": ''}

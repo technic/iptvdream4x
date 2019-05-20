@@ -16,7 +16,6 @@ from datetime import datetime, timedelta
 import time
 import re
 import htmlentitydefs
-from os import path as os_path
 
 
 def trace(*args):
