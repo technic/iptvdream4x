@@ -10,7 +10,24 @@
   </screen>
   <screen>
     <name>IPtvDreamEpg</name>
-    <entries/>
+    <entries>
+      <entry name="epgName" value="Program Name" render="Label" type="string"/>
+      <entry name="epgTime" value="18:00" render="Label" type="string"/>
+      <entry name="epgDuration" value="30 min" render="Label" type="string"/>
+      <entry name="epgProgress" value="30" render="Slider" type="string"/>
+      <entry name="epgDescription" value="Program Description. Program Description." render="Label" type="string"/>
+    </entries>
+  </screen>
+  <screen>
+    <name>IPtvDreamEpgInfo</name>
+    <entries>
+      <entry name="epgName" value="Program Name" render="Label" type="string"/>
+      <entry name="epgProgress" value="50" render="Slider" type="string"/>
+      <entry name="epgDescription" value="Program Description. Program Description." render="Label" type="string"/>
+      <entry name="epgTime" value="18:00" render="Label" type="string"/>
+      <entry name="epgDuration" value="30 min" render="Label" type="string"/>
+      <entry name="epgDate" value="01.02.2003" render="Label" type="string"/>
+    </entries>
   </screen>
   <screen>
     <name>IPtvDreamSeekScreen</name>

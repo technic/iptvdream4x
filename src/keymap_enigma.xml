@@ -49,12 +49,19 @@ flags="r" - onKeyRepeat
 		<key id="KEY_YELLOW" mapto="addFavourites" flags="m" />
 		<key id="KEY_BLUE" mapto="showFavourites" flags="m" />
 		<key id="KEY_MENU" mapto="contextMenu" flags="m" />
+		<key id="KEY_SPACE" mapto="contextMenu" flags="m" />
 		<key id="KEY_INFO" mapto="showEPGList" flags="m" />
 		<key id="KEY_CHANNELUP" mapto="nextBouquet" flags="m" />
 		<key id="KEY_CHANNELDOWN" mapto="prevBouquet" flags="m" />
 	</map>
 	
 	<map context="IPtvDreamEpgListActions">
+		<key id="KEY_UP" mapto="up" flags="mr" />
+		<key id="KEY_DOWN" mapto="down" flags="mr"/>
+		<key id="KEY_LEFT" mapto="pageUp" flags="m"/>
+		<key id="KEY_RIGHT" mapto="pageDown" flags="m"/>
+		<key id="KEY_PAGEUP" mapto="pageUp" flags="m"/>
+		<key id="KEY_PAGEDOWN" mapto="pageDown" flags="m"/>
 		<key id="KEY_CHANNELUP" mapto="nextDay" flags="m" />
 		<key id="KEY_CHANNELDOWN" mapto="prevDay" flags="m" />
 	</map>

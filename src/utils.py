@@ -11,11 +11,11 @@
 
 from __future__ import print_function
 
+from functools import wraps
 from datetime import datetime, timedelta
 import time
 import re
 import htmlentitydefs
-from os import path as os_path
 
 
 def trace(*args):
@@ -23,6 +23,7 @@ def trace(*args):
 
 
 def timeit(f):
+	@wraps(f)
 	def wrapper(*args, **kwargs):
 		t = time.time()
 		result = f(*args, **kwargs)
@@ -122,6 +123,12 @@ class EPG(object):
 	def percent(self, t, size):
 		return size * self.timePass(t) / self.duration()
 
+	def progress(self, t):
+		return float(self.timePass(t)) / float(self.duration())
+
+	def isAt(self, t):
+		return self.begin <= t < self.end
+
 	def __getitem__(self, key):
 		# print("DEPRECATED")
 		return self.__dict__[key]
@@ -131,27 +138,60 @@ class EPG(object):
 		self.__dict__[key] = value
 
 	def __repr__(self):
-		return self.begin.strftime("%H:%M") + "-" + self.end.strftime("%H:%M") + "|" + self.name
+		return "%s-%s|%s" % (self.begin.strftime("%H:%M"), self.end.strftime("%H:%M"), self.name)
 
 
 class ConfEntry(object):
-	def __init__(self, name, title):
-		pass
+	def __init__(self, title):
+		"""
+		Base class for api configuration
+		:type title: str
+		"""
+		self.title = title
+
+	def safeSetValue(self, value):
+		""" Override and do validation if required """
+		self.value = value
 
 
-class ConfInteger:
-	def __init__(self, name, title, value, limits):
-		pass
+class ConfInteger(ConfEntry):
+	def __init__(self, title, value, limits):
+		"""
+		:type value: int
+		:type limits: typing.Tuple[int, int]
+		"""
+		super(ConfInteger, self).__init__(title)
+		self.value = value
+		self.limits = limits
+
+	def safeSetValue(self, value):
+		if self.limits[0] <= value <= self.limits[1]:
+			self.value = value
 
 
-class ConfString:
-	def __init__(self, name, title, value):
-		pass
+class ConfString(ConfEntry):
+	def __init__(self, title, value):
+		"""
+		:type value: str
+		"""
+		super(ConfString, self).__init__(title)
+		self.value = value
 
 
-class ConfSelection:
-	def __init__(self, name, title, value, values):
-		pass
+class ConfSelection(ConfEntry):
+	def __init__(self, title, value, choices):
+		"""
+		choices should be list of (value, description) tuples
+		:type value: str
+		:type choices: List[Tuple[str, str]]
+		"""
+		super(ConfSelection, self).__init__(title)
+		self.value = value
+		self.choices = choices
+
+	def safeSetValue(self, value):
+		if value in [c[0] for c in self.choices]:
+			self.value = value
 
 
 class EPGDB(object):
@@ -348,7 +388,7 @@ def unescapeEntities(text):
 			except KeyError:
 				pass
 		return text  # leave as is
-	return re.sub("&#?\w+;", fixup, text)
+	return re.sub(r"&#?\w+;", fixup, text)
 
 
 class APIException(Exception):

@@ -9,7 +9,7 @@ sudo apt-get install -y \
   libz-dev libssl-dev \
   libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
   gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav \
-  linux-image-extra-`uname -r` alsa alsa-utils gstreamer1.0-alsa \
+  linux-image-extra-$(uname -r) alsa alsa-utils gstreamer1.0-alsa \
   libfreetype6-dev libsigc++-1.2-dev  libfribidi-dev \
   libavahi-client-dev libjpeg-dev libgif-dev libsdl2-dev
 
@@ -54,7 +54,7 @@ cd -
 cd ~/src
 
 sudo mkdir -p /opt/disk
-sudo chown $USER:$USER /opt/disk
+sudo chown "$USER":"$USER" /opt/disk
 
 if test -d enigma2; then
   cd enigma2

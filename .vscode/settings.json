@@ -1,0 +1,28 @@
+{
+    "python.pythonPath": ".venv\\Scripts\\python.exe",
+    "python.testing.pyTestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./tests",
+        "-p",
+        "test_*.py"
+    ],
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintArgs":[],
+    "python.linting.enabled": true,
+    "cSpell.words": [
+        "iptv",
+        "iptvdream",
+        "rtype"
+    ],
+    "python.linting.pep8Enabled": true,
+    // enigma2 legacy style
+    "[python]": {
+        "editor.insertSpaces": false,
+        "editor.tabSize": 4
+    },
+    "python.linting.flake8Enabled": false
+}

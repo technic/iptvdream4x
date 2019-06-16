@@ -18,7 +18,7 @@ fi
 
 
 set -xe
-cd "$(dirname $0)"
+cd "$(dirname "$0")"
 
 build_dir="/tmp/iptvdream-build"
 rm -rf ${build_dir} && mkdir -p ${build_dir}
@@ -29,10 +29,10 @@ export PROVIDER=${provider}
 make version
 source version && test -n "${version}"
 
-name=`echo "enigma2-plugin-extensions-iptvdream-${provider}" |tr A-Z a-z`
+name=$(echo "enigma2-plugin-extensions-iptvdream-${provider}" |tr A-Z a-z)
 package="${name}_${version}_all.ipk"
 ipk="packages/${package}"
 
-rm -f ${ipk} && make ${ipk}
-wput -u -nc ${ipk} "ftp://root@${host}/tmp/test.ipk"
+rm -f "$ipk" && make "$ipk"
+wput -u -nc "$ipk" "ftp://root@${host}/tmp/test.ipk"
 ssh "root@${host}" opkg install --force-reinstall "/tmp/test.ipk"

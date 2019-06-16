@@ -9,13 +9,21 @@
 # Software Foundation; either version 2, or (at your option) any later
 # version.
 
-from twisted.internet.defer import maybeDeferred, succeed
-from abstract_api import MODE_STREAM, MODE_VIDEOS, AbstractAPI, AbstractStream, CallbackCore
-from datetime import datetime
-from hashlib import md5
-from ..utils import tdSec, APIException, EPG, Group, Channel
+from __future__ import print_function
+
 from urllib import urlencode
 from json import loads as json_loads
+from datetime import datetime
+from hashlib import md5
+from twisted.internet.defer import maybeDeferred, succeed
+
+from abstract_api import MODE_STREAM, MODE_VIDEOS, AbstractAPI, AbstractStream, CallbackCore
+from ..utils import tdSec, APIException, EPG, Group, Channel
+try:
+	from ..loc import translate as _
+except ImportError:
+	def _(text):
+		return text
 
 
 class TeleportAPI(AbstractAPI):
@@ -32,7 +40,7 @@ class TeleportAPI(AbstractAPI):
 	def start(self):
 		self.authorize()
 
-	def authorize(self, params=None):
+	def authorize(self):
 		self.trace("Username is", self.username)
 		md5pass = md5(md5(self.username).hexdigest() + md5(self.password).hexdigest()).hexdigest()
 		params = {"login": self.username, "pass": md5pass, "with_cfg": '', "with_acc": ''}
@@ -51,8 +59,14 @@ class TeleportAPI(AbstractAPI):
 			if 'end_date' in s:
 				self.packet_expire = datetime.strptime(s['end_date'], "%Y-%m-%d")
 
-	def parseSettings(self, settings):
-		pass
+	def parseSettings(self, data):
+		from ..utils import ConfSelection, ConfInteger
+		self.settings['media_server_id'] = ConfSelection(
+			title=_("Media server"),
+			value=str(data['media_server_id']),
+			choices=[(str(s['id']), s['title'].encode('utf-8')) for s in data['media_servers']]
+		)
+		self.settings['time_shift'] = ConfInteger(_("Time shift"), data['time_shift'], (0, 24))
 
 
 class TeleportStream(AbstractStream, TeleportAPI):
@@ -95,12 +109,14 @@ class TeleportStream(AbstractStream, TeleportAPI):
 		data = self.getJsonData(self.site+"/get_epg_current?", params)
 		for c in data['channels']:
 			cid = c['id']
+			programs = []
 			for e in c['current'], c['next']:
 				try:
-					yield cid, self.epgEntry(e)
+					programs.append(self.epgEntry(e))
 				except (KeyError, TypeError) as e:
 					self.trace(e)
 					continue
+			yield (cid, programs)
 
 	def getCurrentEpg(self, cid):
 		return self.getChannelsEpg([cid])
@@ -113,12 +129,14 @@ class TeleportStream(AbstractStream, TeleportAPI):
 	def getSettings(self):
 		return self.settings
 
-	def pushSettings(self, sett):
-		for s in sett:
-			params = {'var': s[0]['id'], 'val': s[1]}
-			response = self.getJsonData(self.site+"/set?", params, "Push setting [%s] new value." % s[0]['id'])
-			s[0]['value'] = s[1]
-	
+	def pushSettings(self, settings):
+		params = {
+			"var": ','.join(settings.keys()),
+			"val": ','.join(map(str, settings.values()))
+		}
+		data = self.getJsonData(self.site + "/set?", params)
+		self.parseSettings(data)
+
 	def getFavourites(self):
 		response = self.getJsonData(self.site + "/get_favorites_tv?", {})
 		if response['favorites']:
@@ -126,7 +144,7 @@ class TeleportStream(AbstractStream, TeleportAPI):
 		else:
 			return []
 	
-	def setFavourite(self, cid, fav):
+	def uploadFavourites(self, current):
 		self.getJsonData(self.site + "/set_favorites_tv?", {'val': ','.join(map(str, self.favourites))})
 
 

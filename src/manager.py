@@ -9,35 +9,35 @@
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 
-
-# enigma2 imports
-from Screens.Screen import Screen
-from Screens.MessageBox import MessageBox
-from Screens.InputBox import InputBox
-from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
-	ConfigText, ConfigYesNo, ConfigSelection
-from Components.ActionMap import ActionMap
-from Components.Button import Button
-from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
-from Tools.Import import my_import
-from Tools.LoadPixmap import LoadPixmap
-from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER
-from Components.MenuList import MenuList
-from Screens.ChoiceBox import ChoiceBox
-from Plugins.Plugin import PluginDescriptor
-from common import ConfigNumberText
-from skin import loadSkin
-from enigma import gFont, getDesktop, gMainDC, eSize
+from __future__ import print_function
 
 # system imports
 from json import load as json_load
 import os
 
+# enigma2 imports
+from Screens.Screen import Screen
+from Screens.MessageBox import MessageBox
+from Screens.InputBox import InputBox
+from Screens.ChoiceBox import ChoiceBox
+from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
+	ConfigText, ConfigYesNo, ConfigSelection
+from Components.ActionMap import ActionMap
+from Components.Button import Button
+from Components.MenuList import MenuList
+from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
+from Tools.Import import my_import
+from Tools.LoadPixmap import LoadPixmap
+from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER
+from enigma import gFont, getDesktop, gMainDC, eSize
+from skin import loadSkin
+
 # plugin imports
 from dist import NAME, VERSION
+from common import ConfigNumberText
 from utils import trace, APIException, APILoginFailed
 from loc import translate as _
-from settings import IPtvDreamConfig
+from settings import IPtvDreamConfig, IPtvDreamApiConfig
 from main import IPtvDreamStreamPlayer
 
 PLAYERS = [('1', "enigma2 ts (1)"), ('4097', "gstreamer (4097)"), ('5002', "exteplayer3 (5002)")]
@@ -122,7 +122,7 @@ class PluginStarter(Screen):
 		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
 
 	def login(self):
-		def cb(changed):
+		def cb(changed=False):
 			if changed:
 				self.auth()
 			else:
@@ -140,8 +140,14 @@ class PluginStarter(Screen):
 	def finished(self, ret):
 		if ret == 'settings':
 			self.login()
+		elif ret == 'provider_settings':
+			self.openProviderSettings()
 		else:
 			self.exit()
+
+	def openProviderSettings(self):
+		if self.db:
+			self.session.openWithCallback(lambda ret=None: self.start(), IPtvDreamApiConfig, self.db)
 
 	def exit(self):
 		self.close()
@@ -261,7 +267,9 @@ class Manager(object):
 		trace("Config generated for", self.config.keys())
 
 	def getList(self):
-		return [{'name': v.NAME, 'title': v.TITLE} for v in self.apiDict.values()]
+		return sorted(
+			({'name': v.NAME, 'title': v.TITLE} for v in self.apiDict.values()),
+			key=lambda item: item['name'])
 
 	def getApi(self, name):
 		return self.apiDict[name]

@@ -24,14 +24,19 @@ skindir = $(build)$(skin_path)
 all: package
 
 pyfiles := src/__init__.py src/common.py src/dist.py src/plugin.py src/updater.py \
+	src/cache.py \
 	src/layer.py src/loc.py src/utils.py src/manager.py src/main.py src/settings.py \
-	src/standby.py src/virtualkb.py src/server.py \
+	src/standby.py src/virtualkb.py src/server.py src/provision.py \
+	src/lib/__init__.py src/lib/epg.py src/lib/tv.py \
 	src/api/__init__.py src/api/abstract_api.py
 datafiles := src/keymap_enigma.xml src/keymap_neutrino.xml src/IPtvDream.png
 
 ifeq ($(PROVIDER),all)
-pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py \
-	src/api/m3u.py src/api/edem_soveni.py src/api/edem_yahan.py src/api/ottclub.py src/api/shura.py \
+pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py src/api/amigo.py src/api/emigranttv.py \
+	src/api/pure.py src/api/kinoboom.py \
+	src/api/m3u.py src/api/edem_soveni.py src/api/ottclub.py src/api/shura.py \
+	src/api/iptv_e2_soveni.py src/api/kingmodiptv.py \
+	src/api/kartina.py src/api/ktv.py src/api/newrus.py \
 	src/api/mywy.py src/api/naschetv.py src/api/ozo.py src/api/sovok.py src/api/baltic.py
 datafiles += $(wildcard src/logo/*.png)
 endif
@@ -56,6 +61,14 @@ datainstall := $(patsubst src/%,$(plugindir)/%,$(datafiles))
 
 $(datainstall): $(plugindir)/%: src/%
 	install -D -m644 $< $@
+
+$(plugindir)/LICENSE: LICENSE
+	install -D -m644 $< $@
+
+$(plugindir)/README.md: README.md
+	install -D -m644 $< $@
+
+install: $(plugindir)/LICENSE $(plugindir)/README.md
 
 
 skinfiles := $(shell find skin/ -name *.png) skin/iptvdream.xml

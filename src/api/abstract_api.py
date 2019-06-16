@@ -9,6 +9,8 @@
 # Software Foundation; either version 2, or (at your option) any later
 # version.
 
+from __future__ import print_function
+
 import socket
 import zlib
 import cookielib
@@ -16,12 +18,16 @@ import urllib
 import urllib2
 from json import loads as json_loads
 from os import path as os_path
-from xml.etree.cElementTree import fromstring
-from ..utils import getHwAddr, syncTime, Group, Channel, APIException, EPG
 from datetime import datetime
-from urllib import urlencode
+try:
+	from typing import Dict
+except ImportError:
+	pass
+
 from twisted.internet.defer import Deferred, succeed
 from twisted.web.client import getPage
+
+from ..utils import getHwAddr, syncTime, Group, Channel, APIException, APILoginFailed, EPG
 from ..dist import VERSION
 
 MODE_STREAM = 0
@@ -123,55 +129,27 @@ class AbstractAPI(object):
 			if reauthOnError and not fromauth:
 				return self.getJsonData(url, params, name)
 			error = json['error']
-			raise APIException(str(error['code']) + ": " + error['message'].encode('utf-8'))
+			if str(error['code']) in ['ACC_WRONG', 'AСС_EMPTY']:
+				raise APILoginFailed(str(error['code']) + ": " + error['message'].encode('utf-8'))
+			else:
+				raise APIException(str(error['code']) + ": " + error['message'].encode('utf-8'))
 		self.trace("getJsonData ok")
 		return json
 
-	def getXmlData(self, url, params, name='', fromauth=None):
-		reauthOnError = True
-		if not self.sid and not fromauth:
-			reauthOnError = False
-			self.cookiejar.clear()
-			self.authorize()
-		elif fromauth:
-			self.cookiejar.clear()
-		
-		self.trace("Getting %s" % name)
+	def _resolveConfigurationFile(self, file_name):
 		try:
-			reply = self.readHttp(url+urllib.urlencode(params))
-		except IOError as e:
-			self.sid = None
-			raise APIException(e)
-
-		try:
-			root = fromstring(reply)
-		except SyntaxError as e:
-			raise APIException("Failed to parse xml response: %s" % str(e))
-
-		err = root.find('error')
-		if err:
-			self.sid = None
-			self.cookiejar.clear()
-			if reauthOnError and not fromauth:
-				return self.getXmlData(url, params, name)
-			raise APIException(err.find('code').text.encode('utf-8')+" "+err.find('message').text.encode('utf-8'))
-		return root
+			from Tools.Directories import resolveFilename, SCOPE_SYSETC
+			return resolveFilename(SCOPE_SYSETC, 'iptvdream/%s' % file_name)
+		except ImportError:
+			self.trace("error: cant locate configuration files")
+			return "/tmp/%s" % file_name
 
 	def trace(self, *args):
 		"""Use for API debug"""
 		print("[IPtvDream] %s: %s" % (self.NAME, " ".join(map(str, args))))
-	
-	def get_hashID(self):
-		return int(hash(self.NAME) & 0xffffff)
-	hashID = property(get_hashID)
 
 
 class AbstractStream(AbstractAPI):
-	"""
-	:type groups: dict[int, Group]
-	:type channels: dict[int, Channel]
-	"""
-
 	SERVICE = 1
 	URL_DYNAMIC = True
 	Sort_N = 0
@@ -180,27 +158,31 @@ class AbstractStream(AbstractAPI):
 
 	def __init__(self, username, password):
 		super(AbstractStream, self).__init__(username, password)
-		self.channels = {}
-		self.groups = {}
+		self.channels = {}  # type: Dict[int, Channel]
+		self.groups = {}  # type: Dict[int, Group]
 		self.favourites = []
 		self.got_favourites = False
-
+	
 	def setChannelsList(self):
 		pass
-	
+
 	def addFav(self, cid):
 		if not self.favourites.count(cid):
 			self.favourites.append(cid)
-			self.uploadFavourites(self.favourites, cid, True)
+			self.uploadFavourites(self.favourites)
 
 	def rmFav(self, cid):
 		self.favourites.remove(cid)
-		self.uploadFavourites(self.favourites, cid, False)
+		self.uploadFavourites(self.favourites)
+
+	def setFavourites(self, favourites):
+		self.favourites = favourites
+		self.uploadFavourites(self.favourites)
 
 	def loadChannelsEpg(self, cids):
-		for cid, program in self.getChannelsEpg(cids):
+		for cid, programs in self.getChannelsEpg(cids):
 			try:
-				self.channels[cid].addEpg(program)
+				self.channels[cid].addEpgSorted(programs)
 			except KeyError:
 				self.trace("unknown channel", cid)
 	
@@ -231,8 +213,9 @@ class AbstractStream(AbstractAPI):
 
 	def selectFavourites(self):
 		if not self.got_favourites:
-			s = set(self.getFavourites()).intersection(self.channels.keys())
-			self.favourites = list(s)
+			keys = set(self.channels.keys())
+			favourites = self.getFavourites()
+			self.favourites = [cid for cid in favourites if cid in keys]
 			self.got_favourites = True
 		return [self.channels[cid] for cid in self.favourites]
 	
@@ -262,7 +245,7 @@ class AbstractStream(AbstractAPI):
 	def getChannelsEpg(self, cids):
 		"""
 		:param list[int] cids: list of channel ids
-		:rtype: list[(int, EPG)]
+		:rtype: list[(int, list[EPG])]
 		"""
 		return []
 
@@ -285,30 +268,28 @@ class AbstractStream(AbstractAPI):
 		"""
 		return []
 
-	def uploadFavourites(self, current, cid, added):
+	def uploadFavourites(self, current):
 		"""
 		:param list[int] current: list of current favourites
-		:param int cid: channel id that was just added or removed
-		:param bool added: whether channel should be in favourites
 		"""
 		pass
 
 	def getSettings(self):
+		""" Return setting id to ConfEntry object dict """
 		return {}
 
-	def pushSettings(self, sett):
+	def pushSettings(self, settings):
+		"""
+		Push settings to server for key to value dict
+		:type settings: typing.Dict[str, str]
+		"""
 		pass
 
 
 class OfflineFavourites(AbstractStream):
 	def __init__(self, username, password):
 		super(OfflineFavourites, self).__init__(username, password)
-		try:
-			from Tools.Directories import resolveFilename, SCOPE_SYSETC
-			self._favorites_file = resolveFilename(SCOPE_SYSETC, 'iptvdream/%s.txt' % self.NAME)
-		except ImportError:
-			self.trace("error: cant locate favourites files")
-			self._favorites_file = "/tmp/fav_%s.txt" % self.NAME
+		self._favorites_file = self._resolveConfigurationFile('%s.txt' % self.NAME)
 
 	def getFavourites(self):
 		if not os_path.isfile(self._favorites_file):
@@ -320,10 +301,31 @@ class OfflineFavourites(AbstractStream):
 				fav.append(cid)
 			return fav
 
-	def uploadFavourites(self, current, cid, added):
+	def uploadFavourites(self, current):
 		try:
 			with open(self._favorites_file, 'w') as f:
 				f.write(','.join(map(str, current)))
+		except Exception as e:
+			raise APIException(str(e))
+
+
+class JsonSettings(AbstractAPI):
+	def __init__(self, username, password):
+		super(JsonSettings, self).__init__(username, password)
+		self._settings_file = self._resolveConfigurationFile('%s.json' % self.NAME)
+
+	def _loadSettings(self):
+		from json import load as json_load
+		if not os_path.isfile(self._settings_file):
+			return {}
+		with open(self._settings_file) as f:
+			return json_load(f) or {}
+
+	def _saveSettings(self, settings):
+		from json import dump as json_dump
+		try:
+			with open(self._settings_file, 'w') as f:
+				json_dump(settings, f)
 		except Exception as e:
 			raise APIException(str(e))
 

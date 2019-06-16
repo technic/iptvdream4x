@@ -11,48 +11,54 @@
 
 from __future__ import print_function
 
+# system imports
+from datetime import timedelta
+try:
+	# noinspection PyUnresolvedReferences
+	from typing import Callable, Optional, List, Tuple  # pylint: disable=unused-import
+except ImportError:
+	pass
+
 # enigma2 imports
+from Components.Sources.List import List as ListSource
 from Components.Sources.Boolean import Boolean
 from Components.ActionMap import ActionMap, NumberActionMap
-from Components.config import config, configfile, ConfigText, ConfigInteger, ConfigSelection, getConfigListEntry
-from Components.ConfigList import ConfigListScreen
+from Components.config import config, configfile
 from Components.Label import Label
+from Components.ScrollLabel import ScrollLabel
 from Components.Slider import Slider
 from Components.Button import Button
-from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
+from Components.ServiceEventTracker import InfoBarBase
 from Components.Input import Input
 from Components.MenuList import MenuList
 from Components.GUIComponent import GUIComponent
-from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions,\
-	InfoBarAudioSelection, InfoBarNotifications
+from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions, InfoBarNotifications
 from Screens.Screen import Screen
 from Screens.InfoBarGenerics import NumberZap as NumberZapProxy
 from Screens.MessageBox import MessageBox
 from Screens.MinuteInput import MinuteInput
 from Screens.ChoiceBox import ChoiceBox
-from Screens.InputBox import PinInput, InputBox
-from Tools.BoundFunction import boundFunction
+from Screens.InputBox import InputBox
 from Tools.LoadPixmap import LoadPixmap
-from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
+from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC
 
 # enigma2 core imports
 from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, \
-	gFont, eLabel, eSize, ePoint, iPlayableService, ePicLoad
-from enigma import eServiceReference, iServiceInformation, eDVBDB
-from skin import parseFont, colorNames, SkinError
-
-# system imports
-from os import path as os_path, listdir as os_listdir, mkdir as os_mkdir
-from datetime import datetime, timedelta
+	eLabel, eSize, ePoint
+from enigma import eServiceReference
+from skin import parseFont
 
 # plugin imports
 from layer import eTimer
 from common import StaticTextService
-from utils import trace, tdSec, secTd, syncTime, APIException, APILoginFailed, APIWrongPin
-from api.abstract_api import MODE_VIDEOS, MODE_STREAM, AbstractStream
+from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG
+from api.abstract_api import AbstractStream
 from loc import translate as _
-from common import parseColor
+from common import parseColor, ShowHideScreen, AutoAudioSelection
 from standby import standbyNotifier
+from cache import LiveEpgWorker
+from lib.epg import EpgProgress
+from lib.tv import SortOrderSettings
 
 SKIN_PATH = resolveFilename(SCOPE_SKIN, 'IPtvDream')
 ENIGMA_CONF_PATH = resolveFilename(SCOPE_SYSETC, 'enigma2')
@@ -63,106 +69,6 @@ EPG_UPDATE_INTERVAL = 60  # Seconds, in channel list.
 PROGRESS_TIMER = 1000*60  # Update progress in infobar.
 PROGRESS_SIZE = 500
 ARCHIVE_TIME_FIX = 5  # sec. When archive paused, we could miss some video
-AUTO_AUDIOSELECT = True
-
-
-#  Reimplementation of InfoBarShowHide
-class ShowHideScreen:
-	STATE_HIDDEN = 0
-	STATE_SHOWN = 1
-
-	def __init__(self):
-		# super(ShowHideScreen, self).__init__(session)
-		self.__state = self.STATE_SHOWN
-
-		self["ShowHideActions"] = ActionMap(["InfobarShowHideActions"], {
-				"toggleShow": self.toggleShow,
-				"hide": self.hide,
-			}, 1)  # lower prio to make it possible to override ok and cancel..
-
-		self.hideTimer = eTimer()
-		self.hideTimer.callback.append(self.doTimerHide)
-		self.hideTimer.start(5000, True)
-
-		self.onShow.append(self.__onShow)
-		self.onHide.append(self.__onHide)
-		self.__locked = 0
-
-	def serviceStarted(self):
-		if self.execing:
-			if config.usage.show_infobar_on_zap.value:
-				self.doShow()
-
-	def __onShow(self):
-		self.__state = self.STATE_SHOWN
-		self.startHideTimer()
-
-	def startHideTimer(self):
-		if self.__state == self.STATE_SHOWN:
-			idx = config.usage.infobar_timeout.index
-			if idx:
-				self.hideTimer.start(idx*1000, True)
-
-	def __onHide(self):
-		self.__state = self.STATE_HIDDEN
-
-	def doShow(self):
-		self.show()
-		self.startHideTimer()
-
-	def doTimerHide(self):
-		self.hideTimer.stop()
-		if self.__state == self.STATE_SHOWN:
-			self.hide()
-
-	def toggleShow(self):
-		if self.__state == self.STATE_SHOWN:
-			self.hide()
-			self.hideTimer.stop()
-		elif self.__state == self.STATE_HIDDEN:
-			self.show()
-
-	def lockShow(self):
-		self.__locked = self.__locked + 1
-		if self.execing:
-			self.show()
-			self.hideTimer.stop()
-
-	def unlockShow(self):
-		self.__locked = self.__locked - 1
-		if self.execing:
-			self.startHideTimer()
-
-
-class IPtvDreamAudio(Screen):
-	def __init__(self, session):
-		super(IPtvDreamAudio, self).__init__(session)
-		self.__ev_tracker = ServiceEventTracker(screen=self, eventmap={
-				iPlayableService.evUpdatedInfo: self.audioSelect,
-				iPlayableService.evStart: self.audioClear
-			})
-		self.audio_selected = False
-
-	def audioSelect(self):
-		print("[IPtvDreamAudio] select")
-		if self.audio_selected or not AUTO_AUDIOSELECT:
-			return
-		self.audio_selected = True
-		service = self.session.nav.getCurrentService()
-		audio = service and service.audioTracks()
-		n = audio and audio.getNumberOfTracks() or 0
-		if n > 0:
-			selected_audio = audio.getCurrentTrack()
-			for x in range(n):
-				language = audio.getTrackInfo(x).getLanguage()
-				print("[IPtvDreamAudio] scan langstr:", x, language)
-				if language.find('rus') > -1 and x != selected_audio:
-					audio.selectTrack(x)
-					break
-
-	def audioClear(self):
-		print("[IPtvDreamAudio] clear")
-		self.audio_selected = False
 
 
 class NumberZap(NumberZapProxy):
@@ -175,24 +81,22 @@ class NumberZap(NumberZapProxy):
 
 
 class IPtvDreamStreamPlayer(
-		Screen, ShowHideScreen, InfoBarBase, InfoBarMenu, InfoBarPlugins,
-		InfoBarExtensions, InfoBarAudioSelection, InfoBarNotifications):
-
+		ShowHideScreen, AutoAudioSelection,
+		InfoBarBase, InfoBarMenu, InfoBarPlugins, InfoBarExtensions, InfoBarNotifications):
 	"""
 	:type channels: IPtvDreamChannels
+	:type db: AbstractStream
 	"""
 
 	ALLOW_SUSPEND = True
 
 	def __init__(self, session, db):
-		Screen.__init__(self, session)
+		super(IPtvDreamStreamPlayer, self).__init__(session)
 		InfoBarBase.__init__(self, steal_current_service=True)
 		InfoBarMenu.__init__(self)
 		InfoBarExtensions.__init__(self)
 		InfoBarPlugins.__init__(self)
-		InfoBarAudioSelection.__init__(self)
 		InfoBarNotifications.__init__(self)
-		ShowHideScreen.__init__(self)  # Use myInfoBar because image developers modify InfoBarGenerics
 
 		trace("start stream player")
 		self.db = db
@@ -275,7 +179,7 @@ class IPtvDreamStreamPlayer(
 		self.archive_pause = None
 		self.shift = 0
 
-	### Init and destroy
+	# Init and destroy
 
 	def start(self):
 		trace("player start")
@@ -292,7 +196,7 @@ class IPtvDreamStreamPlayer(
 				self.exit()
 		self.session.openWithCallback(cb, MessageBox, _("Exit plugin?"), MessageBox.TYPE_YESNO)
 
-	### Play
+	# Play
 
 	def play(self, cid):
 		trace("play cid =", cid)
@@ -333,7 +237,7 @@ class IPtvDreamStreamPlayer(
 
 		self.playUrl(url)
 
-	### Player
+	# Player
 
 	def playUrl(self, url):
 		cid = self.cid
@@ -362,7 +266,7 @@ class IPtvDreamStreamPlayer(
 			else:
 				self.play(self.cid)
 
-	### Archive
+	# Archive
 
 	def setArchiveShift(self, time_shift):
 		self.shift = time_shift
@@ -417,7 +321,7 @@ class IPtvDreamStreamPlayer(
 		self.setArchiveShift(0)
 		self.play(self.cid)
 
-	### EPG
+	# EPG
 
 	def epgEvent(self):
 		# first stop timers
@@ -483,7 +387,7 @@ class IPtvDreamStreamPlayer(
 		self["progressBar"].setValue(self.currentEpg.percent(time, PROGRESS_SIZE))
 		self.epgProgressTimer.start(PROGRESS_TIMER)
 
-	### Dialogs
+	# Dialogs
 
 	def showEpg(self):
 		self.session.openWithCallback(self.programSelected, IPtvDreamEpg, self.db, self.cid, self.shift)
@@ -495,7 +399,13 @@ class IPtvDreamStreamPlayer(
 
 	def showList(self):
 		self.session.execDialog(self.channels)
-		self.channels.callback = self.channelSelected
+		self.channels.callback = self.listClosed
+
+	def listClosed(self, cid=None, time=None, action=None):
+		if action is None:
+			self.channelSelected(cid, time)
+		else:
+			self.exit(action)
 
 	def channelSelected(self, cid, time=None):
 		if cid is None:
@@ -511,7 +421,7 @@ class IPtvDreamStreamPlayer(
 	def openVod(self):
 		self.exit('vod')
 
-	### Channels
+	# Channels
 
 	def switchChannel(self, cid):
 		# FIXME: zapping breaks archive shift
@@ -546,7 +456,7 @@ class IPtvDreamStreamPlayer(
 			cid = self.channels.getCurrent()
 			self.switchChannel(cid)
 
-	### Errors
+	# Errors
 
 	def showError(self, msg):
 		self.session.open(MessageBox, msg, MessageBox.TYPE_ERROR, 5)
@@ -556,12 +466,14 @@ class ChannelList(MenuList):
 	def __init__(self):
 		MenuList.__init__(self, [], content=eListboxPythonMultiContent, enableWrapAround=True)
 		self.list = []
+		self.index = {}
 		self.col = {}
 		self.fontCalc = []
 
 		self.pixmapProgressBar = None
 		self.pixmapArchive = None
 		self.itemHeight = 28
+		self.itemWidth = 0
 		self.l.setFont(0, parseFont("Regular;22", ((1, 1), (1, 1))))
 		self.l.setFont(1, parseFont("Regular;18", ((1, 1), (1, 1))))
 		self.l.setFont(2, parseFont("Regular;20", ((1, 1), (1, 1))))
@@ -646,19 +558,53 @@ class ChannelList(MenuList):
 		else:
 			self.num = 0
 
-	def setList(self, channels):
-		self.list = channels
-		print(len(channels), channels)
-		self.l.setList(map(self.buildChannelEntry, channels))
+	def setChannelsList(self, channels):
+		self.setList(map(self.buildChannelEntry, channels))
+		# Create map from channel id to its index in list
+		self.index = dict((entry[0].cid, i) for (i, entry) in enumerate(self.list))
 		if self.num:
 			self.num = 1
+
+	def updateChannel(self, cid, channel):
+		try:
+			index = self.index[cid]
+		except KeyError:
+			return
+		self.list[index] = self.buildChannelEntry(channel)
+		self.l.invalidateEntry(index)
+
+	def moveUp(self):
+		index = self.getSelectedIndex()
+		if index == 0:
+			return
+		self.list[index - 1], self.list[index] = self.list[index], self.list[index - 1]
+		self.l.invalidateEntry(index - 1)
+		self._updateIndexMap(index - 1)
+		self.l.invalidateEntry(index)
+		self._updateIndexMap(index)
+		self.up()
+
+	def moveDown(self):
+		index = self.getSelectedIndex()
+		if index + 1 == len(self.list):
+			return
+		self.list[index], self.list[index + 1] = self.list[index + 1], self.list[index]
+		self.l.invalidateEntry(index)
+		self._updateIndexMap(index)
+		self.l.invalidateEntry(index + 1)
+		self._updateIndexMap(index + 1)
+		self.down()
+
+	def _updateIndexMap(self, i):
+		cid = self.list[i][0].cid
+		self.index[cid] = i
 
 	def highlight(self, cid):
 		self.highlight_cid = cid
 
 	def setGroupList(self, groups):
-		self.list = groups
-		self.l.setList(map(self.buildGroupEntry, groups))
+		self.setList(map(self.buildGroupEntry, groups))
+		self.index = {}
 
 	def calculateWidth(self, text, font):
 		self.fontCalc[font].setText(text)
@@ -671,9 +617,13 @@ class ChannelList(MenuList):
 				0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, group.title)
 		]
 
-	def buildChannelEntry(self, c):
+	def buildChannelEntry(self, entry):
+		"""
+		:type entry: Tuple[utils.Channel, utils.EPG]
+		"""
+		c, e = entry
 		defaultFlag = RT_HALIGN_LEFT | RT_VALIGN_CENTER
-		# Filling from left to rigth
+		# Filling from left to right
 
 		lst = [c]
 		xoffset = 1
@@ -694,13 +644,11 @@ class ChannelList(MenuList):
 						xoffset, (self.itemHeight - height) / 2, width, height, self.pixmapArchive))
 			xoffset += width+5
 
-		epg = c.epgCurrent()
-
 		if self.showEpgProgress:
 			width = 52
 			height = 6
-			if epg:
-				percent = epg.percent(syncTime(), 100)
+			if e:
+				percent = e.percent(syncTime(), 100)
 				lst.extend([
 					(eListboxPythonMultiContent.TYPE_PROGRESS,
 						xoffset+1, (self.itemHeight-height)/2, width, height,
@@ -723,8 +671,8 @@ class ChannelList(MenuList):
 					0, defaultFlag, text, self.col['colorServicePlaying'], self.col['colorServicePlayingSelected']))
 		xoffset += width+10
 
-		if epg:
-			text = '(%s)' % epg.name
+		if e:
+			text = '(%s)' % e.name
 			lst.append(
 				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, self.itemWidth, self.itemHeight,
 					1, defaultFlag, text,
@@ -733,49 +681,46 @@ class ChannelList(MenuList):
 		return lst
 
 
-class History:
-	"""
-	:type history: list[HistoryEntry]
-	"""
+class History(object):
 	def __init__(self, size):
-		self.history_size = size
-		self.history = []
-		self.history_idx = -1
+		self._size = size
+		self._history = []  # type: List[HistoryEntry]
+		self._index = -1
 
 	def isEmpty(self):
-		return len(self.history) == 0
+		return len(self._history) == 0
 
-	def historyAppend(self, val):
-		while len(self.history) > self.history_idx + 1:
-			self.history.pop()
-		self.history.append(val)
-		if len(self.history) > self.history_size:
-			self.history.pop(0)
+	def append(self, val):
+		while len(self._history) > self._index + 1:
+			self._history.pop()
+		self._history.append(val)
+		if len(self._history) > self._size:
+			self._history.pop(0)
 		else:
-			self.history_idx += 1
+			self._index += 1
 
 	def historyPrev(self):
-		if self.history_idx < 1:
+		if self._index < 1:
 			return None
 		else:
-			self.history_idx -= 1
-			return self.history[self.history_idx]
+			self._index -= 1
+			return self._history[self._index]
 
 	def historyNext(self):
-		if self.history_idx+1 == len(self.history):
+		if self._index+1 == len(self._history):
 			return None
 		else:
-			self.history_idx += 1
-			return self.history[self.history_idx]
+			self._index += 1
+			return self._history[self._index]
 
-	def historyNow(self):
-		if len(self.history):
-			return self.history[self.history_idx]
+	def now(self):
+		if len(self._history):
+			return self._history[self._index]
 		else:
 			return None
 
-	def historyPrint(self):
-		print(map(str, self.history))
+	def __repr__(self):
+		return map(str, self._history)
 
 
 class HistoryEntry(object):
@@ -803,7 +748,7 @@ class HistoryEntry(object):
 class IPtvDreamChannels(Screen):
 	"""
 	:type db: AbstractStream
-	:type saved_state: HistoryEntry
+	:type saved_state: Optional[HistoryEntry]
 	"""
 
 	GROUPS, ALL, GROUP, FAV = range(4)
@@ -813,7 +758,7 @@ class IPtvDreamChannels(Screen):
 
 		trace("channels init")
 		self.history = History(10)
-		self.db = db
+		self.db = db  # type: AbstractStream
 		self.player_ref = player_ref
 		from manager import manager
 		self.cfg = manager.getConfig(self.db.NAME)
@@ -834,6 +779,21 @@ class IPtvDreamChannels(Screen):
 		self["epgNextName"] = Label()
 		self["epgNextDescription"] = Label()
 
+		self["progress"] = self._progress = EpgProgress()
+		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
+
+		self._worker = LiveEpgWorker(db)
+		self._worker.onUpdate.append(self.updatePrograms)
+		self.onClose.append(self._worker.destroy)
+
+		def workerStandby(sleep):
+			if sleep:
+				self._worker.stop()
+			else:
+				self._worker.update()
+		standbyNotifier.onStandbyChanged.append(workerStandby)
+		self.onClose.append(lambda: standbyNotifier.onStandbyChanged.remove(workerStandby))
+
 		self["packetExpire"] = Label()
 
 		self["actions"] = ActionMap(
@@ -852,35 +812,41 @@ class IPtvDreamChannels(Screen):
 
 		self.list.onSelectionChanged.append(self.selectionChanged)
 
+		self.order_config = SortOrderSettings()
 		self.mode = self.GROUPS
 		self.gid = None
 		self.saved_state = None
 
-		self.editMoving = False
+		self.edit_mode = False
+		self.marked = False  # Whether current entry is marked (in edit mode)
+		self["move_actions"] = ActionMap(
+			["OkCancelActions", "DirectionActions", "IPtvDreamChannelListActions"], {
+				"cancel": self.finishEditing,
+				"ok": self.toggleMarkForMoving,
+				"up": self.moveUp,
+				"down": self.moveDown,
+				"contextMenu": self.showMenu,
+				"addFavourites": self.addRemoveFavourites,
+			}, -1)
 
 		if self.db.packet_expire is not None:
 			self["packetExpire"].setText(_("Payment expires: ") + self.db.packet_expire.strftime("%d.%m.%Y"))
 
-		self.onLayoutFinish.append(self.initList)
+		self.onLayoutFinish.append(self.fillList)
 		self.onShown.append(self.start)
-
-		self.lastEpgUpdate = datetime.fromtimestamp(0)
-
-	def initList(self):
-		self.fillList()
 
 	def start(self):
 		trace("Channels list shown")
 		if not self.history.isEmpty():
-			self.saved_state = self.history.historyNow().copy()
+			self.saved_state = self.history.now().copy()
 		else:
 			self.saved_state = None
 
 	def saveQuery(self):
 		trace("save query")
-		h = self.history.historyNow()
+		h = self.history.now()
 		if h is not None:
-			self.cfg.last_played.value = self.history.historyNow().toStr()
+			self.cfg.last_played.value = self.history.now().toStr()
 		else:
 			self.cfg.last_played.value = ""
 		self.cfg.last_played.save()
@@ -920,22 +886,19 @@ class IPtvDreamChannels(Screen):
 		else:
 			idx = self.list.getSelectedIndex()
 			cid = entry.cid
-			self.history.historyAppend(HistoryEntry(self.mode, self.gid, 0, cid, idx))
+			self.history.append(HistoryEntry(self.mode, self.gid, 0, cid, idx))
 			self.close(cid, time)
 
-	def fetchChannelsEpg(self):
-		t = syncTime()
-		timeout = not self.lastEpgUpdate or ((t - self.lastEpgUpdate) > secTd(EPG_UPDATE_INTERVAL))
-		if not timeout:
+	def updatePrograms(self, data):
+		# type: (List[Tuple[int, EPG]]) -> None
+		if self.mode == self.GROUPS:
 			return
-		trace("fetchEpg", "!"*100)
-		self.lastEpgUpdate = t
-		to_update = [x for (x, c) in self.db.channels.items() if not c.epgNext(t)]
-		if len(to_update):
-			try:
-				self.db.loadChannelsEpg(to_update)
-			except APIException as e:
-				trace("[IPtvDream] failed to get channels epg", str(e))
+		for (cid, epg) in data:
+			if epg:
+				self.list.updateChannel(cid, (self.db.channels[cid], epg))
+
+	def setChannels(self, channels):
+		self.list.setChannelsList((c, self._worker.get(c.cid)) for c in channels)
 
 	def fillGroupsList(self):
 		self.setTitle(" / ".join([self.db.NAME, _("Groups")]))
@@ -950,21 +913,22 @@ class IPtvDreamChannels(Screen):
 				self.gid = None
 
 	def fillList(self):
-		self.fetchChannelsEpg()
 		title = [self.db.NAME]
-		self.list.highlight(self.player_ref.cid)
+		# Highlight is used for edit mode
+		# self.list.highlight(self.player_ref.cid)
+		order = self.order_config.getValue()
 
 		if self.mode == self.GROUPS:
 			self.fillGroupsList()
 			title.append(_("Groups"))
 		elif self.mode == self.GROUP:
-			self.list.setList(self.db.selectChannels(self.gid))
+			self.setChannels(self.db.selectChannels(self.gid, sort_key=order))
 			title.append(self.db.groups[self.gid].title)
 		elif self.mode == self.ALL:
-			self.list.setList(self.db.selectAll())
+			self.setChannels(self.db.selectAll(sort_key=order))
 			title.append(_("All channels"))
 		elif self.mode == self.FAV:
-			self.list.setList(self.db.selectFavourites())
+			self.setChannels(self.db.selectFavourites())
 			title.append(_("Favourites"))
 
 		self.setTitle(" / ".join(title))
@@ -974,9 +938,6 @@ class IPtvDreamChannels(Screen):
 			self["key_yellow"].setText(_("Add"))
 
 	def selectionChanged(self):
-		if self.editMoving:
-			return
-
 		channel = self.getSelected()
 		trace("selection =", channel)
 
@@ -987,19 +948,19 @@ class IPtvDreamChannels(Screen):
 		else:
 			self["channelName"].setText(channel.name)
 			self["channelName"].show()
-			curr = channel.epgCurrent()
+			curr = self._worker.get(channel.cid)
 			if curr:
 				self["epgTime"].setText("%s - %s" % (curr.begin.strftime("%H:%M"), curr.end.strftime("%H:%M")))
 				self["epgName"].setText(curr.name)
 				self["epgName"].show()
 				self["epgTime"].show()
-				self["epgProgress"].setValue(curr.percent(syncTime(), 100))
-				self["epgProgress"].show()
 				self["epgDescription"].setText(curr.description)
 				self["epgDescription"].show()
+				self._progress.setEpg(curr)
+				self["epgProgress"].show()
 			else:
 				self.hideEpgLabels()
-			curr = channel.epgNext()
+			curr = self._worker.getNext(channel.cid)
 			if curr:
 				self["epgNextTime"].setText("%s - %s" % (curr.begin.strftime("%H:%M"), curr.end.strftime("%H:%M")))
 				self["epgNextName"].setText(curr.name)
@@ -1059,14 +1020,108 @@ class IPtvDreamChannels(Screen):
 			self.db.addFav(channel.cid)
 
 	def showMenu(self):
-		lst = []
-		self.session.openWithCallback(self.showMenuCB, ChoiceBox, _("Context menu"), lst)
+		actions = []
+		current = self.getSelected()
+		if self.mode in [self.ALL, self.GROUP]:
+			actions += [
+				(_("Sort by number"), self.sortByNumber),
+				(_("Sort by name"), self.sortByName),
+			]
+			if current:
+				actions += [
+					(_('Add "%s" to favourites') % current.name, self.addRemoveFavourites),
+				]
+		if self.mode == self.FAV:
+			if current:
+				actions += [
+					(_('Remove "%s" from favourites') % current.name, self.addRemoveFavourites),
+				]
+				if not self.edit_mode:
+					actions += [(_("Enter edit mode"), self.confirmStartEditing)]
+				else:
+					actions += [(_("Exit edit mode"), self.notifyFinishEditing)]
 
-	def showMenuCB(self, entry=None):
-		if entry is None:
+		actions += [(_("Open settings"), self.openSettings)]
+
+		def cb(entry=None):
+			if entry is not None:
+				func = entry[1]
+				func()
+		if actions:
+			self.session.openWithCallback(cb, ChoiceBox, _("Context menu"), actions)
+
+	def sortBy(self, what):
+		channel = self.getSelected()
+		if channel is None:
 			return
-		entry = entry[1]
-		trace("context cb", entry)
+		self.order_config.setValue(what)
+		self.fillList()
+		index = self.findChannelIndex(channel.cid)
+		if index:
+			self.list.moveToIndex(index)
+
+	def sortByNumber(self):
+		self.sortBy('number')
+
+	def sortByName(self):
+		self.sortBy('name')
+
+	def confirmStartEditing(self):
+		def cb(ret):
+			if ret:
+				self.startEditing()
+		message = _(
+			"In the editing mode you can reorder your favourites list. Quick help:\n"
+			"- Select channel that you want to put to a new position.\n"
+			"- Press OK to start moving the channel around with arrow buttons.\n"
+			"- Press OK again to fix the position of the channel.\n"
+			"- Press EXIT when done.\n"
+			"Start editing mode?"
+		)
+		self.session.openWithCallback(cb, MessageBox, _(message), MessageBox.TYPE_YESNO)
+
+	def startEditing(self):
+		"""Start reordering of channels in the favourites list"""
+		self.edit_mode = True
+		self["actions"].setEnabled(False)
+		self["move_actions"].setEnabled(True)
+
+	def toggleMarkForMoving(self):
+		if self.marked:
+			self.marked = False
+			self.list.highlight(None)
+		else:
+			self.marked = True
+			channel = self.getSelected()
+			if channel:
+				self.list.highlight(channel.cid)
+
+	def moveUp(self):
+		if self.marked:
+			self.list.moveUp()
+		else:
+			self.list.up()
+
+	def moveDown(self):
+		if self.marked:
+			self.list.moveDown()
+		else:
+			self.list.down()
+
+	def notifyFinishEditing(self):
+		self.session.openWithCallback(
+			lambda ret: self.finishEditing(),
+			MessageBox, _("Exiting edit mode"), MessageBox.TYPE_INFO, timeout=5)
+
+	def finishEditing(self):
+		self.edit_mode = False
+		self["actions"].setEnabled(True)
+		self["move_actions"].setEnabled(False)
+		try:
+			self.db.setFavourites([entry[0].cid for entry in self.list.list])
+		except APIException as ex:
+			self.session.open(
+				MessageBox, "%s\n%s" % (_("Failed to save favourites list."), str(ex)), MessageBox.TYPE_ERROR)
 
 	def showEpgList(self):
 		channel = self.getSelected()
@@ -1084,19 +1139,19 @@ class IPtvDreamChannels(Screen):
 		return entry and entry[0]
 
 	def getCurrent(self):
-		return self.history.historyNow().cid
+		return self.history.now().cid
 
 	def modeChannels(self):
 		return self.mode != self.GROUPS
 
 	def nextChannel(self):
 		self.list.down()
-		self.history.historyAppend(self.createHistoryEntry())
+		self.history.append(self.createHistoryEntry())
 		return self.getCurrent()
 
 	def prevChannel(self):
 		self.list.up()
-		self.history.historyAppend(self.createHistoryEntry())
+		self.history.append(self.createHistoryEntry())
 		return self.getCurrent()
 
 	def historyNext(self):
@@ -1116,11 +1171,11 @@ class IPtvDreamChannels(Screen):
 			return None
 
 	def findChannelIndex(self, cid):
-		for i, channel in enumerate(self.list.list):
+		for i, entry in enumerate(self.list.list):
+			channel = entry[0]
 			if channel.cid == cid:
 				return i
-		else:
-			return None
+		return None
 
 	def goToNumber(self, num):
 		cid = self.db.findNumber(num)
@@ -1132,8 +1187,11 @@ class IPtvDreamChannels(Screen):
 			self.fillList()
 			idx = self.findChannelIndex(cid)
 		self.list.moveToIndex(idx)
-		self.history.historyAppend(self.createHistoryEntry())
+		self.history.append(self.createHistoryEntry())
 		return cid
+
+	def openSettings(self):
+		self.close(None, None, 'provider_settings')
 
 
 class IPtvDreamEpg(Screen):
@@ -1142,33 +1200,32 @@ class IPtvDreamEpg(Screen):
 
 		self["key_red"] = Button(_("Archive"))
 		self["key_green"] = Button(_("Details"))
-		self.list = MenuList([], content=eListboxPythonMultiContent)
-		self.list.l.setFont(0, gFont("Regular", 20))
-		self.list.l.setFont(1, gFont("Regular", 20))
-		self.list.l.setItemHeight(28)
-		self["list"] = self.list
+		self["list"] = self.list = ListSource()
 
 		self["epgName"] = Label()
 		self["epgDescription"] = Label()
 		self["epgTime"] = Label()
 		self["epgDuration"] = Label()
 
-		self["sepgName"] = Label()
-		self["sepgDescription"] = Label()
-		self["sepgTime"] = Label()
-		self["sepgDuration"] = Label()
+		self["epgProgress"] = Slider(0, 100)
+		self["progress"] = self._progress = EpgProgress()
+		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
 
 		self["actions"] = ActionMap(
 			["OkCancelActions", "IPtvDreamEpgListActions", "ColorActions"], {
 				"cancel": self.exit,
 				"ok": self.archive,
+				"up": self.up,
+				"down": self.down,
+				"pageUp": self.pageUp,
+				"pageDown": self.pageDown,
 				"nextDay": self.nextDay,
 				"prevDay": self.prevDay,
-				"green": self.showSingle,
+				"green": self.showInfo,
 				"red": self.archive
 			}, -1)
 
-		self.db = db
+		self.db = db  # type: AbstractStream
 		self.cid = cid
 		self.shift = shift
 		self.day = 0
@@ -1177,23 +1234,17 @@ class IPtvDreamEpg(Screen):
 		self.onLayoutFinish.append(self.fillList)
 
 	def buildEpgEntry(self, entry):
-		res = [
-			entry,
-			(eListboxPythonMultiContent.TYPE_TEXT, 18, 2, 40, 22, 0, RT_HALIGN_LEFT, _(entry.begin.strftime('%a'))),
-			(eListboxPythonMultiContent.TYPE_TEXT, 62, 2, 90, 22, 0, RT_HALIGN_LEFT, entry.begin.strftime('%H:%M')),
-			(eListboxPythonMultiContent.TYPE_TEXT, 140, 2, 585, 24, 1, RT_HALIGN_LEFT, entry.name)]
 		if self.db.channels[self.cid].has_archive and entry.begin < syncTime():
-			res += [(eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST, 0, 5, 16, 16, rec_png)]
-		return res
+			pixmap = rec_png
+		else:
+			pixmap = None
+		return entry, pixmap, entry.begin.strftime('%a'), entry.begin.strftime('%H:%M'), entry.name
 
 	def fillList(self):
 		if self.cid is None:
 			return
-		self.hideLabels("s%s")
-		self.list.show()
 
-		d = syncTime()+secTd(self.shift)+timedelta(self.day)
-
+		d = syncTime() + secTd(self.shift) + timedelta(self.day)
 		epg_list = self.db.channels[self.cid].epgDay(d)
 		if len(epg_list) == 0:
 			try:
@@ -1204,43 +1255,25 @@ class IPtvDreamEpg(Screen):
 
 		self.list.setList(map(self.buildEpgEntry, epg_list))
 		self.setTitle("EPG / %s / %s %s" % (self.db.channels[self.cid].name, d.strftime("%d"), _(d.strftime("%b"))))
-		self.list.moveToIndex(0)
+		self.list.setIndex(0)
 		e = self.db.channels[self.cid].epgCurrent(d)
 		if e and self.day == 0:
 			try:
-				self.list.moveToIndex(epg_list.index(e))
+				self.list.setIndex(epg_list.index(e))
 			except ValueError:
 				trace("epgCurrent at other date!")
 
-	def updateLabels(self, s="%s"):
+	def updateLabels(self):
 		entry = self.list.getCurrent()
 		if not entry:
 			return
 
 		entry = entry[0]
-		self[s % "epgName"].setText(entry.name)
-		self[s % "epgTime"].setText(entry.begin.strftime("%d.%m %H:%M"))
-		self[s % "epgDescription"].setText(entry.description)
-		self[s % "epgDescription"].show()
-		self[s % "epgName"].show()
-		self[s % "epgTime"].show()
-		self[s % "epgDuration"].setText("%s min" % (entry.duration() / 60))
-		self[s % "epgDuration"].show()
-
-	def hideLabels(self, s="%s"):
-		trace("hide", s)
-		self[s % "epgName"].hide()
-		self[s % "epgTime"].hide()
-		self[s % "epgDuration"].hide()
-		self[s % "epgDescription"].hide()
-
-	def showSingle(self):
-		if not self.single:
-			self["key_green"].setText("")
-			self.single = True
-			self.hideLabels()
-			self.list.hide()
-			self.updateLabels("s%s")
+		self["epgName"].setText(entry.name)
+		self["epgTime"].setText(entry.begin.strftime("%d.%m %H:%M"))
+		self["epgDescription"].setText(entry.description)
+		self["epgDuration"].setText("%s min" % (entry.duration() / 60))
+		self._progress.setEpg(entry)
 
 	def archive(self):
 		entry = self.list.getCurrent()
@@ -1250,28 +1283,94 @@ class IPtvDreamEpg(Screen):
 		if self.db.channels[self.cid].has_archive:
 			self.close(self.cid, entry.begin)
 
+	def showInfo(self):
+		entry = self.list.getCurrent()
+		if not entry:
+			return
+		entry = entry[0]
+		self.session.open(IPtvDreamEpgInfo, self.db.channels[self.cid], entry)
+
 	def exit(self):
-		# If single view then go to list. Else close all
-		if self.single:
-			self.single = False
-			self["key_green"].setText(_("Details"))
-			self.fillList()
-			self.updateLabels()
+		self.close()
+
+	def up(self):
+		idx = self.list.getIndex()
+		if idx == 0:
+			self.prevDay()
+			self.list.setIndex(self.list.count() - 1)
 		else:
-			self.close()
+			self.list.selectPrevious()
+
+	def down(self):
+		idx = self.list.getIndex()
+		if idx == self.list.count() - 1 or self.list.count() == 0:
+			self.nextDay()
+		else:
+			self.list.selectNext()
+
+	def pageUp(self):
+		idx = self.list.getIndex()
+		if idx == 0:
+			self.prevDay()
+			self.list.setIndex(self.list.count() - 1)
+		else:
+			self.list.pageUp()
+
+	def pageDown(self):
+		idx = self.list.getIndex()
+		if idx == self.list.count() - 1 or self.list.count() == 0:
+			self.nextDay()
+		else:
+			self.list.pageDown()
 
 	def nextDay(self):
-		if self.single:
-			return
 		self.day += 1
 		self.fillList()
 
 	def prevDay(self):
-		if self.single:
-			return
 		self.day -= 1
 		self.fillList()
 
+
+class IPtvDreamEpgInfo(Screen):
+	def __init__(self, session, channel, entry):
+		"""
+		Screen to show information for single EPG entry
+		:type entry: utils.EPG
+		:type channel: utils.Channel
+		"""
+		Screen.__init__(self, session)
+		self.entry = entry
+		self.channel = channel
+
+		self.setTitle("%d. %s" % (channel.number, channel.name))
+		self["epgName"] = Label(entry.name)
+		self["epgDescription"] = ScrollLabel(entry.description or _("No detailed information"))
+		self["epgTime"] = Label(entry.begin.strftime("%a %H:%M"))
+		self["epgDate"] = Label(entry.begin.strftime("%d.%m.%Y"))
+		self["epgDuration"] = Label()
+		self["epgProgress"] = Slider(0, 100)
+		self["progress"] = self._progress = EpgProgress()
+		self._progress.onChanged.append(self.updateProgress)
+		self.onLayoutFinish.append(self.initGui)
+
+		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions"], {
+			"cancel": self.close,
+			"ok": self.close,
+			"up": self["epgDescription"].pageUp,
+			"down": self["epgDescription"].pageDown
+		}, -1)
+
+	def initGui(self):
+		self._progress.setEpg(self.entry)
+
+	def updateProgress(self, value):
+		t = syncTime()
+		if self.entry.isAt(t):
+			self["epgDuration"] = Label("+%s min" % (self.entry.timeLeft(t) / 60))
+		else:
+			self["epgDuration"] = Label("%s min" % (self.entry.duration() / 60))
+		self["epgProgress"].setValue(int(100 * value))
 
 # gettext HACK:
 # [_("Jan"), _("Feb"), _("Mar"), _("Apr"), _("May"), _("Jun"), _("Jul"), _("Aug"), _("Sep"), _("Oct"), _("Nov") ]

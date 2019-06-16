@@ -1,9 +1,9 @@
 Package: enigma2-plugin-extensions-iptvdream
 Version:
-Description: enigma2 iptvdream plugin framework core
+Description: enigma2 iptvdream4x plugin
 Section: extra
 Priority: optional
-Maintainer: Alex Maystrenko <alexeytech@gmail.com>, Alex Revetchi <alex.revetchi@gmail.com>
+Maintainer: Alex Maystrenko <alexeytech@gmail.com>
 License: GNU GPLv2
 Architecture:
 Conflicts: enigma2-plugin-extensions-iptvdream-puretv, enigma2-plugin-extensions-iptvdream-raduga, enigma2-plugin-extensions-iptvdream-api1, enigma2-plugin-extensions-iptvdream-picon-bigfilm, enigma2-plugin-extensions-iptvdream-ozo, enigma2-plugin-extensions-iptvdream-sognotv, enigma2-plugin-extensions-iptvdream-mywy, enigma2-plugin-extensions-iptvdream-baltic, enigma2-plugin-extensions-iptvdream-kartina, enigma2-plugin-extensions-iptvdream-naschetv, enigma2-plugin-extensions-iptvdream-rodnoe, enigma2-plugin-extensions-iptvdream-mixtv, enigma2-plugin-extensions-iptvdream-bigfilm, enigma2-plugin-extensions-iptvdream-teleprom, enigma2-plugin-extensions-iptvdream-moidom
