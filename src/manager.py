@@ -192,6 +192,8 @@ class TokenPluginStarter(PluginStarter):
 			windowTitle=_("Input pin"))
 
 	def _codeEntered(self, code):
+		if code is None:
+			return self.exit()
 		try:
 			token = self.db.getToken(code)
 			self._saveToken(token)
