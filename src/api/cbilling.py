@@ -103,8 +103,10 @@ class OTTProvider(OfflineFavourites):
         data = self._getJson(self.stalker_site + "/epg_list.php?", {"time": syncTime().strftime("%s")})
         for c in data['data']:
             cid = hash(c['channel_id'])
+            programs = []
             for e in c['programs']:
-                epg = EPG(
+                programs.append(EPG(
                     int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
-                    e['description'].encode('utf-8'))
-                yield (cid, epg)
+                    e['description'].encode('utf-8')
+                ))
+            yield (cid, programs)
