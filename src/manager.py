@@ -25,6 +25,7 @@ from Components.config import config, configfile, ConfigSubsection, ConfigSubDic
 from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.MenuList import MenuList
+from Components.Input import Input
 from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
 from Tools.Import import my_import
 from Tools.LoadPixmap import LoadPixmap
@@ -189,7 +190,7 @@ class TokenPluginStarter(PluginStarter):
 		""" Ask user for pin code and obtain a token"""
 		self.session.openWithCallback(
 			self._codeEntered, InputBox, title=_("Please go to %s and generate pin code") % self.apiClass.token_page,
-			windowTitle=_("Input pin"))
+			windowTitle=_("Input pin"), type=Input.NUMBER)
 
 	def _codeEntered(self, code):
 		if code is None:
