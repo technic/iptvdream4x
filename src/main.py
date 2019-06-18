@@ -899,7 +899,11 @@ class IPtvDreamChannels(Screen):
 			return
 		for (cid, epg) in data:
 			if epg:
-				self.list.updateChannel(cid, (self.db.channels[cid], epg))
+				try:
+					channel = self.db.channels[cid]
+				except KeyError:
+					continue
+				self.list.updateChannel(cid, (channel, epg))
 
 	def setChannels(self, channels):
 		self.list.setChannelsList((c, self._worker.get(c.cid)) for c in channels)
