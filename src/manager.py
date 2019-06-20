@@ -170,7 +170,7 @@ class TokenPluginStarter(PluginStarter):
 	def start(self):
 		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
 		if self.cfg.password.value == '':
-			self.login()
+			self.askToken()
 		else:
 			self.auth()
 
@@ -179,14 +179,14 @@ class TokenPluginStarter(PluginStarter):
 			self.db.start()
 			return self.run()
 		except APILoginFailed as e:
-			cb = lambda ret: self.login()
+			cb = lambda ret: self.askToken()
 			message = _("We need to authenticate your device") + "\n" + str(e)
 		except APIException as e:
 			cb = lambda ret: self.exit()
 			message = _("Start of %s failed") % self.db.NAME + "\n" + str(e)
 		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
 
-	def login(self):
+	def askToken(self):
 		""" Ask user for pin code and obtain a token"""
 		self.session.openWithCallback(
 			self._codeEntered, InputBox, title=_("Please go to %s and generate pin code") % self.apiClass.token_page,
@@ -200,7 +200,7 @@ class TokenPluginStarter(PluginStarter):
 			self._saveToken(token)
 			return self.auth()
 		except APILoginFailed as e:
-			cb = lambda ret: self.login()
+			cb = lambda ret: self.askToken()
 			message = _("Failed to authentificate your device") + "\n" + str(e)
 		except APIException as e:
 			cb = lambda ret: self.exit()
