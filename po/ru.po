@@ -23,35 +23,35 @@ msgstr "Добавить"
 
 #, python-format
 msgid "Add \"%s\" to favourites"
-msgstr ""
+msgstr "Добавить \"%s\" в избранное"
 
 msgid "All"
 msgstr "Все"
 
 msgid "All channels"
-msgstr ""
+msgstr "Все каналы"
 
 msgid "Archive"
 msgstr "Архив"
 
 msgid "Authorization error"
-msgstr ""
+msgstr "Ошибка авторизации"
 
 msgid "Cancel"
 msgstr "Отменить"
 
 msgid "Channel Locked"
-msgstr ""
+msgstr "Канал закрыт"
 
 msgid "Checking depends"
-msgstr ""
+msgstr "Проверка зависимостей"
 
 msgid "Checking updates"
-msgstr ""
+msgstr "Проверка обновлений"
 
 #, python-format
 msgid "Configuration of %s"
-msgstr ""
+msgstr "Настройки %s"
 
 msgid "Context menu"
 msgstr "Контекстное меню"
@@ -63,35 +63,35 @@ msgid "Enter edit mode"
 msgstr "Войти в режим сортировки"
 
 msgid "Enter protect password"
-msgstr ""
+msgstr "Введите защитный код"
 
 msgid "Error while getting stream url:"
-msgstr ""
+msgstr "Ошибка при получении ссылки на поток:"
 
 msgid "Exit"
-msgstr ""
+msgstr "Выход"
 
 msgid "Exit edit mode"
 msgstr "Выйти из режима сортировки"
 
 msgid "Exit plugin?"
-msgstr ""
+msgstr "Выйти из плагина?"
 
 msgid "Exiting edit mode"
-msgstr ""
+msgstr "Выход из режима редактирования"
 
 #, python-format
 msgid "Failed to install %s!"
-msgstr ""
+msgstr "Не удалось установить %s!"
 
 msgid "Failed to save favourites list."
-msgstr ""
+msgstr "Не удалось сохранить список избранного."
 
 msgid "Failed to send settings to server."
-msgstr ""
+msgstr "Не удалось сохранить настройки на сервере."
 
 msgid "Failed to update package list!"
-msgstr ""
+msgstr "Не удалось обновить список пакетов!"
 
 msgid "Favourites"
 msgstr "Избранное"
@@ -103,17 +103,17 @@ msgid "Groups"
 msgstr "Группы"
 
 msgid "High"
-msgstr ""
+msgstr "Высокое"
 
 #, python-format
 msgid "IPtvDream %s. Providers list:"
-msgstr ""
+msgstr "IPtvDream %s. Список провайдеров:"
 
 msgid "IPtvDream critical error"
-msgstr ""
+msgstr "IPtvDream критическая ошибка"
 
 msgid "IPtvDream plugin is already running!"
-msgstr ""
+msgstr "IPtvDream плагин уже запущен!"
 
 msgid ""
 "In the editing mode you can reorder your favourites list. Quick help:\n"
@@ -123,16 +123,22 @@ msgid ""
 "- Press EXIT when done.\n"
 "Start editing mode?"
 msgstr ""
+"В режиме редактирования Вы можете упорядочить списко избранное. Справка:\n"
+"- Выберите кананал, который вы хотите переместить на новую позицию.\n"
+"- Нажмите OK и начните перемещать канал стрелками вверх или вниз.\n"
+"- Нажмите OK cнова чтобы зафиксировать новое положение канала.\n"
+"- Нажмите EXIT для завершения.\n"
+"Войти в режим редактирования?"
 
 #, python-format
 msgid "Installing %s"
-msgstr ""
+msgstr "Установка %s"
 
 msgid "Installing update, please wait"
-msgstr ""
+msgstr "Установка обновления, пожалуйста ожидайте"
 
 msgid "Keyboard"
-msgstr ""
+msgstr "Клавиатура"
 
 msgid "Keymap"
 msgstr ""
@@ -141,91 +147,91 @@ msgid "Login"
 msgstr "Логин"
 
 msgid "Low"
-msgstr ""
+msgstr "Низкое"
 
 msgid "Media server"
-msgstr ""
+msgstr "Медиа сервер"
 
 msgid "No detailed information"
-msgstr ""
+msgstr "Нет подробной информации"
 
 msgid "OK"
 msgstr "ОК"
 
 msgid "Open settings"
-msgstr ""
+msgstr "Открыть настройки"
 
 msgid "Password"
 msgstr "Пароль"
 
 msgid "Payment expires: "
-msgstr ""
+msgstr "Подписка истекает: "
 
 msgid "Player ID"
 msgstr ""
 
 msgid "Playlist"
-msgstr ""
+msgstr "Плейлист"
 
 msgid "Quality"
-msgstr ""
+msgstr "Качество"
 
 msgid "Remove"
 msgstr "Удалить"
 
 #, python-format
 msgid "Remove \"%s\" from favourites"
-msgstr ""
+msgstr "Удалить \"%s\" из избранного"
 
 msgid "Restart enigma2 to apply keymap changes?"
-msgstr ""
+msgstr "Перезапустить enigma2 для применения изменений?"
 
 msgid "Restarting enigma2 after IPtvDream update..."
-msgstr ""
+msgstr "Перезагрузка enigma2 после обновления IPtvDream..."
 
 msgid "Select keymap style"
 msgstr ""
 
 msgid "Server"
-msgstr ""
+msgstr "Сервер"
 
 msgid "Setup"
-msgstr ""
+msgstr "Настройка"
 
 #, python-format
 msgid "Setup finished with %d errors."
-msgstr ""
+msgstr "Настройка завершена ошибок %d."
 
 msgid "Setup finished without errors."
-msgstr ""
+msgstr "Настройка завершена без ошибок."
 
 msgid "Show all iptv providers"
-msgstr ""
+msgstr "Cписок провайдеров iptv"
 
 msgid "Show in main menu"
-msgstr ""
+msgstr "Отображать в главном меню"
 
 msgid "Sort by name"
 msgstr "Отсортировать по имени"
 
 msgid "Sort by number"
-msgstr ""
+msgstr "Отсортировать по номеру"
 
 #, python-format
 msgid "Start of %s failed"
-msgstr ""
+msgstr "Не удалось запустить %s"
 
 msgid "Time shift"
-msgstr ""
+msgstr "Сдвиг времени"
 
 msgid "Update failed"
-msgstr ""
+msgstr "Ошибка при обновлении"
 
 msgid "Updating package list, please wait ..."
-msgstr ""
+msgstr "Обновление списка пакетов, пожалуйста ожидайте ..."
 
 msgid "Wrong pin!"
-msgstr ""
+msgstr "Не верный код!"
 
 msgid "by name"
 msgstr ""
