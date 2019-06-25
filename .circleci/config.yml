@@ -103,7 +103,7 @@ jobs:
           command: |
             apt-get update && apt-get install -y rsync
             ls -lR packages/
-            rsync -rt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
+            rsync -rlt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
 
 
 default-all: &default-all
