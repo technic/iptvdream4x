@@ -152,7 +152,7 @@ $(pkgdir)/$(pkgname).$(pkgext): install $(build)/DEBIAN/control $(hooks)
 	dpkg-deb -b -Zgzip $(build) tmp.deb
 	mv tmp.deb $@
 	echo '$(version)' > $(pkgdir)/version-$(provider).txt
-	ln -s $(pkgname).$(pkgext) $(pkgdir)/latest_$(provider).$(pkgext)
+	ln -sf $(pkgname).$(pkgext) $(pkgdir)/latest_$(provider).$(pkgext)
 
 package: $(pkgdir)/$(pkgname).$(pkgext) info
 
