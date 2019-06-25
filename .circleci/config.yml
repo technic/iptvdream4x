@@ -113,6 +113,8 @@ default-all: &default-all
       ignore:
         - cbilling
         - cbilling/*
+    tags:
+      only: /.*/
 
 default-cbilling: &default-cbilling
   provider: cbilling
@@ -121,6 +123,8 @@ default-cbilling: &default-cbilling
       only:
       - cbilling
       - cbilling/*
+    tags:
+      only: /.*/
 
 
 workflows:
@@ -138,7 +142,5 @@ workflows:
             - test
             - build
           filters:
-            branches:
-              ignore: /.*/
             tags:
               only: cbilling/v/*
