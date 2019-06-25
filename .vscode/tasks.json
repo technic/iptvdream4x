@@ -89,6 +89,18 @@
             "args": ["scripts/box-run.py"],
             "problemMatcher": [],
             "dependsOn": "Upload package to device",
+        },
+        {
+            "label": "Update po files",
+            "type": "process",
+            "command": "docker",
+            "args": [
+                "exec",
+                "enigma2",
+                "make",
+                "update-po",
+            ],
+            "problemMatcher": []
         }
     ]
 }
