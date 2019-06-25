@@ -139,8 +139,6 @@ workflows:
             - build
           filters:
             branches:
-              only:
-                - cbilling
-                - cbilling/*
+              ignore: /.*/
             tags:
-              only: cbilling/v*
+              only: cbilling/v/*
