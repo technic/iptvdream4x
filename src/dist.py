@@ -1,3 +1,3 @@
 NAME = "cbilling"
 TITLE = "Cbilling.tv"
-VERSION = "4.36"
+VERSION = "4.36.1"
