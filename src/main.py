@@ -32,7 +32,8 @@ from Components.ServiceEventTracker import InfoBarBase
 from Components.Input import Input
 from Components.MenuList import MenuList
 from Components.GUIComponent import GUIComponent
-from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions, InfoBarNotifications
+from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions, \
+	InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport
 from Screens.Screen import Screen
 from Screens.InfoBarGenerics import NumberZap as NumberZapProxy
 from Screens.MessageBox import MessageBox
@@ -82,7 +83,8 @@ class NumberZap(NumberZapProxy):
 
 class IPtvDreamStreamPlayer(
 		ShowHideScreen, AutoAudioSelection,
-		InfoBarBase, InfoBarMenu, InfoBarPlugins, InfoBarExtensions, InfoBarNotifications):
+		InfoBarBase, InfoBarMenu, InfoBarPlugins, InfoBarExtensions, 
+		InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport):
 	"""
 	:type channels: IPtvDreamChannels
 	:type db: AbstractStream
@@ -97,6 +99,8 @@ class IPtvDreamStreamPlayer(
 		InfoBarExtensions.__init__(self)
 		InfoBarPlugins.__init__(self)
 		InfoBarNotifications.__init__(self)
+		InfoBarAudioSelection.__init__(self)
+		InfoBarSubtitleSupport.__init__(self)
 
 		trace("start stream player")
 		self.db = db
