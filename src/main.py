@@ -83,7 +83,7 @@ class NumberZap(NumberZapProxy):
 
 class IPtvDreamStreamPlayer(
 		ShowHideScreen, AutoAudioSelection,
-		InfoBarBase, InfoBarMenu, InfoBarPlugins, InfoBarExtensions, 
+		InfoBarBase, InfoBarMenu, InfoBarPlugins, InfoBarExtensions,
 		InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport):
 	"""
 	:type channels: IPtvDreamChannels
