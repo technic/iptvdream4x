@@ -144,4 +144,4 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /v\/(\d)+(\.(\d)+)+$/
+              only: /cbilling\/v\/(\d)+(\.(\d)+)+$/
