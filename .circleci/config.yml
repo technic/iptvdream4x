@@ -106,37 +106,36 @@ jobs:
             rsync -rlt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
 
 
-default-all: &default-all
-  provider: all
-  filters:
-    branches:
-      ignore:
-        - cbilling
-        - cbilling/*
-    tags:
-      only: /.*/
+references:
+  config-all: &config-all
+    provider: all
+    filters:
+      branches:
+        ignore:
+          - /^cbilling.*/
+      tags:
+        only: /.*/
 
-default-cbilling: &default-cbilling
-  provider: cbilling
-  filters:
-    branches:
-      only:
-      - cbilling
-      - cbilling/*
-    tags:
-      only: /.*/
+  config-cbilling: &config-cbilling
+    provider: cbilling
+    filters:
+      branches:
+        only:
+        - /^cbilling.*/
+      tags:
+        only: /.*/
 
 
 workflows:
   task-all:
     jobs:
-      - test: *default-all
-      - build: *default-all
+      - test: *config-all
+      - build: *config-all
 
   task-cbilling:
     jobs:
-      - test: *default-cbilling
-      - build: *default-cbilling
+      - test: *config-cbilling
+      - build: *config-cbilling
       - deploy:
           requires:
             - test
@@ -145,4 +144,4 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: cbilling/v/*
+              only: /v\/(\d)+(\.(\d)+)+$/
