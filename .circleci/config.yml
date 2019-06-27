@@ -114,7 +114,7 @@ references:
         ignore:
           - /^cbilling.*/
       tags:
-        only: /.*/
+        only: /^v.*/
 
   config-cbilling: &config-cbilling
     provider: cbilling
@@ -123,7 +123,7 @@ references:
         only:
         - /^cbilling.*/
       tags:
-        only: /.*/
+        only: /^cbilling.*/
 
 
 workflows:
