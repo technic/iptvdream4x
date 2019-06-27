@@ -7,25 +7,20 @@ jobs:
   test:
     docker:
       - image: technic93/e2xvfb:0.1
-
     parameters:
       provider:
         type: string
         default: "all"
-
     environment:
       PROVIDER: << parameters.provider >>
-
     steps:
       - checkout
-
       - run:
           name: info
           command: |
             uname -a
             whoami
             echo PROVIDER=${PROVIDER}
-
       - run:
           name: pep8
           command: |
@@ -33,7 +28,6 @@ jobs:
             sudo pip install pep8
             pep8 --version
             pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
-
       - run:
           name: test update
           command: |
@@ -48,63 +42,51 @@ jobs:
   build:
     docker:
       - image: technic93/e2xvfb:0.1
-
     parameters:
       provider:
         type: string
         default: "all"
-
     environment:
       PROVIDER: << parameters.provider >>
-
     steps:
     - checkout
-
     - run:
         name: info
         command: |
           uname -a
           whoami
           echo PROVIDER=${PROVIDER}
-
     - run:
         name: build
         command: |
           make
           make DEB=y
-
     - persist_to_workspace:
         root: .
         paths:
         - packages/*
-
     - store_artifacts:
         path: ./packages
 
   deploy:
     docker:
       - image: python:2.7.15
-
     steps:
       - checkout
-
       - attach_workspace:
           at: .
-
       - add_ssh_keys:
           fingerprints:
             - "45:16:fd:9e:94:b8:84:59:ae:5b:50:6e:e7:e2:e5:09"
       - run:
           name: add fingerprint
           command: echo $UPDATE_FINGERPRINT >> ~/.ssh/known_hosts
-
       - run:
           name: Deploy
           command: |
             apt-get update && apt-get install -y rsync
             ls -lR packages/
             rsync -rlt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
-
 
 references:
   config-all: &config-all
@@ -124,7 +106,6 @@ references:
         - /^cbilling.*/
       tags:
         only: /^cbilling.*/
-
 
 workflows:
   task-all:
