@@ -254,7 +254,7 @@ class IPtvDreamStreamPlayer(
 
 	def updateLabels(self):
 		cid = self.cid
-		self["piconRef"].text = self.db.getPiconName(cid)
+		# self["piconRef"].text = self.db.getPiconName(cid)
 		self["channelName"].setText("%d. %s" % (self.db.channels[cid].number, self.db.channels[cid].name))
 		self.epgEvent()
 
