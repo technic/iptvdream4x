@@ -27,7 +27,7 @@ jobs:
             echo $PATH |tr ':' '\n'
             sudo pip install pycodestyle
             pycodestyle --version
-            pycodestyle --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
+            pycodestyle src
       - run:
           name: test update
           command: |

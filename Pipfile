@@ -4,7 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pep8 = "*"
+pycodestyle = "*"
 typing = "*"
 pylint = "<2.0.0"
 pipenv = "*"
