@@ -70,7 +70,7 @@ class LiveEpgWorker(object):
 		next_update = min(p.end for programs in self._epg.values() for p in programs[:1])
 		self.trace("schedule to", next_update)
 		diff = int((next_update + timedelta(seconds=1) - datetime.now()).total_seconds() * 1000)
-		self._timer.start(max(60 * 1000, diff), True)
+		self._timer.start(max(60 * 1000, min(60 * 60 * 1000, diff)), True)  # 1 min < timer < 1 hour
 		if data:
 			self._runCallbacks(set(self._epg.keys()).intersection(set(to_update)))
 
