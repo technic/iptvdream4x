@@ -6,7 +6,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: technic93/e2xvfb:0.1
+      - image: technic93/e2xvfb
     parameters:
       provider:
         type: string
@@ -41,7 +41,7 @@ jobs:
 
   build:
     docker:
-      - image: technic93/e2xvfb:0.1
+      - image: technic93/e2xvfb
     parameters:
       provider:
         type: string
