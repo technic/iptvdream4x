@@ -24,6 +24,7 @@ from enigma import iPlayableService
 from skin import colorNames, SkinError
 
 from layer import eTimer
+from utils import trace
 # provide it from common file
 from updater import fatalError
 
@@ -34,7 +35,7 @@ def safecb(callback):
 		try:
 			obj._wantCallbacks
 		except AttributeError:
-			print("IGNORE late callback")
+			trace("IGNORE late callback")
 			return None
 		return callback(obj, data)
 	return wrapper
@@ -145,7 +146,7 @@ class AutoAudioSelection(Screen):
 		self.audio_selected = False
 
 	def audioSelect(self):
-		print("[IPtvDreamAudio] select")
+		trace("audioSelect")
 		if self.audio_selected:
 			return
 		self.audio_selected = True
@@ -156,11 +157,11 @@ class AutoAudioSelection(Screen):
 			selected_audio = audio.getCurrentTrack()
 			for x in range(n):
 				language = audio.getTrackInfo(x).getLanguage()
-				print("[IPtvDreamAudio] scan langstr:", x, language)
+				trace("audio scan language:", x, language)
 				if language.find('rus') > -1 and x != selected_audio:
 					audio.selectTrack(x)
 					break
 
 	def audioClear(self):
-		print("[IPtvDreamAudio] clear")
+		trace("audioClear")
 		self.audio_selected = False

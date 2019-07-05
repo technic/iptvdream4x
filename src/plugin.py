@@ -28,7 +28,7 @@ try:
 	from server import startApiProxy
 	startApiProxy()
 except Exception as e:
-	print("[IPtvDream] Cant start server", e)
+	print("[IPtvDream] Can't start server", e)
 
 
 def checkUpdate(session, callback):
