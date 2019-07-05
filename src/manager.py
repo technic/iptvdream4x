@@ -66,9 +66,6 @@ def getPlugins():
 
 
 def loadProviders():
-	from json import load as json_load
-	from Tools.Directories import resolveFilename, SCOPE_SYSETC
-
 	if NAME == 'all':
 		fname = resolveFilename(SCOPE_SYSETC, 'iptvdream.json')
 		try:
@@ -312,7 +309,7 @@ class IPtvDreamManager(Screen):
 
 	def start(self):
 		self.listbox.setList(map(self.makeEntry, manager.getList()))
-	
+
 	def makeEntry(self, entry):
 		prefix = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream')
 		pixmap = LoadPixmap(os.path.join(prefix, 'logo/%s.png' % entry['name']))
@@ -350,9 +347,6 @@ class IPtvDreamManager(Screen):
 		self.session.openWithCallback(cb, ChoiceBox, title=_("Select keymap style"), list=KEYMAPS)
 
 	def applyKeymap(self, style):
-		import os
-		import errno
-		from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN
 		plugin_path = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream')
 		link = os.path.join(plugin_path, 'keymap.xml')
 		try:
@@ -363,6 +357,7 @@ class IPtvDreamManager(Screen):
 			os.symlink('keymap_%s.xml' % style, link)
 		except OSError as e:
 			trace(e)
+			import errno
 			if e.errno == errno.EPROTO:  # ignore virtual machine related error
 				import shutil
 				shutil.copy(os.path.join(plugin_path, 'keymap_%s.xml' % style), link)

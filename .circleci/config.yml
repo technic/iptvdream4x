@@ -6,7 +6,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: technic93/e2xvfb:0.1
+      - image: technic93/e2xvfb
     parameters:
       provider:
         type: string
@@ -25,9 +25,9 @@ jobs:
           name: pep8
           command: |
             echo $PATH |tr ':' '\n'
-            sudo pip install pep8
-            pep8 --version
-            pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
+            sudo pip install pycodestyle
+            pycodestyle --version
+            pycodestyle src
       - run:
           name: test update
           command: |
@@ -41,7 +41,7 @@ jobs:
 
   build:
     docker:
-      - image: technic93/e2xvfb:0.1
+      - image: technic93/e2xvfb
     parameters:
       provider:
         type: string
