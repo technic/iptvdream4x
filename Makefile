@@ -43,6 +43,7 @@ endif
 
 ifeq ($(PROVIDER),cbilling)
 pyfiles += src/api/cbilling.py
+datafiles += src/logo/cbilling.png
 endif
 
 pyext := pyo
