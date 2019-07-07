@@ -21,7 +21,7 @@ from ..utils import syncTime, APIException, APILoginFailed, EPG, Channel, Group
 
 class OTTProvider(OfflineFavourites):
     NAME = "cbilling"
-    HAS_LOGIN = False
+    AUTH_TYPE = "Token"
     token_page = "https://cbilling.tv"
 
     def __init__(self, username, password):
