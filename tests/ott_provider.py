@@ -25,7 +25,7 @@ class TestOTTProvider(TestCase):
         import os
         with open(os.path.join(os.path.dirname(__file__), 'secret.json')) as f:
             secret = json.load(f)
-        if self.ProviderClass.HAS_LOGIN:
+        if self.ProviderClass.AUTH_TYPE:
             secret = secret[self.ProviderClass.NAME]
             self._db = self.ProviderClass(secret['user'], secret['pass'])  # type: AbstractStream
         else:

@@ -49,7 +49,7 @@ class AbstractAPI(object):
 	HAS_PIN = False
 	SERVICES = []
 	USE_SEEK = True
-	HAS_LOGIN = True
+	AUTH_TYPE = "Login"
 
 	def __init__(self, username, password):
 		self.username = username

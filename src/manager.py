@@ -99,7 +99,7 @@ class PluginStarter(Screen):
 		self.onFirstExecBegin.append(self.start)
 
 	def start(self):
-		if self.apiClass.HAS_LOGIN and self.cfg.login.value == '':
+		if self.apiClass.AUTH_TYPE and self.cfg.login.value == '':
 			self.login()
 		else:
 			self.auth()

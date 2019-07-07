@@ -22,7 +22,7 @@ from ..utils import syncTime, APIException, EPG, Channel, Group
 
 class M3UProvider(OfflineFavourites):
 	NAME = "M3U"
-	HAS_LOGIN = False
+	AUTH_TYPE = ""
 
 	TVG_MAP = False  # True if tvg-id are non-numerical and we need to get map from server
 
