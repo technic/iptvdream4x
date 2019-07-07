@@ -138,12 +138,20 @@ class PluginStarter(Screen):
 			self.login()
 		elif ret == 'provider_settings':
 			self.openProviderSettings()
+		elif ret == 'clear_login':
+			self.clearLogin()
+			self.exit()
 		else:
 			self.exit()
 
 	def openProviderSettings(self):
 		if self.db:
 			self.session.openWithCallback(lambda ret=None: self.start(), IPtvDreamApiConfig, self.db)
+
+	def clearLogin(self):
+		self.cfg.login.value = ''
+		self.cfg.password.value = ''
+		manager.saveConfig()
 
 	def exit(self):
 		self.close()
