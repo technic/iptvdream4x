@@ -1051,7 +1051,7 @@ class IPtvDreamChannels(Screen):
 		if self.db.getSettings():
 			actions += [(_("Open settings"), self.openSettings)]
 		if self.db.AUTH_TYPE:
-			actions += [(_("Clear login data and exit")), self.clearLogin]
+			actions += [(_("Clear login data and exit"), self.clearLogin)]
 
 		def cb(entry=None):
 			if entry is not None:
