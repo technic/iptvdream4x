@@ -1048,8 +1048,9 @@ class IPtvDreamChannels(Screen):
 					actions += [(_("Enter edit mode"), self.confirmStartEditing)]
 				else:
 					actions += [(_("Exit edit mode"), self.notifyFinishEditing)]
+		actions += [(_("Open plugin settings"), self.openSettings)]
 		if self.db.getSettings():
-			actions += [(_("Open settings"), self.openSettings)]
+			actions += [(_("Open provider settings"), self.openProviderSettings)]
 		if self.db.AUTH_TYPE:
 			actions += [(_("Clear login data and exit"), self.clearLogin)]
 
@@ -1201,6 +1202,9 @@ class IPtvDreamChannels(Screen):
 		return cid
 
 	def openSettings(self):
+		self.close(None, None, 'settings')
+
+	def openProviderSettings(self):
 		self.close(None, None, 'provider_settings')
 
 	def clearLogin(self):
