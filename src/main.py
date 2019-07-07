@@ -1048,8 +1048,8 @@ class IPtvDreamChannels(Screen):
 					actions += [(_("Enter edit mode"), self.confirmStartEditing)]
 				else:
 					actions += [(_("Exit edit mode"), self.notifyFinishEditing)]
-
-		actions += [(_("Open settings"), self.openSettings)]
+		if self.db.getSettings():
+			actions += [(_("Open settings"), self.openSettings)]
 
 		def cb(entry=None):
 			if entry is not None:
@@ -1200,6 +1200,9 @@ class IPtvDreamChannels(Screen):
 
 	def openSettings(self):
 		self.close(None, None, 'provider_settings')
+
+	def clearLogin(self):
+		self.close(None, None, 'clear_login')
 
 
 class IPtvDreamEpg(Screen):
