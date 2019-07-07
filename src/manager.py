@@ -101,7 +101,7 @@ class PluginStarter(Screen):
 		self.onFirstExecBegin.append(self.start)
 
 	def start(self):
-		if self.apiClass.HAS_LOGIN and self.cfg.login.value == '':
+		if self.apiClass.AUTH_TYPE and self.cfg.login.value == '':
 			self.login()
 		else:
 			self.auth()
@@ -140,12 +140,20 @@ class PluginStarter(Screen):
 			self.login()
 		elif ret == 'provider_settings':
 			self.openProviderSettings()
+		elif ret == 'clear_login':
+			self.clearLogin()
+			self.exit()
 		else:
 			self.exit()
 
 	def openProviderSettings(self):
 		if self.db:
 			self.session.openWithCallback(lambda ret=None: self.start(), IPtvDreamApiConfig, self.db)
+
+	def clearLogin(self):
+		self.cfg.login.value = ''
+		self.cfg.password.value = ''
+		manager.saveConfig()
 
 	def exit(self):
 		self.close()

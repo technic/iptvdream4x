@@ -26,7 +26,7 @@ except ImportError:
 
 class OTTProvider(M3UProvider, JsonSettings):
 	NAME = "KingModIPTV"
-	HAS_LOGIN = True
+	AUTH_TYPE = "Login"
 	TVG_MAP = True
 
 	def __init__(self, username, password):

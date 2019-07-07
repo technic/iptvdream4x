@@ -55,7 +55,7 @@ class IPtvDreamConfig(ConfigListScreen, Screen):
 		trace(id(cfg))
 
 		cfg_list = []
-		if apiClass.HAS_LOGIN:
+		if apiClass.AUTH_TYPE == "Login":
 			cfg_list = [
 				getConfigListEntry(_("Login"), cfg.login),
 				getConfigListEntry(_("Password"), cfg.password),
