@@ -17,7 +17,7 @@ from datetime import datetime
 from hashlib import md5
 from twisted.internet.defer import maybeDeferred, succeed
 
-from abstract_api import MODE_STREAM, MODE_VIDEOS, AbstractAPI, AbstractStream, CallbackCore
+from abstract_api import MODE_STREAM, MODE_VIDEOS, AbstractAPI, AbstractStream
 from ..utils import tdSec, APIException, EPG, Group, Channel
 try:
 	from ..loc import translate as _
@@ -146,110 +146,3 @@ class TeleportStream(AbstractStream, TeleportAPI):
 	
 	def uploadFavourites(self, current):
 		self.getJsonData(self.site + "/set_favorites_tv?", {'val': ','.join(map(str, self.favourites))})
-
-
-### TODO:
-
-NUMS_ON_PAGE = 18
-
-
-class OzoVideos(CallbackCore):
-	MODE = MODE_VIDEOS
-	iTitle = None
-	NUMBER_PASS = False
-	HAS_PIN = True
-	SERVICES = []
-	USE_SEEK = True
-	languages = ["ru_RU", "en_EN"]
-	
-	def __init__(self, username, password):
-		self.NAME = self.iName
-		self.VERSION = VERSION
-		CallbackCore.__init__(self, username, password)
-	
-	### Interface for CallbackCore
-	
-	def makeRequest(self, sid, params):
-		params['sid'] = sid
-		cmd = params['cmd']
-		return "%s/%s?%s" % (self.site, cmd, urlencode(params))
-	
-	def retProcess(self, reply):
-		try:
-			data = json_loads(reply)
-		except Exception as e:
-			raise APIException("json error: " + str(e))
-		if 'error' in data:
-			raise APIException(data['error']['message'].encode('utf-8'))
-		else:
-			return data
-	
-	def authRequest(self):
-		md5pass = md5(md5(self.username).hexdigest() + md5(self.password).hexdigest()).hexdigest()
-		return "%s/login?%s" % (self.site, urlencode({"login": self.username, "pass": md5pass}))
-	
-	def authProcess(self, data):
-		return data['sid']
-	
-	### Private functions
-	
-	def fixMovie(self, entry):
-		rename = [
-			("name", "title"), ("desc", "description"), ("actors", "acters"),
-			("poster", "pic"), ("genres", "genre")
-		]
-		for new, old in rename:
-			entry[new] = entry[old]
-			del entry[old]
-		entry['rating'] = ""
-		entry['added'] = ""
-		return entry
-	
-	### IPtvDream API
-	
-	def loadvideos(self, genres, searchstr, sortkey, page):
-		params = {'cmd': "get_list_movie", 'limit': NUMS_ON_PAGE, 'extended': 1, 'page': page + 1}
-		if searchstr:
-			params['word'] = searchstr
-		if genres:
-			params['genre'] = ",".join(genres)
-		if sortkey != "id":
-			params['sort'] = sortkey
-			params['order'] = 1  # ascent
-		
-		def f(data):
-			c = int(data['options']['count'])
-			c = c / NUMS_ON_PAGE + (c % NUMS_ON_PAGE > 0)
-			return (map(self.fixMovie, data['groups']), c)
-		return self.get(params).addCallback(f)
-	
-	def loadvid(self, vid):
-		def f(data):
-			try:
-				return (self.fixMovie(data['groups'][0]), [])
-			except IndexError:
-				raise APIException("video not found")
-		d = self.get({'cmd': "get_list_movie", 'limit': NUMS_ON_PAGE, 'extended': 1, 'idlist': vid})
-		return d.addCallback(f)
-	
-	def isseries(self, entry):
-		return False
-	
-	def loadseries(self, entry):
-		return succeed([])
-	
-	def videourl(self, entry, code=None):
-		def f(data):
-			return data['url'].encode('utf-8')
-		params = {'cmd': "get_url_movie", 'cid': entry['id']}
-		if code is not None:
-			params['protect_code'] = code
-		return self.get(params).addCallback(f)
-	
-	def loadgenres(self):
-		def f(data):
-			return [(g['id'], g['title']) for g in data['groups']]
-		return self.get({'cmd': "get_genre_movie"}).addCallback(f)
-	
-	def sortkeys(self):
-		return [("id", "Последние"), ("name", "По названию")]
