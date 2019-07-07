@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-20 08:24+0000\n"
+"POT-Creation-Date: 2019-07-07 13:58+0200\n"
 "PO-Revision-Date: 2015-06-25 00:40+0200\n"
 "Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
 "Language-Team: Russian / enigma(c) Ukraine, Kiev>\n"
@@ -48,6 +48,9 @@ msgstr "Проверка зависимостей"
 
 msgid "Checking updates"
 msgstr "Проверка обновлений"
+
+msgid "Clear login data and exit"
+msgstr "Удалить данные авторизации и выйти"
 
 #, python-format
 msgid "Configuration of %s"
