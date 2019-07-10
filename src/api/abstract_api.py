@@ -179,17 +179,6 @@ class AbstractStream(AbstractAPI):
 		self.favourites = favourites
 		self.uploadFavourites(self.favourites)
 
-	def loadChannelsEpg(self, cids):
-		for cid, programs in self.getChannelsEpg(cids):
-			try:
-				self.channels[cid].addEpgSorted(programs)
-			except KeyError:
-				self.trace("unknown channel", cid)
-	
-	def loadCurrentEpg(self, cid):
-		for e in self.getCurrentEpg(cid):
-			self.channels[cid].addEpg(e)
-	
 	def loadDayEpg(self, cid, date):
 		date = datetime(date.year, date.month, date.day)
 		self.channels[cid].addEpgDay(date, list(self.getDayEpg(cid, date)))
