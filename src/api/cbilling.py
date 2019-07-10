@@ -26,7 +26,7 @@ class OTTProvider(OfflineFavourites):
 
     def __init__(self, username, password):
         super(OTTProvider, self).__init__(username, password)
-        self.site = "https://cbilling.tv/enigma"
+        self.site = "http://cbilling.tv/enigma"
         self.stalker_site = "http://mag.iptvx.tv/stalker_portal/server/tools"
         self._token = password
         self.web_names = {}
