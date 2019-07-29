@@ -36,7 +36,7 @@ def fatalError(err):
 	"""
 	print("[IPtvDream] plugin error - exit 5")
 	print(err)
-	with open('/tmp/IPtvDream.crash', 'w') as f:
+	with open('/tmp/IPtvDream_crash.txt', 'w') as f:
 		f.write(str(err))
 	# exit code 5 = bsod
 	quitMainloop(5)
