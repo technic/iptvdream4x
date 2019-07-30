@@ -86,7 +86,7 @@ jobs:
           command: |
             apt-get update && apt-get install -y rsync lftp
             ls -lR packages/
-            lftp -e "set ssl:verify-certificate no; mirror -vR packages/ web/$FTP_SERVER/public_html/iptvdream4x/packages; quit" \
+            lftp -e "set ssl:verify-certificate no; mirror -vRL packages/ web/$FTP_SERVER/public_html/iptvdream4x/packages; quit" \
             -u $FTP_USER ftp://$FTP_SERVER
             rsync -rlt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
 
