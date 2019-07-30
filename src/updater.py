@@ -69,7 +69,7 @@ def parseVersion(data):
 
 class Updater(object):
 	def __init__(self):
-		self.url = "http://technic.cf/iptvdream4x/packages/"
+		self.url = "http://cb.technic.cf/iptvdream4x/packages/"
 		self.console = Console()
 		self.prefix = "enigma2-plugin-extensions"
 		self.agent = "IPtvDream-%s/%s" % (NAME, VERSION)

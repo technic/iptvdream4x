@@ -84,8 +84,10 @@ jobs:
       - run:
           name: Deploy
           command: |
-            apt-get update && apt-get install -y rsync
+            apt-get update && apt-get install -y rsync lftp
             ls -lR packages/
+            lftp -e "set ssl:verify-certificate no; mirror -vR packages/ web/$FTP_SERVER/public_html/packages; quit" \
+            -u $FTP_USER ftp://$FTP_SERVER
             rsync -rlt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
 
 references:
