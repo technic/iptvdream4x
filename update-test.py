@@ -13,7 +13,7 @@ import shutil
 VERSION_FILE = 'src/dist.py'
 PKG_TMP = "/tmp/packages"
 PKG_DEPLOY = "/var/www/html/iptvdream4x/packages"
-SERVER_HOSTNAME = "technic.cf"
+SERVER_HOSTNAME = "cb.technic.cf"
 
 
 def modifyVersion(func):
