@@ -53,7 +53,7 @@
     <widget backgroundColor="#0038435a" font="Regular;25" foregroundColor="#00e5b243" halign="center" name="channelName" position="319,12" size="574,28" transparent="1"/>
     <widget backgroundColor="#00000000" font="Regular;14" position="1040,108" size="120,24" transparent="1" zPosition="1" halign="center" render="Label" source="Title" foregroundColor="snow"/>
     <ePixmap alphatest="blend" pixmap="IPtvDream/frame.png" position="33,center" size="120,76" zPosition="1"/>
-    <widget alphatest="blend" position="43,center" render="Picon" size="100,60" source="piconRef" transparent="1" zPosition="3"/>
+    <widget alphatest="blend" position="43,center" name="picon" size="100,60" transparent="1" zPosition="3"/>
     <widget backgroundColor="#00343c4f" font="Regular;22" foregroundColor="#45ffffff" name="currentTime" position="165,49" size="66,26" transparent="1"/>
     <widget backgroundColor="#00343c4f" font="Regular;25" foregroundColor="#45ffffff" name="currentName" noWrap="1" position="243,47" size="665,30" transparent="1" zPosition="21"/>
     <widget backgroundColor="#00343c4f" font="Regular;22" foregroundColor="#45ffffff" halign="right" name="currentDuration" position="919,48" size="106,26" transparent="1"/>

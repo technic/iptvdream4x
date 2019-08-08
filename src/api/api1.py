@@ -75,6 +75,8 @@ class TeleportStream(AbstractStream, TeleportAPI):
 
 	def __init__(self, username, password):
 		super(TeleportStream, self).__init__(username, password)
+		self.icons = {}
+		self.icons_url = ""
 
 	def epgEntry(self, e):
 		return EPG(int(e['begin']), int(e['end']), e['title'].encode('utf-8'), e['info'].encode('utf-8'))
@@ -92,7 +94,9 @@ class TeleportStream(AbstractStream, TeleportAPI):
 						bool(c['has_archive']), bool(c['protected']))
 				self.channels[cid] = channel
 				channels.append(channel)
+				self.icons[cid] = c['icon'].encode('utf-8')
 			self.groups[gid] = Group(gid, g['user_title'].encode('utf-8'), channels)
+		self.icons_url = data['icons']['default'].encode('utf-8')
 		print(self.groups)
 
 	def getStreamUrl(self, cid, pin, time=None):
@@ -146,3 +150,6 @@ class TeleportStream(AbstractStream, TeleportAPI):
 
 	def uploadFavourites(self, current):
 		self.getJsonData(self.site + "/set_favorites_tv?", {'val': ','.join(map(str, self.favourites))})
+
+	def getPiconUrl(self, cid):
+		return self.icons_url.replace("%ICON%", self.icons[cid])

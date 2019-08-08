@@ -103,11 +103,13 @@ class M3UProvider(OfflineFavourites):
 
 		name = ""
 		group = "Unknown"
+		logo = ""
 		tvg = None
 
 		import re
 		tvg_regexp = re.compile('#EXTINF:.*tvg-id="([^"]*)"')
 		group_regexp = re.compile('#EXTINF:.*group-title="([^"]*)"')
+		logo_regexp = re.compile('#EXTINF:.*tvg-logo="([^"]*)"')
 		url_regexp = re.compile(r"https?://[\w.]+/iptv/\w+/(\d+)/index.m3u8")
 
 		for line in lines:
@@ -132,6 +134,11 @@ class M3UProvider(OfflineFavourites):
 					group = m.group(1)
 				else:
 					group = "Unknown"
+				m = logo_regexp.match(line)
+				if m:
+					logo = m.group(1)
+				else:
+					logo = ""
 			elif line.startswith("#EXTGRP:"):
 				group = line.strip().split(':')[1]
 			elif line.startswith("#EXTM3U"):
@@ -160,7 +167,7 @@ class M3UProvider(OfflineFavourites):
 				self.channels[cid] = c
 				g.channels.append(c)
 				url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
-				self.channels_data[cid] = {'tvg': tvg, 'url': url}
+				self.channels_data[cid] = {'tvg': tvg, 'url': url, 'logo': logo}
 				if tvg is not None:
 					try:
 						self.tvg_ids[tvg].append(cid)
@@ -196,3 +203,6 @@ class M3UProvider(OfflineFavourites):
 				yield cid, map(lambda e: EPG(
 					int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
 					e['description'].encode('utf-8')), c['programs'])
+
+	def getPiconUrl(self, cid):
+		return self.channels_data[cid]['logo']

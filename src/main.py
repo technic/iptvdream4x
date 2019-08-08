@@ -31,6 +31,7 @@ from Components.Button import Button
 from Components.ServiceEventTracker import InfoBarBase
 from Components.Input import Input
 from Components.MenuList import MenuList
+from Components.Pixmap import Pixmap
 from Components.GUIComponent import GUIComponent
 from Components.Pixmap import Pixmap
 from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions, \
@@ -59,7 +60,7 @@ from common import parseColor, ShowHideScreen, AutoAudioSelection
 from standby import standbyNotifier
 from cache import LiveEpgWorker
 from lib.epg import EpgProgress
-from lib.tv import SortOrderSettings
+from lib.tv import SortOrderSettings, Picon
 
 SKIN_PATH = resolveFilename(SCOPE_SKIN, 'IPtvDream')
 ENIGMA_CONF_PATH = resolveFilename(SCOPE_SYSETC, 'enigma2')
@@ -125,7 +126,9 @@ class IPtvDreamStreamPlayer(
 		# TODO: think more
 		self["archiveDate"] = Label("")
 		self["inArchive"] = Boolean(False)
-		self["piconRef"] = StaticTextService()
+
+		self["picon"] = Pixmap()
+		self._picon = Picon(self["picon"])
 
 		self["provider"] = Pixmap()
 		icon_path = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream/logo/%s.png' % self.db.NAME)
@@ -252,8 +255,8 @@ class IPtvDreamStreamPlayer(
 
 	def updateLabels(self):
 		cid = self.cid
-		# self["piconRef"].text = self.db.getPiconName(cid)
 		self["channelName"].setText("%d. %s" % (self.db.channels[cid].number, self.db.channels[cid].name))
+		self._picon.setIcon(self.db.getPiconUrl(cid))
 		self.epgEvent()
 
 	def standbyChanged(self, sleep):

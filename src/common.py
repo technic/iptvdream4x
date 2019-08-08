@@ -43,6 +43,17 @@ def safecb(callback):
 	return wrapper
 
 
+class DownloadException(Exception):
+	"""Twisted download exception"""
+	def __init__(self, message):
+		Exception.__init__(self, message)
+
+
+def downloadError(err):
+	"""Wrap twisted download failure in DownloadException"""
+	raise DownloadException(err.getErrorMessage())
+
+
 class ConfigNumberText(ConfigText):
 	def __init__(self, default=''):
 		ConfigText.__init__(self, default, fixed_size=False)
