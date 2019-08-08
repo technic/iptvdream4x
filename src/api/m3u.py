@@ -169,10 +169,10 @@ class M3UProvider(OfflineFavourites):
 		
 		self.trace("Loaded {} channels".format(len(self.channels)))
 
-	def getStreamUrl(self, cid, pin, t=None):
+	def getStreamUrl(self, cid, pin, time=None):
 		url = self.channels_data[cid]['url']
-		if t:
-			url += '?utc=%s&lutc=%s' % (t.strftime('%s'), syncTime().strftime('%s'))
+		if time:
+			url += '?utc=%s&lutc=%s' % (time.strftime('%s'), syncTime().strftime('%s'))
 		return url
 
 	def getDayEpg(self, cid, date):

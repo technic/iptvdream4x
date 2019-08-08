@@ -179,17 +179,6 @@ class AbstractStream(AbstractAPI):
 		self.favourites = favourites
 		self.uploadFavourites(self.favourites)
 
-	def loadChannelsEpg(self, cids):
-		for cid, programs in self.getChannelsEpg(cids):
-			try:
-				self.channels[cid].addEpgSorted(programs)
-			except KeyError:
-				self.trace("unknown channel", cid)
-	
-	def loadCurrentEpg(self, cid):
-		for e in self.getCurrentEpg(cid):
-			self.channels[cid].addEpg(e)
-	
 	def loadDayEpg(self, cid, date):
 		date = datetime(date.year, date.month, date.day)
 		self.channels[cid].addEpgDay(date, list(self.getDayEpg(cid, date)))
@@ -328,77 +317,3 @@ class JsonSettings(AbstractAPI):
 				json_dump(settings, f)
 		except Exception as e:
 			raise APIException(str(e))
-
-
-class CallbackCore(object):
-	def __init__(self, username, password):
-		self.username = username
-		self.password = password
-		self.sid = None
-		self.requests = []
-		self.authorizing = False
-		self.agent = "iptvdream-plugin/%d.%d %s/%s" % (VERSION[0], VERSION[1], self.NAME, self.VERSION)
-	
-	# You may use this to print debug information
-	def trace(self, *args):
-		print("[IPtvDream] %s" % self.NAME, ' '.join(map(str, args)))
-	
-	# Public function to get data
-	def get(self, params):
-		return self._get(params, 0)
-	
-	# All these functions below are private.
-	# You must not override or directly use them.
-	def authorize(self):
-		self.sid = None
-		self.authorizing = True
-		self.trace("Authorization of username = %s" % self.username)
-		d = getPage(self.authRequest(), agent=self.agent)
-		return d.addErrback(self.error).addCallback(self.retProcess).addCallback(self.authCb).addErrback(self.authErr)
-
-	def authCb(self, json):
-		self.authorizing = False
-		self.trace("authCallback")
-		self.sid = self.authProcess(json)
-		for r in self.requests:
-			r.callback(self.sid)
-		self.requests = []
-	
-	def authErr(self, err):
-		self.trace("authErrback")
-		self.authorizing = False
-		for r in self.requests:
-			r.errback(err)
-		self.requests = []
-		raise err
-	
-	def getSid(self):
-		if self.sid:
-			return succeed(self.sid)
-		else:
-			if not self.authorizing:
-				self.authorize()
-			d = Deferred()
-			self.requests.append(d)
-			return d
-	
-	def _get(self, params, depth):
-		return self.getSid().addCallback(self.doGet, params, depth)
-	
-	def doGet(self, sid, params, depth):
-		self.trace("doGet")
-		d = getPage(self.makeRequest(sid, params), agent=self.agent).addErrback(self.error)
-		return d.addCallback(self.retProcess).addErrback(self.getErr, params, depth)
-
-	def getErr(self, err, params, depth):
-		err.trap(APIException)
-		self.sid = None
-		if depth < 1:
-			self.trace("retry", depth + 1)
-			return self._get(params, depth + 1)
-		else:
-			raise err
-	
-	def error(self, err):
-		self.trace("getPage error:", err.getErrorMessage())
-		raise APIException(self.NAME + "error: " + err.getErrorMessage())
