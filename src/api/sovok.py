@@ -12,10 +12,10 @@ from __future__ import print_function
 
 from datetime import datetime
 from ..utils import Channel, Group, APIWrongPin, EPG
-from abstract_api import AbstractStream
+from abstract_api import OfflineFavourites
 
 
-class OTTProvider(AbstractStream):
+class OTTProvider(OfflineFavourites):
 	NAME = "SovokTV"
 	site = "http://api.sovok.tv/v2.3/json"
 
