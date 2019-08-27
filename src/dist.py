@@ -1,3 +1,3 @@
 NAME = "all"
 TITLE = "All"
-VERSION = "4.39"
+VERSION = "4.40"
