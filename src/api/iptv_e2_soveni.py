@@ -102,11 +102,11 @@ class OTTProvider(M3UProvider):
 						self.tvg_ids[tvg].append(cid)
 					except KeyError:
 						self.tvg_ids[tvg] = [cid]
-		
+
 		self.trace("Loaded {} channels".format(len(self.channels)))
 
-	def getStreamUrl(self, cid, pin, t=None):
+	def getStreamUrl(self, cid, pin, time=None):
 		url = self.channels_data[cid]['url']
-		if t:
-			url += '&utcstart=%s' % (t.strftime('%s'))
+		if time:
+			url += '&utcstart=%s' % (time.strftime('%s'))
 		return url

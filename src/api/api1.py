@@ -72,7 +72,7 @@ class TeleportAPI(AbstractAPI):
 class TeleportStream(AbstractStream, TeleportAPI):
 	MODE = MODE_STREAM
 	HAS_PIN = True
-	
+
 	def __init__(self, username, password):
 		super(TeleportStream, self).__init__(username, password)
 
@@ -143,6 +143,6 @@ class TeleportStream(AbstractStream, TeleportAPI):
 			return map(int, response['favorites'].split(','))
 		else:
 			return []
-	
+
 	def uploadFavourites(self, current):
 		self.getJsonData(self.site + "/set_favorites_tv?", {'val': ','.join(map(str, self.favourites))})

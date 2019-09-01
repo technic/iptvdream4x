@@ -57,7 +57,7 @@ class AbstractAPI(object):
 		self.sid = None
 		self.packet_expire = None
 		self.settings = []
-	
+
 		socket.setdefaulttimeout(10)
 		self.uuid = getHwAddr('eth0')
 		self.cookiejar = cookielib.CookieJar()
@@ -74,7 +74,7 @@ class AbstractAPI(object):
 
 	def authorize(self):
 		pass
-		
+
 	def readHttp(self, request):
 		o = self.urlopener.open(request)
 		enc = o.headers.get('Content-Encoding')
@@ -92,7 +92,7 @@ class AbstractAPI(object):
 			self.authorize()
 		elif fromauth:
 			self.cookiejar.clear()
-				
+
 		try:
 			request = url+urllib.urlencode(params)
 			self.trace("Getting %s (%s)" % (name, request))
@@ -110,7 +110,7 @@ class AbstractAPI(object):
 			self.authorize()
 		elif fromauth:
 			self.cookiejar.clear()
-		
+
 		try:
 			request = url+urllib.urlencode(params)
 			self.trace("Getting %s" % name, url, request)
@@ -162,7 +162,7 @@ class AbstractStream(AbstractAPI):
 		self.groups = {}  # type: Dict[int, Group]
 		self.favourites = []
 		self.got_favourites = False
-	
+
 	def setChannelsList(self):
 		pass
 
@@ -182,20 +182,20 @@ class AbstractStream(AbstractAPI):
 	def loadDayEpg(self, cid, date):
 		date = datetime(date.year, date.month, date.day)
 		self.channels[cid].addEpgDay(date, list(self.getDayEpg(cid, date)))
-	
+
 	def getPiconName(self, cid):
 		"""You can return reference to cid or to channel name, anything you want ;)"""
 		return "%s:%s:" % (self.NAME, cid)
-	
+
 	# Return lists for GUI
-	
+
 	def selectGroups(self):
 		return self.groups.values()
-	
+
 	def selectAll(self, sort_key=Sort_N):
 		attr = self.SORT[sort_key]
 		return sorted(self.channels.values(), key=lambda c: getattr(c, attr))
-	
+
 	def selectChannels(self, gid, sort_key=Sort_N):
 		attr = self.SORT[sort_key]
 		return sorted(self.groups[gid].channels, key=lambda c: getattr(c, attr))
@@ -207,13 +207,13 @@ class AbstractStream(AbstractAPI):
 			self.favourites = [cid for cid in favourites if cid in keys]
 			self.got_favourites = True
 		return [self.channels[cid] for cid in self.favourites]
-	
+
 	def findNumber(self, number):
 		for cid, ch in self.channels.iteritems():
 			if ch.number == number:
 				return cid
 		return None
-	
+
 	def isLocked(self, cid):
 		return self.channels[cid].is_protected
 
