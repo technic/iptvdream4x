@@ -36,9 +36,9 @@ if __name__ == "__main__":
 	text = check_readme()
 	url = os.environ['BOT_URL']
 	chat_id = os.environ['BOT_CHAT']
-	r = requests.post(url, {
+	result = requests.post(url, {
 		"chat_id": chat_id,
 		"text": text
 	})
-	r.raise_for_status()
+	result.raise_for_status()
 	print("Message sent.")
