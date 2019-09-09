@@ -15,9 +15,9 @@ stepdefs:
         - Xvfb :99 -ac -screen 0 1280x720x16 &
         - export DISPLAY=:99
         - ps ax
-        - pip install pep8
-        - pep8 --version
-        - pep8 --ignore E126,E266,E226,W191,W293,E731 --max-line-length=119 src
+        - pip install pycodestyle
+        - pycodestyle --version
+        - pycodestyle src
         - python update-test.py
 
 pipelines:
