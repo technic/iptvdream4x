@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+"""Test that plugin auto update is working"""
+
 from __future__ import print_function
 
 import subprocess

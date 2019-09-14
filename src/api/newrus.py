@@ -112,8 +112,8 @@ class OTTProvider(AbstractStream, NewrusAPI):
 	def getSettings(self):
 		return self.settings
 
-	def pushSettings(self, sett):
+	def pushSettings(self, settings):
 		# FIXME: implement me
-		for s in sett:
+		for s in settings:
 			params = {"var": s[0], "val": s[1]}
 		self.getData(self.site + "/settings_set.php?", params)

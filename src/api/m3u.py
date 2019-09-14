@@ -148,7 +148,7 @@ class M3UProvider(OfflineFavourites):
 					gid = len(group_names)
 					group_names[group] = gid
 					g = self.groups[gid] = Group(gid, group, [])
-		
+
 				num += 1
 				m = url_regexp.match(line)
 				if m:
@@ -166,7 +166,7 @@ class M3UProvider(OfflineFavourites):
 						self.tvg_ids[tvg].append(cid)
 					except KeyError:
 						self.tvg_ids[tvg] = [cid]
-		
+
 		self.trace("Loaded {} channels".format(len(self.channels)))
 
 	def getStreamUrl(self, cid, pin, time=None):
