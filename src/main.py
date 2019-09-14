@@ -35,7 +35,6 @@ from Components.GUIComponent import GUIComponent
 from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions, \
 	InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport
 from Screens.Screen import Screen
-from Screens.InfoBarGenerics import NumberZap as NumberZapProxy
 from Screens.MessageBox import MessageBox
 from Screens.MinuteInput import MinuteInput
 from Screens.ChoiceBox import ChoiceBox
@@ -51,7 +50,7 @@ from skin import parseFont
 
 # plugin imports
 from layer import eTimer
-from common import StaticTextService
+from common import StaticTextService, NumberEnter
 from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG
 from api.abstract_api import AbstractStream
 from loc import translate as _
@@ -70,15 +69,6 @@ EPG_UPDATE_INTERVAL = 60  # Seconds, in channel list.
 PROGRESS_TIMER = 1000*60  # Update progress in infobar.
 PROGRESS_SIZE = 500
 ARCHIVE_TIME_FIX = 5  # sec. When archive paused, we could miss some video
-
-
-class NumberZap(NumberZapProxy):
-	def __init__(self, session, number):
-		NumberZapProxy.__init__(self, session, number)
-
-	def keyOK(self):
-		self.Timer.stop()
-		self.close(int(self["number"].getText()))
 
 
 class IPtvDreamStreamPlayer(
@@ -452,7 +442,7 @@ class IPtvDreamStreamPlayer(
 			self.switchChannel(cid)
 
 	def keyNumberGlobal(self, number):
-		self.session.openWithCallback(self.numberEntered, NumberZap, number)
+		self.session.openWithCallback(self.numberEntered, NumberEnter, number)
 
 	def numberEntered(self, num=None):
 		trace("numberEntered", num)
