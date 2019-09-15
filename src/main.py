@@ -139,6 +139,7 @@ class IPtvDreamStreamPlayer(
 				"cancel": self.confirmExit,
 				"closePlugin": self.exit,
 				"openVideos": self.openVod,
+				"red": self.showEpg(),
 				"green": self.openSettings,
 				"openServiceList": self.showList,
 				"zapUp": self.previousChannel,
