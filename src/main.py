@@ -32,6 +32,7 @@ from Components.ServiceEventTracker import InfoBarBase
 from Components.Input import Input
 from Components.MenuList import MenuList
 from Components.GUIComponent import GUIComponent
+from Components.Pixmap import Pixmap
 from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions, \
 	InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport
 from Screens.Screen import Screen
@@ -40,7 +41,7 @@ from Screens.MinuteInput import MinuteInput
 from Screens.ChoiceBox import ChoiceBox
 from Screens.InputBox import InputBox
 from Tools.LoadPixmap import LoadPixmap
-from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC
+from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
 
 # enigma2 core imports
 from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, \
@@ -115,15 +116,22 @@ class IPtvDreamStreamPlayer(
 		self["currentDuration"] = Label("")
 		self["nextDuration"] = Label("")
 		self["progressBar"] = Slider(0, PROGRESS_SIZE)
+		# Buttons
+		self["key_red"] = Button(_("Archive"))
+		self["key_green"] = Button(_("Settings"))
+		self["key_yellow"] = Button(_("Audio"))
+		self["key_blue"] = Button(_("Extensions"))
 
 		# TODO: think more
 		self["archiveDate"] = Label("")
 		self["inArchive"] = Boolean(False)
 		self["piconRef"] = StaticTextService()
-		self["providerRef"] = StaticTextService(self.db.NAME)
+
+		self["provider"] = Pixmap()
+		icon_path = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream/logo/%s.png' % self.db.NAME)
+		self.onFirstExecBegin.insert(0, lambda: self["provider"].instance.setPixmap(LoadPixmap(icon_path)))
 
 		# TODO: ActionMap add help.
-
 		self["actions"] = ActionMap(["IPtvDreamInfobarActions", "ColorActions", "OkCancelActions"], {
 				"cancel": self.confirmExit,
 				"closePlugin": self.exit,
