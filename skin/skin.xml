@@ -82,10 +82,10 @@
       <convert type="ValueRange">721,1980</convert>
       <convert type="ConditionalShowHide"/>
     </widget>
-    <ePixmap alphatest="on" pixmap="IPtvDream/icons/red.png" position="182,138" size="18,18"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/icons/green.png" position="398,138" size="18,18"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/icons/yellow.png" position="625,138" size="18,18"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/icons/blue.png" position="838,138" size="18,18"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/red.png" position="182,138" size="18,18"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/green.png" position="398,138" size="18,18"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/yellow.png" position="625,138" size="18,18"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/blue.png" position="838,138" size="18,18"/>
     <widget backgroundColor="#00000000" font="Regular;18" name="key_red" position="207,135" size="120,24" transparent="1" zPosition="1" foregroundColor="snow"/>
     <widget backgroundColor="#00000000" font="Regular;18" name="key_green" position="424,135" size="120,24" transparent="1" zPosition="1" foregroundColor="snow"/>
     <widget backgroundColor="#00000000" font="Regular;18" name="key_yellow" position="651,135" size="120,24" transparent="1" zPosition="1" foregroundColor="snow"/>
