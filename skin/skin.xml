@@ -89,7 +89,7 @@
     <widget backgroundColor="#00000000" font="Regular;18" name="key_red" position="207,135" size="120,24" transparent="1" zPosition="1" foregroundColor="snow"/>
     <widget backgroundColor="#00000000" font="Regular;18" name="key_green" position="424,135" size="120,24" transparent="1" zPosition="1" foregroundColor="snow"/>
     <widget backgroundColor="#00000000" font="Regular;18" name="key_yellow" position="651,135" size="120,24" transparent="1" zPosition="1" foregroundColor="snow"/>
-    <widget backgroundColor="#00000000" font="Regular;18" foregroundColor="snow" position="862,135" render="Label" size="120,24" source="Title" transparent="1" name="key_blue"/>
+    <widget backgroundColor="#00000000" font="Regular;18" name="key_blue" position="862,135" size="120,24" transparent="1" foregroundColor="snow"/>
   </screen>
   <screen flags="wfNoBorder" name="IPtvDreamChannels" position="0,0" size="1280,720" title="Channel Selection">
     <ePixmap pixmap="IPtvDream/menu/back1.png" position="1,center" size="1280,720" zPosition="-10" alphatest="blend"/>
