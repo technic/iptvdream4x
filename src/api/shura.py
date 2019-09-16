@@ -40,11 +40,13 @@ class OTTProvider(M3UProvider):
 
 		name = ""
 		group = "Unknown"
+		logo = ""
 		tvg = None
 
 		import re
 		tvg_regexp = re.compile('#EXTINF:.*tvg-id="([^"]*)"')
 		group_regexp = re.compile('#EXTINF:.*group-title="([^"]*)"')
+		logo_regexp = re.compile('#EXTINF:.*tvg-logo="([^"]*)"')
 		url_regexp = re.compile(r"https?://[\w.]+/~\w+/(\d+)/hls/.*\.m3u8")
 
 		for line in lines:
@@ -69,6 +71,11 @@ class OTTProvider(M3UProvider):
 					group = m.group(1)
 				else:
 					group = "Unknown"
+				m = logo_regexp.match(line)
+				if m:
+					logo = m.group(1)
+				else:
+					logo = ""
 			elif line.startswith("#EXTGRP:"):
 				group = line.strip().split(':')[1]
 			elif line.startswith("#EXTM3U"):
@@ -97,7 +104,7 @@ class OTTProvider(M3UProvider):
 				self.channels[cid] = c
 				g.channels.append(c)
 				url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
-				self.channels_data[cid] = {'tvg': tvg, 'url': url}
+				self.channels_data[cid] = {'tvg': tvg, 'url': url, 'logo': logo}
 				if tvg is not None:
 					try:
 						self.tvg_ids[tvg].append(cid)

@@ -120,7 +120,8 @@ class OTTProvider(M3UProvider, JsonSettings):
 				c = Channel(cid, gid, name, num, archive)
 				self.channels[cid] = c
 				g.channels.append(c)
-				self.channels_data[cid] = {'tvg': tvg, 'url': url}
+				# TODO: add logo if we have it
+				self.channels_data[cid] = {'tvg': tvg, 'url': url, 'logo': ""}
 				if tvg is not None:
 					try:
 						self.tvg_ids[tvg].append(cid)
