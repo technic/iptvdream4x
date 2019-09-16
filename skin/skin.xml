@@ -119,8 +119,8 @@
     <widget backgroundColor="#00000000" font="Regular;20" name="key_yellow" position="617,680" size="200,24" transparent="1" zPosition="1"/>
     <widget backgroundColor="#00000000" font="Regular;20" name="key_blue" position="867,680" size="200,24" transparent="1" zPosition="1"/>
     <widget backgroundColor="#001b2c47" font="Regular;18" halign="right" name="packetExpire" position="956,14" size="277,22" transparent="1"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/icons/calendar.png" size="20,22" position="1097,73"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/icons/clock.png" size="25,25" position="807,70"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/calendar.png" size="20,22" position="1097,73"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/clock.png" size="25,25" position="807,70"/>
   </screen>
   <screen flags="wfNoBorder" name="IPtvDreamEpg" position="0,0" size="1280,720" title="Channel EPG">
     <ePixmap pixmap="IPtvDream/menu/back1.png" position="0,0" size="1280,720" zPosition="-10"/>
