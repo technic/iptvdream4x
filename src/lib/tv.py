@@ -23,6 +23,7 @@ from Tools.LoadPixmap import LoadPixmap
 from enigma import eBackgroundFileEraser, ePicLoad
 
 from ..loc import translate as _
+from ..layer import enigma2Qt
 from ..api.abstract_api import AbstractStream
 from ..utils import trace
 from ..common import fatalError, downloadError, DownloadException
@@ -129,7 +130,10 @@ class Picon(object):
 		self.pixmap = pixmap
 		self.d = None
 		self.picload = ePicLoad()
-		self.picload.PictureData.get().append(self._paint)
+		if enigma2Qt:
+			self._connection = self.picload.PictureData.connect(self._paint)
+		else:
+			self.picload.PictureData.get().append(self._paint)
 
 	def setIcon(self, url):
 		self.pixmap.instance.setPixmap(None)
