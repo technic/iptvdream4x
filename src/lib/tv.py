@@ -111,7 +111,6 @@ class PiconCache(object):
 				eBackgroundFileEraser.getInstance().erase(PICON_PATH + fname)
 
 	def _onError(self, err, f):
-		print("X"*100)
 		self.trace(err)
 		_, consumers = self.defers.pop(f)
 		for consumer in consumers:
