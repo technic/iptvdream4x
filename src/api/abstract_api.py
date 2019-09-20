@@ -56,7 +56,7 @@ class AbstractAPI(object):
 		self.password = password
 		self.sid = None
 		self.packet_expire = None
-		self.settings = []
+		self.settings = {}
 
 		socket.setdefaulttimeout(10)
 		self.uuid = getHwAddr('eth0')
