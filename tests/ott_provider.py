@@ -77,3 +77,9 @@ class TestOTTProvider(TestCase):
             elif isinstance(v, ConfSelection):
                 to_push[k] = v.choices[0][0]
         self._db.pushSettings(to_push)
+
+    def test_piconUrl(self):
+        self._db.setChannelsList()
+        cid = self._db.channels.keys()[0]
+        url = self._db.getPiconUrl(cid)
+        self.assertIsInstance(url, str)
