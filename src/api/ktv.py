@@ -52,10 +52,12 @@ class KartinaAPI(AbstractAPI):
 
 class KtvStream(OfflineFavourites, KartinaAPI):
 	HAS_PIN = True
+	icons_url = ""
 
 	def __init__(self, username, password):
 		super(KtvStream, self).__init__(username, password)
 		self.day_ends = defaultdict(dict)
+		self.icons = {}
 
 	@staticmethod
 	def parseName(txt):
@@ -80,6 +82,7 @@ class KtvStream(OfflineFavourites, KartinaAPI):
 					bool(int(c.get('have_archive', 0))), bool(int(c.get('protected', 0)))
 				)
 				self.channels[cid] = channel
+				self.icons[cid] = c['icon'].encode('utf-8')
 				channels.append(channel)
 			self.groups[gid] = Group(gid, g['name'].encode('utf-8'), channels)
 
@@ -153,3 +156,9 @@ class KtvStream(OfflineFavourites, KartinaAPI):
 		for x in settings:
 			params = {"var": x[0]['id'], "val": x[1]}
 			self.getData(self.site + "/settings_set?", params, "setting %s" % x[0]['id'])
+
+	def getPiconUrl(self, cid):
+		url = self.icons[cid]
+		if url:
+			return self.icons_url + url
+		return ""

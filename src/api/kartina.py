@@ -16,3 +16,4 @@ from ktv import KtvStream
 class OTTProvider(KtvStream):
 	NAME = "KartinaTV"
 	site = "http://iptv.kartina.tv/api/json"
+	icons_url = "http://iptv.kartina.tv"
