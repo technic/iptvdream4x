@@ -27,6 +27,7 @@ class OTTProvider(M3UProvider):
 		pass
 
 	def setChannelsList(self):
+		self._downloadTvgMap()
 		m3u = self._locatePlaylist()
 		try:
 			with open(m3u) as f:
