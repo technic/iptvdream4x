@@ -1041,11 +1041,15 @@ class IPtvDreamChannels(Screen):
 				actions += [
 					(_('Add "%s" to favourites') % current.name, self.addRemoveFavourites),
 				]
+				if current.has_archive:
+					actions += [(_('Open archive for "%s"') % current.name, self.showEpgList)]
 		if self.mode == self.FAV:
 			if current:
 				actions += [
 					(_('Remove "%s" from favourites') % current.name, self.addRemoveFavourites),
 				]
+				if current.has_archive:
+					actions += [(_('Open archive for "%s"') % current.name, self.showEpgList)]
 				if not self.edit_mode:
 					actions += [(_("Enter edit mode"), self.confirmStartEditing)]
 				else:
