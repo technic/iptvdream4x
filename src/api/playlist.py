@@ -12,7 +12,7 @@ from __future__ import print_function
 
 # plugin imports
 from m3u import M3UProvider
-from ..utils import APIException
+from ..utils import APIException, Channel
 
 
 class OTTProvider(M3UProvider):
@@ -29,7 +29,11 @@ class OTTProvider(M3UProvider):
 	def setChannelsList(self):
 		m3u = self._locatePlaylist()
 		try:
-			self._parsePlaylist(m3u)
+			with open(m3u) as f:
+				self._parsePlaylist(f.readlines())
 		except IOError as e:
 			self.trace("error!", e)
 			raise APIException(e)
+
+	def makeChannel(self, url, gid, name, num):
+		return Channel(hash(url), gid, name, num, name.endswith('(A)'))
