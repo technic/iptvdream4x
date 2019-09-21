@@ -40,7 +40,7 @@ class KartinaAPI(AbstractAPI):
 	def authorize(self):
 		self.trace("Authorization of username = %s" % self.username)
 		params = {
-			"login": self.username, "pass": self.password, 
+			"login": self.username, "pass": self.password,
 			"softid": self.softid, "cli_serial": self.uuid,
 		}
 		reply = self.getJsonData(self.site + '/login?', params, fromauth=True)
