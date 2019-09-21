@@ -68,7 +68,7 @@ class OTTProvider(AbstractStream, NewrusAPI):
 				num += 1
 				cid = int(c['id'])
 				channel = Channel(
-					cid, gid, c['name'].encode('utf-8'), num,
+					cid, c['name'].encode('utf-8'), num,
 					bool(c['have_archive']), bool(c['protected']))
 				self.channels[cid] = channel
 				channels.append(channel)

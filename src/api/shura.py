@@ -39,4 +39,4 @@ class OTTProvider(M3UProvider):
 		else:
 			cid = hash(url)
 			self.trace("Failed to get cid from url", url)
-		return Channel(cid, gid, name, num, name.endswith("(A)"))
+		return Channel(cid, name, num, name.endswith("(A)"))

@@ -117,7 +117,7 @@ class OTTProvider(M3UProvider, JsonSettings):
 
 				num += 1
 				cid = num  # TODO: use url_regexp
-				c = Channel(cid, gid, name, num, archive)
+				c = Channel(cid, name, num, archive)
 				self.channels[cid] = c
 				g.channels.append(c)
 				# TODO: add logo if we have it

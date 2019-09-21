@@ -98,7 +98,7 @@ class M3UProvider(OfflineFavourites):
 				self.trace("error!", e)
 				raise APIException(e)
 
-	def makeChannel(self, url, gid, name, num):
+	def makeChannel(self, url, name, num):
 		"""
 		Return Channel instance based on url and name
 		gid and num parameters in most cases must be just forwarded
@@ -109,7 +109,7 @@ class M3UProvider(OfflineFavourites):
 		else:
 			cid = hash(url)
 			self.trace("Failed to get cid from url", url)
-		return Channel(cid, gid, name, num, True)
+		return Channel(cid, name, num, True)
 
 	def _parsePlaylist(self, lines):
 		self.tvg_ids = {}
@@ -169,7 +169,7 @@ class M3UProvider(OfflineFavourites):
 					g = self.groups[gid] = Group(gid, group, [])
 
 				num += 1
-				c = self.makeChannel(url, gid, name, num)
+				c = self.makeChannel(url, name, num)
 				cid = c.cid
 				self.channels[cid] = c
 				g.channels.append(c)

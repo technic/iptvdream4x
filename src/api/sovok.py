@@ -51,7 +51,7 @@ class OTTProvider(OfflineFavourites):
 				cid = int(c['id'])
 				number += 1
 				channel = Channel(
-					cid, gid, c['name'].encode('utf-8'), number,
+					cid, c['name'].encode('utf-8'), number,
 					bool(int(c['have_archive'])), bool(int(c['protected']))
 				)
 				self.channels[cid] = channel

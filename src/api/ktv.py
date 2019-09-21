@@ -98,7 +98,7 @@ class KtvStream(OfflineFavourites, KartinaAPI):
 			for c in g['channels']:
 				cid = int(c['id'])
 				channel = Channel(
-					cid, gid, c['name'].encode('utf-8'), cid,
+					cid, c['name'].encode('utf-8'), cid,
 					bool(int(c.get('have_archive', 0))), bool(int(c.get('protected', 0)))
 				)
 				self.channels[cid] = channel

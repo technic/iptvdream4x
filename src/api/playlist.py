@@ -36,5 +36,5 @@ class OTTProvider(M3UProvider):
 			self.trace("error!", e)
 			raise APIException(e)
 
-	def makeChannel(self, url, gid, name, num):
-		return Channel(hash(url), gid, name, num, name.endswith('(A)'))
+	def makeChannel(self, url, name, num):
+		return Channel(hash(url), name, num, name.endswith('(A)'))

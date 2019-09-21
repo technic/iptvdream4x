@@ -344,10 +344,9 @@ class Group(object):
 
 
 class Channel(EPGDB):
-	def __init__(self, cid, gid, name, number, has_archive=False, is_protected=False):
+	def __init__(self, cid, name, number, has_archive=False, is_protected=False):
 		"""
 		:param int cid: channel id
-		:param int gid: group id, that channel belongs to
 		:param str name: channel title
 		:param int number: channel number
 		:param has_archive:
@@ -355,7 +354,6 @@ class Channel(EPGDB):
 		"""
 		EPGDB.__init__(self)
 		self.cid = cid
-		self.gid = gid
 		self.name = name
 		self.number = number
 		self.has_archive = has_archive

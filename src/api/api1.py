@@ -90,7 +90,7 @@ class TeleportStream(AbstractStream, TeleportAPI):
 			for c in g['channels']:
 				cid = c['id']
 				channel = Channel(
-						cid, gid, c['name'].encode('utf-8'), c['number'],
+						cid, c['name'].encode('utf-8'), c['number'],
 						bool(c['has_archive']), bool(c['protected']))
 				self.channels[cid] = channel
 				channels.append(channel)
