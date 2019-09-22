@@ -31,7 +31,7 @@ jobs:
       - run:
           name: pylint
           command: |
-            sudo pip install pylint
+            sudo pip install pylint==1.9
             pylint src
       - run:
           name: test update
