@@ -48,8 +48,7 @@ class OTTProvider(M3UProvider):
 	def makeChannel(self, num, name, url, tvg, logo):
 		if tvg is None:
 			try:
-				tvg = self.name_map[name]
-				print(name, type(name), self.name_map.keys()[0], type(self.name_map.keys()[0]))
+				tvg = self.name_map[name.decode('utf-8')]
 			except KeyError:
 				pass
 		return Channel(hash(url), name, num, name.endswith('(A)')), {'tvg': tvg, 'url': url, 'logo': logo}
