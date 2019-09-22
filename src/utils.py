@@ -129,14 +129,6 @@ class EPG(object):
 	def isAt(self, t):
 		return self.begin <= t < self.end
 
-	def __getitem__(self, key):
-		# print("DEPRECATED")
-		return self.__dict__[key]
-
-	def __setitem__(self, key, value):
-		# print("DEPRECATED")
-		self.__dict__[key] = value
-
 	def __repr__(self):
 		return "%s-%s|%s" % (self.begin.strftime("%H:%M"), self.end.strftime("%H:%M"), self.name)
 
