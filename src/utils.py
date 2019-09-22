@@ -299,7 +299,7 @@ class EPGDB(object):
 		if i > 0:
 			prev = self.l[i-1][1]
 			if prev.begin == epg.begin or prev.end > epg.begin:
-				print("[IPtvDream] EPG conflict!")
+				trace("EPG conflict!")
 				self.l[i-1] = (t, epg)
 				return i
 		self.l.insert(i, (t, epg))

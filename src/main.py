@@ -299,14 +299,14 @@ class IPtvDreamStreamPlayer(
 		self.session.openWithCallback(self.rwdJumpTo, MinuteInput)
 
 	def fwdJumpTo(self, minutes):
-		print("[IPtvDream] fwdSeek", minutes)
+		trace("fwdSeek", minutes)
 		self.shift += minutes*60
 		if self.shift > 0:
 			self.setArchiveShift(0)
 		self.play(self.cid)
 
 	def rwdJumpTo(self, minutes):
-		print("[IPtvDream] rwdSeek", minutes)
+		trace("rwdSeek", minutes)
 		self.shift -= minutes*60
 		self.play(self.cid)
 
@@ -360,7 +360,7 @@ class IPtvDreamStreamPlayer(
 			try:
 				self.db.loadDayEpg(cid, time)
 			except APIException as e:
-				print("[IPtvDream] ERROR load epg failed! cid =", cid, bool(self.shift), e)
+				trace("ERROR load epg failed! cid =", cid, bool(self.shift), e)
 			if not setEpgCurrent():
 				self["currentName"].setText('')
 				self["currentTime"].setText('')
@@ -380,7 +380,7 @@ class IPtvDreamStreamPlayer(
 			try:
 				self.db.loadDayEpg(cid, time)
 			except APIException:
-				print("[IPtvDream] load epg next failed!")
+				trace("load epg next failed!")
 			if not setEpgNext():
 				self["nextName"].setText('')
 				self["nextDuration"].setText('')

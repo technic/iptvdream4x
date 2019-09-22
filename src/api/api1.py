@@ -97,7 +97,7 @@ class TeleportStream(AbstractStream, TeleportAPI):
 				self.icons[cid] = c['icon'].encode('utf-8')
 			self.groups[gid] = Group(gid, g['user_title'].encode('utf-8'), channels)
 		self.icons_url = data['icons']['default'].encode('utf-8')
-		print(self.groups)
+		self.trace(self.groups)
 
 	def getStreamUrl(self, cid, pin, time=None):
 		params = {"cid": cid, "time_shift": self.time_shift}

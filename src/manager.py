@@ -196,7 +196,6 @@ class Manager(object):
 			try:
 				trace("Loading module", f)
 				module = my_import('%s.%s' % (prefix, f))
-				print(module)
 				if not hasattr(module, api_provider):
 					continue
 				provider = getattr(module, api_provider)
@@ -211,7 +210,7 @@ class Manager(object):
 				self.config[name].last_played = ConfigText()
 
 			except Exception:
-				print("[IPtvDream] Exception")
+				trace("Exception")
 				import traceback
 				traceback.print_exc()
 				continue

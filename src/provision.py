@@ -85,7 +85,7 @@ class ProvisionScreen(MessageBox):
 	def start(self):
 		self.onShown.remove(self.start)
 
-		print("[IPTV] start setup")
+		trace("start setup")
 		gen = self.taskGenerator()
 
 		def runNext(result):
