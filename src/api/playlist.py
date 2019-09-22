@@ -10,6 +10,9 @@
 
 from __future__ import print_function
 
+# system imports
+from json import loads as json_loads
+
 # plugin imports
 from m3u import M3UProvider
 from ..utils import APIException, Channel
@@ -17,14 +20,20 @@ from ..utils import APIException, Channel
 
 class OTTProvider(M3UProvider):
 	NAME = "M3U-Playlist"
+	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
 		self.site = "http://iptvdream.zapto.org/epg-soveni"
 		self.playlist = "playlist.m3u"
+		self.name_map = {}
 
 	def start(self):
-		pass
+		try:
+			self.name_map = json_loads(self.readHttp(self.site + "/channels_names"))['data']
+		except IOError as e:
+			self.trace("error!", e)
+			raise APIException(e)
 
 	def setChannelsList(self):
 		self._downloadTvgMap()
@@ -36,5 +45,11 @@ class OTTProvider(M3UProvider):
 			self.trace("error!", e)
 			raise APIException(e)
 
-	def makeChannel(self, url, name, num):
-		return Channel(hash(url), name, num, name.endswith('(A)'))
+	def makeChannel(self, num, name, url, tvg, logo):
+		if tvg is None:
+			try:
+				tvg = self.name_map[name]
+				print(name, type(name), self.name_map.keys()[0], type(self.name_map.keys()[0]))
+			except KeyError:
+				pass
+		return Channel(hash(url), name, num, name.endswith('(A)')), {'tvg': tvg, 'url': url, 'logo': logo}

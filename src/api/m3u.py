@@ -98,10 +98,9 @@ class M3UProvider(OfflineFavourites):
 				self.trace("error!", e)
 				raise APIException(e)
 
-	def makeChannel(self, url, name, num):
+	def makeChannel(self, num, name, url, tvg, logo):
 		"""
-		Return Channel instance based on url and name
-		gid and num parameters in most cases must be just forwarded
+		Return tuple (Channel instance, internal data) based on parameters extracted from playlist
 		"""
 		m = self._url_regexp.match(url)
 		if m:
@@ -109,10 +108,10 @@ class M3UProvider(OfflineFavourites):
 		else:
 			cid = hash(url)
 			self.trace("Failed to get cid from url", url)
-		return Channel(cid, name, num, True)
+		url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
+		return Channel(cid, name, num, True), {'tvg': tvg, 'url': url, 'logo': logo}
 
 	def _parsePlaylist(self, lines):
-		self.tvg_ids = {}
 		group_names = {}
 		num = 0
 
@@ -169,22 +168,26 @@ class M3UProvider(OfflineFavourites):
 					g = self.groups[gid] = Group(gid, group, [])
 
 				num += 1
-				c = self.makeChannel(url, name, num)
+				c, d = self.makeChannel(num, name, url, tvg, logo)
 				cid = c.cid
 				self.channels[cid] = c
 				g.channels.append(c)
-				self.channels_data[cid] = {'tvg': tvg, 'url': url, 'logo': logo}
-				if tvg is not None:
-					try:
-						self.tvg_ids[tvg].append(cid)
-					except KeyError:
-						self.tvg_ids[tvg] = [cid]
+				self.channels_data[cid] = d
+
+		# Create inverse mapping from tvg to cid, required for epg_list
+		self.tvg_ids = {}
+		for cid, data in self.channels_data.items():
+			tvg = data['tvg']
+			if tvg is not None:
+				try:
+					self.tvg_ids[tvg].append(cid)
+				except KeyError:
+					self.tvg_ids[tvg] = [cid]
 
 		self.trace("Loaded {} channels".format(len(self.channels)))
 
 	def getStreamUrl(self, cid, pin, time=None):
 		url = self.channels_data[cid]['url']
-		url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
 		if time:
 			url += '?utc=%s&lutc=%s' % (time.strftime('%s'), syncTime().strftime('%s'))
 		return url

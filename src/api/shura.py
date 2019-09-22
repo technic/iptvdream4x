@@ -32,11 +32,12 @@ class OTTProvider(M3UProvider):
 		url_regexp = re.compile(r"https?://([\w.]+)/(\w+)/\d+/hls/pl.m3u8")
 		self._extractKeyFromPlaylist(url_regexp)
 
-	def makeChannel(self, url, gid, name, num):
+	def makeChannel(self, num, name, url, tvg, logo):
 		m = self._url_regexp.match(url)
 		if m:
 			cid = int(m.group(1))
 		else:
 			cid = hash(url)
 			self.trace("Failed to get cid from url", url)
-		return Channel(cid, name, num, name.endswith("(A)"))
+		url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
+		return Channel(cid, name, num, name.endswith("(A)")), {'tvg': tvg, 'url': url, 'logo': logo}
