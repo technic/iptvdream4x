@@ -29,6 +29,11 @@ jobs:
             pycodestyle --version
             pycodestyle src
       - run:
+          name: pylint
+          command: |
+            sudo pip install pylint
+            pylint src
+      - run:
           name: test update
           command: |
             sudo mkdir -p /dev/input
