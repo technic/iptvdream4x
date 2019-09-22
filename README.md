@@ -1,5 +1,6 @@
 # IPtvDream 4X
 [![](https://img.shields.io/bitbucket/pipelines/iptvdream/iptvdream-4x.svg)](https://bitbucket.org/iptvdream/iptvdream-4x/addon/pipelines/home)
+[![CircleCI](https://circleci.com/bb/iptvdream/iptvdream-4x.svg?style=svg)](https://circleci.com/bb/iptvdream/iptvdream-4x)
 
 Плагин для просмотра iptv на ресивeрах (тв-приставках) с enigma2.
 *NO WARRANTIES[*](#markdown-header-no-warranties) (Отказ от ответственности)[*](#markdown-header-no-warranties)*.
@@ -9,6 +10,12 @@
 Отчёты об ошибках, пожелания, предложения, пулл-реквесты и прочая помощь приветствуется!
 
 # Release notes
+
+## 4.47
+
+- добавлена возможность просмотра пользовательского плейлиста
+- выбор сервера и другие настройки для картины
+- выбор плейлиста для iptv-e2
 
 ## 4.46
 
