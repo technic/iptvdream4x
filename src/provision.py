@@ -24,8 +24,10 @@ except ImportError as e:
 	def _(text):
 		return text
 
+pluginConfig = config.plugins.IPtvDream = ConfigSubsection()
+
 # Revision of applied provision (setup) tasks
-config.plugins.IPtvDream.provision_r = ConfigInteger(0)
+pluginConfig.provision_r = ConfigInteger(0)
 
 
 def trace(*args):
@@ -73,12 +75,12 @@ class ProvisionScreen(MessageBox):
 
 	@classmethod
 	def provisionRequired(cls):
-		return config.plugins.IPtvDream.provision_r.value < cls.REVISION
+		return pluginConfig.provision_r.value < cls.REVISION
 
 	@classmethod
 	def updateRevision(cls):
-		config.plugins.IPtvDream.provision_r.value = cls.REVISION
-		config.plugins.IPtvDream.provision_r.save()
+		pluginConfig.provision_r.value = cls.REVISION
+		pluginConfig.provision_r.save()
 
 	# We use generators magic below
 
