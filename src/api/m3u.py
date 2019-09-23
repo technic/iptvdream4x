@@ -124,6 +124,12 @@ class M3UProvider(OfflineFavourites):
 		group_regexp = re.compile('#EXTINF:.*group-title="([^"]*)"')
 		logo_regexp = re.compile('#EXTINF:.*tvg-logo="([^"]*)"')
 
+		import codecs
+		if lines:
+			if lines[0].startswith(codecs.BOM_UTF8):
+				self.trace("Discard BOM_UTF8")
+				lines[0] = lines[0][3:]
+
 		for line in lines:
 			if line.startswith("#EXTINF:"):
 				name = line.strip().split(',')[1]
