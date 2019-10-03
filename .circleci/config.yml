@@ -131,7 +131,10 @@ workflows:
     jobs:
       - test: *config-all
       - build: *config-all
-      - mirror: *config-all
+      - mirror:
+          filters:
+            branches:
+              only: [master]
 
   task-cbilling:
     jobs:
