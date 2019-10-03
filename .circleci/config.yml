@@ -54,24 +54,24 @@ jobs:
     environment:
       PROVIDER: << parameters.provider >>
     steps:
-    - checkout
-    - run:
-        name: info
-        command: |
-          uname -a
-          whoami
-          echo PROVIDER=${PROVIDER}
-    - run:
-        name: build
-        command: |
-          make
-          make DEB=y
-    - persist_to_workspace:
-        root: .
-        paths:
-        - packages/*
-    - store_artifacts:
-        path: ./packages
+      - checkout
+      - run:
+          name: info
+          command: |
+            uname -a
+            whoami
+            echo PROVIDER=${PROVIDER}
+      - run:
+          name: build
+          command: |
+            make
+            make DEB=y
+      - persist_to_workspace:
+          root: .
+          paths:
+            - packages/*
+      - store_artifacts:
+          path: ./packages
 
   deploy:
     docker:
@@ -93,6 +93,20 @@ jobs:
             ls -lR packages/
             rsync -rlt --delay-updates packages/ $UPDATE_SERVER:~/iptvdream4x/packages
 
+  mirror:
+    docker:
+      - image: circleci/python
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "9b:68:18:d4:e9:38:67:9f:e0:5c:37:83:96:ff:f3:4d"
+      - run:
+          name: GitHub mirror
+          command: |
+            git remote add github git@github.com:technic/iptvdream4x.git
+            git push --mirror github
+
 references:
   config-all: &config-all
     provider: all
@@ -108,7 +122,7 @@ references:
     filters:
       branches:
         only:
-        - /^cbilling.*/
+          - /^cbilling.*/
       tags:
         only: /^cbilling.*/
 
@@ -117,6 +131,7 @@ workflows:
     jobs:
       - test: *config-all
       - build: *config-all
+      - mirror: *config-all
 
   task-cbilling:
     jobs:
