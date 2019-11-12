@@ -141,12 +141,7 @@ class OTTProvider(M3UProvider, JsonSettings):
 				[('hi', _("High")), ('lo', _("Low"))]
 			),
 		}
-		for k, v in self._loadSettings().items():
-			try:
-				settings[k].safeSetValue(str(v))
-			except KeyError:
-				continue
-		return settings
+		return self._safeLoadSetting(settings)
 
 	def pushSettings(self, settings):
 		data = self._loadSettings()

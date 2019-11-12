@@ -314,6 +314,15 @@ class JsonSettings(AbstractAPI):
 		with open(self._settings_file) as f:
 			return json_load(f) or {}
 
+	def _safeLoadSetting(self, defaults):
+		"""Update defaults with verified values loaded from json"""
+		for k, v in self._loadSettings().items():
+			try:
+				defaults[k].safeSetValue(str(v))
+			except KeyError:
+				continue
+		return defaults
+
 	def _saveSettings(self, settings):
 		from json import dump as json_dump
 		try:
