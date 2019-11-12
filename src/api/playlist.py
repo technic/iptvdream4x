@@ -15,16 +15,20 @@ from json import loads as json_loads
 
 # plugin imports
 from m3u import M3UProvider
-from ..utils import APIException, Channel
+from abstract_api import JsonSettings
+from ..utils import APIException, Channel, ConfSelection, ConfString
+from ..loc import translate as _
 
 
-class OTTProvider(M3UProvider):
+class OTTProvider(M3UProvider, JsonSettings):
 	NAME = "M3U-Playlist"
 	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg-soveni"
+		s = self.getSettings()
+		self.site = s['epg_url'].value
+		self.archive_tag = s['archive'].value
 		self.playlist = "playlist.m3u"
 		self.name_map = {}
 
@@ -51,4 +55,17 @@ class OTTProvider(M3UProvider):
 				tvg = self.name_map[name.decode('utf-8')]
 			except KeyError:
 				pass
-		return Channel(hash(url), name, num, name.endswith('(A)')), {'tvg': tvg, 'url': url, 'logo': logo}
+		if self.archive_tag == 'tagged':
+			archive = name.endswith('(A)')
+		else:
+			archive = True
+		return Channel(hash(url), name, num, archive), {'tvg': tvg, 'url': url, 'logo': logo}
+
+	def getSettings(self):
+		settings = {
+			'archive': ConfSelection(_("Enable archive"), 'all', [
+				('all', "All channels"), ('tagged', "Marked channels (A)")
+			]),
+			'epg_url': ConfString(_("EPG-json url"), "http://iptvdream.zapto.org/epg-soveni")
+		}
+		return self._safeLoadSetting(settings)
