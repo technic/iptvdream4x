@@ -330,3 +330,8 @@ class JsonSettings(AbstractAPI):
 				json_dump(settings, f)
 		except Exception as e:
 			raise APIException(str(e))
+
+	def pushSettings(self, settings):
+		data = self._loadSettings()
+		data.update(settings)
+		self._saveSettings(data)
