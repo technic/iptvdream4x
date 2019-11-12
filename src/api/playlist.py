@@ -68,4 +68,4 @@ class OTTProvider(M3UProvider, JsonSettings):
 			]),
 			'epg_url': ConfString(_("EPG-json url"), "http://iptvdream.zapto.org/epg-soveni")
 		}
-		return self._safeLoadSetting(settings)
+		return self._safeLoadSettings(settings)

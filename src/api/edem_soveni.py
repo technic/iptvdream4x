@@ -35,7 +35,7 @@ class OTTProvider(M3UProvider, JsonSettings):
 		settings = {
 			'playlist': ConfSelection(_("Playlist"), 'lite', [('lite', "Lite"), ('ico', "Full")]),
 		}
-		return self._safeLoadSetting(settings)
+		return self._safeLoadSettings(settings)
 
 	def pushSettings(self, settings):
 		data = self._loadSettings()

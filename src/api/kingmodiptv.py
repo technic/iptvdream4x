@@ -141,7 +141,7 @@ class OTTProvider(M3UProvider, JsonSettings):
 				[('hi', _("High")), ('lo', _("Low"))]
 			),
 		}
-		return self._safeLoadSetting(settings)
+		return self._safeLoadSettings(settings)
 
 	def pushSettings(self, settings):
 		data = self._loadSettings()
