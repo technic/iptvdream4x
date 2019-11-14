@@ -24,7 +24,7 @@ except ImportError:
 		return text
 
 
-class OTTProvider(M3UProvider, JsonSettings):
+class OTTProvider(JsonSettings, M3UProvider):
 	NAME = "KingModIPTV"
 	AUTH_TYPE = "Login"
 	TVG_MAP = True

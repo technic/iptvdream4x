@@ -21,7 +21,7 @@ except ImportError:
 		return text
 
 
-class OTTProvider(M3UProvider, JsonSettings):
+class OTTProvider(JsonSettings, M3UProvider):
 	NAME = "EdemTV-Soveni"
 
 	def __init__(self, username, password):

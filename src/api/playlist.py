@@ -20,7 +20,7 @@ from ..utils import APIException, Channel, ConfSelection, ConfString
 from ..loc import translate as _
 
 
-class OTTProvider(M3UProvider, JsonSettings):
+class OTTProvider(JsonSettings, M3UProvider):
 	NAME = "M3U-Playlist"
 	TVG_MAP = True
 
