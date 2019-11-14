@@ -19,7 +19,7 @@
         "iptvdream",
         "rtype"
     ],
-    "python.linting.pep8Enabled": true,
+    "python.linting.pycodestyleEnabled": true,
     // enigma2 legacy style
     "[python]": {
         "editor.insertSpaces": false,
