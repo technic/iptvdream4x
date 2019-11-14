@@ -1,3 +1,5 @@
+"""Copy all *.m3u and *.m3u8 playlist to docker container"""
+
 from glob import glob
 from subprocess import check_call
 
