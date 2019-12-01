@@ -308,6 +308,7 @@ class JsonSettings(AbstractAPI):
 		self._settings_file = self._resolveConfigurationFile('%s.json' % self.NAME)
 
 	def _loadSettings(self):
+		"""Read json from settings file without verification"""
 		from json import load as json_load
 		if not os_path.isfile(self._settings_file):
 			return {}
@@ -324,6 +325,7 @@ class JsonSettings(AbstractAPI):
 		return defaults
 
 	def _saveSettings(self, settings):
+		"""Dump settings dictionary to file"""
 		from json import dump as json_dump
 		try:
 			with open(self._settings_file, 'w') as f:
