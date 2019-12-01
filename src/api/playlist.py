@@ -16,7 +16,7 @@ from json import loads as json_loads
 # plugin imports
 from m3u import M3UProvider
 from abstract_api import JsonSettings
-from ..utils import APIException, Channel, ConfSelection, ConfString
+from ..utils import APIException, Channel, ConfSelection, ConfString, syncTime
 from ..loc import translate as _
 
 
@@ -28,6 +28,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 		super(OTTProvider, self).__init__(username, password)
 		s = self.getSettings()
 		self.site = s['epg_url'].value
+		self._archive_url = s['archive_url'].value
 		self.archive_tag = s['archive'].value
 		self.playlist = "playlist.m3u"
 		self.name_map = {}
@@ -61,10 +62,26 @@ class OTTProvider(JsonSettings, M3UProvider):
 			archive = True
 		return Channel(hash(url), name, num, archive), {'tvg': tvg, 'url': url, 'logo': logo}
 
+	def getStreamUrl(self, cid, pin, time=None):
+		url = self.channels_data[cid]['url']
+		if self._archive_url == 'default':
+			if time:
+				url += '?utc=%s&lutc=%s' % (time.strftime('%s'), syncTime().strftime('%s'))
+			return url
+		elif self._archive_url == 'flusonic':
+			if time is None:
+				return url
+			return url.replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
+		else:
+			raise Exception("Unknown archive_url")
+
 	def getSettings(self):
 		settings = {
 			'archive': ConfSelection(_("Enable archive"), 'all', [
 				('all', "All channels"), ('tagged', "Marked channels (A)")
+			]),
+			'archive_url': ConfSelection(_("Archive url type"), 'default', [
+				('default', "Default"), ('flusonic', "Flusonic"),
 			]),
 			'epg_url': ConfString(_("EPG-json url"), "http://iptvdream.zapto.org/epg-soveni")
 		}
