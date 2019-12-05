@@ -1220,6 +1220,7 @@ class IPtvDreamEpg(Screen):
 	def __init__(self, session, db, cid, shift):
 		Screen.__init__(self, session)
 
+		self["btn_red"] = Pixmap()
 		self["key_red"] = Button(_("Archive"))
 		self["key_green"] = Button(_("Details"))
 		self["list"] = self.list = ListSource()
@@ -1295,6 +1296,12 @@ class IPtvDreamEpg(Screen):
 		self["epgTime"].setText(entry.begin.strftime("%d.%m %H:%M"))
 		self["epgDescription"].setText(entry.description)
 		self["epgDuration"].setText("%s min" % (entry.duration() / 60))
+		if self.db.channels[self.cid].has_archive and entry.begin < syncTime():
+			self["btn_red"].show()
+			self["key_red"].show()
+		else:
+			self["btn_red"].hide()
+			self["key_red"].hide()
 		self._progress.setEpg(entry)
 
 	def archive(self):
@@ -1310,7 +1317,11 @@ class IPtvDreamEpg(Screen):
 		if not entry:
 			return
 		entry = entry[0]
-		self.session.open(IPtvDreamEpgInfo, self.db.channels[self.cid], entry)
+		self.session.openWithCallback(self.infoClosed, IPtvDreamEpgInfo, self.db.channels[self.cid], entry)
+
+	def infoClosed(self, time=None):
+		if time is not None:
+			self.close(self.cid, time)
 
 	def exit(self):
 		self.close()
@@ -1376,8 +1387,16 @@ class IPtvDreamEpgInfo(Screen):
 		self._progress.onChanged.append(self.updateProgress)
 		self.onLayoutFinish.append(self.initGui)
 
-		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions"], {
+		self["btn_red"] = Pixmap()
+		self["key_red"] = Button(_("Archive"))
+
+		if not self.hasArchive():
+			self["btn_red"].hide()
+			self["key_red"].hide()
+
+		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions", "ColorActions"], {
 			"cancel": self.close,
+			"red": self.playArchive,
 			"ok": self.close,
 			"up": self["epgDescription"].pageUp,
 			"down": self["epgDescription"].pageDown
@@ -1385,6 +1404,13 @@ class IPtvDreamEpgInfo(Screen):
 
 	def initGui(self):
 		self._progress.setEpg(self.entry)
+
+	def hasArchive(self):
+		return self.channel.has_archive and self.entry.begin < syncTime()
+
+	def playArchive(self):
+		if self.hasArchive():
+			self.close(self.entry.begin)
 
 	def updateProgress(self, value):
 		t = syncTime()
