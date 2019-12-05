@@ -149,6 +149,35 @@ class ShowHideScreen(Screen):
 			self.startHideTimer()
 
 
+# Reimplementation of InfoBarMenu
+class MainMenuScreen(Screen):
+	""" Handles a menu action, to open the (main) menu """
+	def __init__(self, session):
+		super(MainMenuScreen, self).__init__(session)
+		self["MenuActions"] = ActionMap(["InfobarMenuActions"], {
+			"mainMenu": self.mainMenu,
+		})
+		self.session.infobar = None
+
+	def mainMenu(self):
+		try:
+			from Screens.Menu import mdom, MainMenu
+			print("loading mainmenu XML...")
+			menu = mdom.getroot()
+			assert menu.tag == "menu", "root element in menu must be 'menu'!"
+		except Exception as e:
+			print("Incompatible menu:", e)
+
+		self.session.infobar = self
+		# so we can access the currently active infobar from screens opened from within the mainmenu
+		# at the moment used from the SubserviceSelection
+
+		self.session.openWithCallback(self.mainMenuClosed, MainMenu, menu)
+
+	def mainMenuClosed(self, *val):
+		self.session.infobar = None
+
+
 class AutoAudioSelection(Screen):
 	def __init__(self, session):
 		super(AutoAudioSelection, self).__init__(session)

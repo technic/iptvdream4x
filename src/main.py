@@ -34,7 +34,7 @@ from Components.MenuList import MenuList
 from Components.Pixmap import Pixmap
 from Components.GUIComponent import GUIComponent
 from Components.Pixmap import Pixmap
-from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions, \
+from Screens.InfoBarGenerics import InfoBarPlugins, InfoBarExtensions, \
 	InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -56,7 +56,7 @@ from common import StaticTextService, NumberEnter
 from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG
 from api.abstract_api import AbstractStream
 from loc import translate as _
-from common import parseColor, ShowHideScreen, AutoAudioSelection
+from common import parseColor, ShowHideScreen, AutoAudioSelection, MainMenuScreen
 from standby import standbyNotifier
 from cache import LiveEpgWorker
 from lib.epg import EpgProgress
@@ -74,8 +74,8 @@ ARCHIVE_TIME_FIX = 5  # sec. When archive paused, we could miss some video
 
 
 class IPtvDreamStreamPlayer(
-		ShowHideScreen, AutoAudioSelection,
-		InfoBarBase, InfoBarMenu, InfoBarPlugins, InfoBarExtensions,
+		ShowHideScreen, AutoAudioSelection, MainMenuScreen,
+		InfoBarBase, InfoBarPlugins, InfoBarExtensions,
 		InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport):
 	"""
 	:type channels: IPtvDreamChannels
@@ -87,7 +87,6 @@ class IPtvDreamStreamPlayer(
 	def __init__(self, session, db):
 		super(IPtvDreamStreamPlayer, self).__init__(session)
 		InfoBarBase.__init__(self, steal_current_service=True)
-		InfoBarMenu.__init__(self)
 		InfoBarExtensions.__init__(self)
 		InfoBarPlugins.__init__(self)
 		InfoBarNotifications.__init__(self)
