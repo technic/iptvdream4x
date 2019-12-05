@@ -12,7 +12,7 @@
 from __future__ import print_function
 
 # system imports
-from datetime import timedelta
+from datetime import datetime, timedelta
 try:
 	# noinspection PyUnresolvedReferences
 	from typing import Callable, Optional, List, Tuple  # pylint: disable=unused-import
@@ -1266,24 +1266,24 @@ class IPtvDreamEpg(Screen):
 		if self.cid is None:
 			return
 
-		d = syncTime() + secTd(self.shift) + timedelta(self.day)
-		epg_list = self.db.channels[self.cid].epgDay(d)
-		if len(epg_list) == 0:
-			try:
-				self.db.loadDayEpg(self.cid, d)
-			except APIException as e:
-				trace("getDayEpg failed cid =", self.cid, str(e))
-			epg_list = self.db.channels[self.cid].epgDay(d)
+		time = syncTime()
+		d = time + secTd(self.shift) + timedelta(self.day)
+
+		epg_list = []
+		try:
+			epg_list = self.db.getDayEpg(self.cid, datetime(d.year, d.month, d.day))
+		except APIException as e:
+			self.session.open(MessageBox, _("Can not load EPG:") + str(e), MessageBox.TYPE_ERROR, 5)
 
 		self.list.setList(map(self.buildEpgEntry, epg_list))
 		self.setTitle("EPG / %s / %s %s" % (self.db.channels[self.cid].name, d.strftime("%d"), _(d.strftime("%b"))))
 		self.list.setIndex(0)
-		e = self.db.channels[self.cid].epgCurrent(d)
-		if e and self.day == 0:
-			try:
-				self.list.setIndex(epg_list.index(e))
-			except ValueError:
-				trace("epgCurrent at other date!")
+
+		if self.day == 0:
+			for i, e in enumerate(epg_list):
+				if e.isAt(time):
+					self.list.setIndex(i)
+					break
 
 	def updateLabels(self):
 		entry = self.list.getCurrent()
