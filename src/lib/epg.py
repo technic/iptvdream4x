@@ -50,8 +50,8 @@ class EpgProgress(Source):
 		for f in self.onChanged:
 			f(self.getProgress())
 
-	def doSuspend(self, suspended):
-		if suspended:
+	def doSuspend(self, suspend):
+		if suspend:
 			self._timer.stop()
 		else:
 			self._timer.start(1000)
