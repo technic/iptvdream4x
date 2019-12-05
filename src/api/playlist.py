@@ -17,7 +17,11 @@ from json import loads as json_loads
 from m3u import M3UProvider
 from abstract_api import JsonSettings
 from ..utils import APIException, Channel, ConfSelection, ConfString, syncTime
-from ..loc import translate as _
+try:
+	from ..loc import translate as _
+except ImportError:
+	def _(text):
+		return text
 
 
 class OTTProvider(JsonSettings, M3UProvider):
