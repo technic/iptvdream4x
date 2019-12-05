@@ -141,7 +141,7 @@ class M3UProvider(OfflineFavourites):
 							tvg = self.tvg_map[k]
 						except KeyError:
 							tvg = None
-							self.trace("unknown tvg-id", k)
+							# self.trace("unknown tvg-id", k)
 					else:
 						tvg = int(m.group(1))
 				else:
