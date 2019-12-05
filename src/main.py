@@ -1302,7 +1302,7 @@ class IPtvDreamEpg(Screen):
 		if not entry:
 			return
 		entry = entry[0]
-		if self.db.channels[self.cid].has_archive:
+		if self.db.channels[self.cid].has_archive and entry.begin < syncTime():
 			self.close(self.cid, entry.begin)
 
 	def showInfo(self):
