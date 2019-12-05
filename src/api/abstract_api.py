@@ -178,7 +178,7 @@ class AbstractStream(AbstractAPI):
 	def setFavourites(self, favourites):
 		self.favourites = favourites
 		self.uploadFavourites(self.favourites)
-	
+
 	def loadDayEpg(self, cid, date):
 		date = datetime(date.year, date.month, date.day)
 		self.channels[cid].addEpgDay(date, list(self.getDayEpg(cid, date)))
