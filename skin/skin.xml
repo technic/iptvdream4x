@@ -134,7 +134,7 @@
     </widget>
     <eLabel backgroundColor="#001b2c47" font="Regular;35" halign="center" position="392,23" shadowColor="#000064c7" size="459,43" text="EPG List" transparent="1"/>
     <widget backgroundColor="#00343c4f" font="Regular;23" position="70,71" render="Label" shadowColor="#000064c7" size="700,28" source="Title" transparent="1"/>
-    <widget source="list" render="Listbox" backgroundColor="#15000000" backgroundColorSelected="#000a1822" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" position="56,107" scrollbarMode="showOnDemand" size="714,506" transparent="1">
+    <widget source="list" render="Listbox" backgroundColor="#15000000" backgroundColorSelected="#000a1822" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" position="56,107" scrollbarMode="showOnDemand" size="714,532" transparent="1">
       <convert type="TemplatedMultiContent">
           {
             "template": [
@@ -153,10 +153,10 @@
     <widget backgroundColor="#0038435a" font="Regular;19" name="epgDuration" position="945,405" size="145,22" transparent="1"/>
     <widget name="epgProgress" position="1098,408" size="127,15" backgroundColor="#0038435a" borderColor="#00bbbbbb" borderWidth="1" transparent="1"/>
     <widget backgroundColor="#0038435a" font="Regular;18" foregroundColor="#00bbbbbb" name="epgDescription" position="795,437" size="435,170" transparent="1"/>
-    <widget name="btn_red" alphatest="on" pixmap="IPtvDream/buttons/red.png" position="360,635" size="24,24" render="Pixmap"/>
-    <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="390,635" size="260,24" transparent="1" zPosition="1"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/buttons/green.png" position="650,635" size="24,24"/>
-    <widget backgroundColor="#00000000" font="Regular;20" name="key_green" position="680,635" size="260,24" transparent="1" zPosition="1"/>
+    <widget name="btn_red" alphatest="on" pixmap="IPtvDream/buttons/red.png" position="360,680" size="24,24" render="Pixmap"/>
+    <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="390,680" size="260,24" transparent="1" zPosition="1"/>
+    <ePixmap alphatest="on" pixmap="IPtvDream/buttons/green.png" position="650,680" size="24,24"/>
+    <widget backgroundColor="#00000000" font="Regular;20" name="key_green" position="680,680" size="260,24" transparent="1" zPosition="1"/>
   </screen>
   <screen size="862,552" name="IPtvDreamEpgInfo" position="center,center">
     <widget size="816,48" name="epgName" position="24,18" font="Regular;28" foregroundColor="gold2" transparent="1"/>
