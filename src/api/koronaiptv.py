@@ -25,16 +25,16 @@ except ImportError:
 
 
 class OTTProvider(JsonSettings, M3UProvider):
-	NAME = "KingModIPTV"
+	NAME = "KoronaTV"
 	AUTH_TYPE = "Login"
 	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg-king/"
+		self.site = "http://iptvdream.zapto.org/epg-korona/"
 		self.playlist = ""
 		s = self.getSettings()
-		self.playlist_url = "http://%s.kingmodiptv.top/%s/%s/%s/tv.m3u" % (
+		self.playlist_url = "http://pl.korona-tv.top/%s/%s/%s/%s/tv.m3u" % (
 			s['server'].value, s['quality'].value, username, password)
 
 	def setChannelsList(self):
@@ -133,8 +133,8 @@ class OTTProvider(JsonSettings, M3UProvider):
 	def getSettings(self):
 		settings = {
 			'server': ConfSelection(
-				_("Server"), 'pl1',
-				[('pl1', "Server 1"), ('pl2', "Server 2"), ('pl3', "Server 3")]
+				_("Server"), '1',
+				[('1', "Server 1"), ('2', "Server 2"), ('3', "Server 3")]
 			),
 			'quality': ConfSelection(
 				_("Quality"), 'hi',
