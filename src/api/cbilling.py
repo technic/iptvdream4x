@@ -22,11 +22,11 @@ from ..utils import syncTime, APIException, APILoginFailed, EPG, Channel, Group
 class OTTProvider(OfflineFavourites):
 	NAME = "cbilling"
 	AUTH_TYPE = "Token"
-	token_page = "https://cbilling.tv"
+	token_page = "https://cbilling.pw"
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://cbilling.tv/enigma"
+		self.site = "http://cbilling.pw/enigma"
 		self.stalker_site = "http://mag.iptvx.tv/stalker_portal/server/tools"
 		self._token = password
 		self.web_names = {}
