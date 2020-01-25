@@ -149,8 +149,6 @@ class M3UProvider(OfflineFavourites):
 				m = group_regexp.match(line)
 				if m:
 					group = m.group(1)
-				else:
-					group = "Unknown"
 				m = logo_regexp.match(line)
 				if m:
 					logo = m.group(1)
@@ -179,6 +177,9 @@ class M3UProvider(OfflineFavourites):
 				self.channels[cid] = c
 				g.channels.append(c)
 				self.channels_data[cid] = d
+
+				# reset
+				group = "Unknown"
 
 		# Create inverse mapping from tvg to cid, required for epg_list
 		self.tvg_ids = {}
