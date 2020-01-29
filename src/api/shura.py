@@ -20,6 +20,7 @@ from ..utils import Channel
 
 class OTTProvider(M3UProvider):
 	NAME = "ShuraTV"
+	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)

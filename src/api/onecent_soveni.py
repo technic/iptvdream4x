@@ -23,6 +23,7 @@ except ImportError:
 
 class OTTProvider(JsonSettings, M3UProvider):
 	NAME = "Only4TV-soveni"
+	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
