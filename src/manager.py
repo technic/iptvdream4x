@@ -108,7 +108,8 @@ class PluginStarter(Screen):
 		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
 		try:
 			self.db.start()
-			return self.run()
+			self.run()
+			return
 		except APILoginFailed as e:
 			cb = lambda ret: self.login()
 			message = _("Authorization error") + "\n" + str(e)
@@ -130,8 +131,9 @@ class PluginStarter(Screen):
 			self.db.setChannelsList()
 		except APIException as e:
 			trace(e)
-			return self.session.openWithCallback(lambda ret: self.exit(), MessageBox, str(e), MessageBox.TYPE_ERROR)
-		self.session.openWithCallback(self.finished, IPtvDreamStreamPlayer, self.db)
+			self.session.openWithCallback(lambda ret: self.exit(), MessageBox, str(e), MessageBox.TYPE_ERROR)
+		else:
+			self.session.openWithCallback(self.finished, IPtvDreamStreamPlayer, self.db)
 
 	def finished(self, ret):
 		if ret == 'settings':
