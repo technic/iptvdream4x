@@ -136,7 +136,7 @@ class M3UProvider(OfflineFavourites):
 				m = tvg_regexp.match(line)
 				if m:
 					if self.tvg_map:
-						k = unicode(m.group(1))
+						k = m.group(1).decode('utf-8')
 						try:
 							tvg = self.tvg_map[k]
 						except KeyError:
