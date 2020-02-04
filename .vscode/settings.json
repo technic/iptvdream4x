@@ -25,5 +25,6 @@
         "editor.insertSpaces": false,
         "editor.tabSize": 4
     },
-    "python.linting.flake8Enabled": false
+    "python.linting.flake8Enabled": false,
+    "cSpell.language": "en,ru"
 }
