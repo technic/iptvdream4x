@@ -32,6 +32,8 @@ class OTTProvider(JsonSettings, M3UProvider):
 		super(OTTProvider, self).__init__(username, password)
 		s = self.getSettings()
 		self.site = s['epg_url'].value
+		self._m3u_from = s['from'].value
+		self.playlist_url = s['playlist_url'].value
 		self._archive_url = s['archive_url'].value
 		self.archive_tag = s['archive'].value
 		self.playlist = "playlist.m3u"
@@ -46,12 +48,22 @@ class OTTProvider(JsonSettings, M3UProvider):
 
 	def setChannelsList(self):
 		self._downloadTvgMap()
-		m3u = self._locatePlaylist()
 		try:
-			with open(m3u) as f:
-				self._parsePlaylist(f.readlines())
+			if self._m3u_from == 'file':
+				m3u = self._locatePlaylist()
+				with open(m3u) as f:
+					self._parsePlaylist(f.readlines())
+			elif self._m3u_from == 'url':
+				try:
+					lines = self.readHttp(self.playlist_url).split('\n')
+				except (IOError, ValueError) as e:
+					self.trace("error!", e, type(e))
+					raise APIException(e)
+				self._parsePlaylist(lines)
+			else:
+				raise Exception("Bad paramenter %s" % self._m3u_from)
 		except IOError as e:
-			self.trace("error!", e)
+			self.trace("error!", e, type(e))
 			raise APIException(e)
 
 	def makeChannel(self, num, name, url, tvg, logo):
@@ -81,6 +93,10 @@ class OTTProvider(JsonSettings, M3UProvider):
 
 	def getSettings(self):
 		settings = {
+			'from': ConfSelection(_("Get playlist"), 'file', [
+				('file', _("from playlist.m3u file")), ('url', _("from url")),
+			]),
+			'playlist_url': ConfString(_("Playlist url"), ""),
 			'archive': ConfSelection(_("Enable archive"), 'all', [
 				('all', "All channels"), ('tagged', "Marked channels (A)")
 			]),
