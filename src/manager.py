@@ -75,7 +75,7 @@ def loadProviders():
 
 
 class PluginStarter(Screen):
-	def __init__(self, session, name):
+	def __init__(self, session, name, task=None):
 		trace("Starting provider", name)
 
 		desktop = getDesktop(0)
@@ -87,6 +87,7 @@ class PluginStarter(Screen):
 		Screen.__init__(self, session)
 		self.cfg = manager.getConfig(name)
 		self.apiClass = manager.getApi(name)
+		self.task = task
 		self.db = None
 
 		try:
@@ -108,7 +109,11 @@ class PluginStarter(Screen):
 		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
 		try:
 			self.db.start()
-			self.run()
+			if self.task == 'provider_settings':
+				self.task = None
+				self.openProviderSettings()
+			else:
+				self.run()
 			return
 		except APILoginFailed as e:
 			cb = lambda ret: self.login()
@@ -246,12 +251,14 @@ class IPtvDreamManager(Screen):
 		self.setTitle(_("IPtvDream %s. Providers list:") % VERSION)
 		self["key_red"] = Button(_("Exit"))
 		self["key_green"] = Button(_("Setup"))
+		self["key_yellow"] = Button(_("Options"))
 		self["key_blue"] = Button(_("Keymap"))
 		self["actions"] = ActionMap(
 				["OkCancelActions", "ColorActions"], {
 					"cancel": self.cancel,
 					"ok": self.ok,
 					"green": self.setup,
+					"yellow": self.providerSetup,
 					"red": self.cancel,
 					"blue": self.selectKeymap,
 				}, -1)
@@ -289,6 +296,11 @@ class IPtvDreamManager(Screen):
 		entry = self.getSelected()
 		if entry is not None:
 			self.session.open(IPtvDreamConfig, manager.getApi(entry['name']))
+
+	def providerSetup(self):
+		entry = self.getSelected()
+		if entry is not None:
+			self.session.open(PluginStarter, entry['name'], 'provider_settings')
 
 	def cancel(self):
 		self.close()
