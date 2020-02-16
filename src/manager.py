@@ -23,7 +23,7 @@ from Components.config import config, configfile, ConfigSubsection, ConfigSubDic
 	ConfigText, ConfigYesNo, ConfigSelection
 from Components.ActionMap import ActionMap
 from Components.Button import Button
-from Components.MenuList import MenuList
+from Components.Sources.List import List
 from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
 from Tools.Import import my_import
 from Tools.LoadPixmap import LoadPixmap
@@ -262,26 +262,19 @@ class IPtvDreamManager(Screen):
 					"red": self.cancel,
 					"blue": self.selectKeymap,
 				}, -1)
-		self.listbox = self["list"] = MenuList([], content=eListboxPythonMultiContent)
-		self.listbox.l.setFont(0, gFont("Regular", 22))
-		self.listbox.l.setItemHeight(45)
+		self.list = self["list"] = List()
 		self.onFirstExecBegin.append(self.start)
 
 	def start(self):
-		self.listbox.setList(map(self.makeEntry, manager.getList()))
+		self.list.setList(map(self.makeEntry, manager.getList()))
 
 	def makeEntry(self, entry):
 		prefix = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream')
 		pixmap = LoadPixmap(os.path.join(prefix, 'logo/%s.png' % entry['name']))
-		return [
-			entry,
-			(eListboxPythonMultiContent.TYPE_PIXMAP, 1, 2, 100, 40, pixmap),
-			(eListboxPythonMultiContent.TYPE_TEXT, 110, 2, 400, 40,
-				0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, entry['name']),
-		]
+		return entry, pixmap, entry['name']
 
 	def getSelected(self):
-		sel = self.listbox.getCurrent()
+		sel = self.list.getCurrent()
 		if sel is not None:
 			return sel[0]
 		else:
