@@ -27,7 +27,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg-1ott/"
+		self.site = "http://technic.cf/epg-1ott/"
 
 	def start(self):
 		data = self.getJsonData("http://list.1ott.net/PinApi/%s/%s" % (self.username, self.password), {})

@@ -103,6 +103,6 @@ class OTTProvider(JsonSettings, M3UProvider):
 			'archive_url': ConfSelection(_("Archive url type"), 'default', [
 				('default', "Default"), ('flusonic', "Flusonic"),
 			]),
-			'epg_url': ConfString(_("EPG-json url"), "http://iptvdream.zapto.org/epg-soveni")
+			'epg_url': ConfString(_("EPG-json url"), "http://technic.cf/epg-soveni")
 		}
 		return self._safeLoadSettings(settings)

@@ -24,7 +24,7 @@ class OTTProvider(M3UProvider):
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg-soveni/"
+		self.site = "http://technic.cf/epg-soveni/"
 		self.playlist = "shura_pl.m3u8"
 		self.playlist_url = "http://soveni.leolitz.info/plist/shura_epg_ico.m3u8"
 		self._url_regexp = re.compile(r"https?://[\w.]+/~\w+/(\d+)/hls/.*\.m3u8")

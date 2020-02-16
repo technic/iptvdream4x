@@ -19,6 +19,6 @@ class OTTProvider(M3UProvider):
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg"
+		self.site = "http://technic.cf/epg"
 		self.playlist = "edem_pl.m3u8"
 		self.playlist_url = "http://epg.it999.ru/edem_epg_ico.m3u8"

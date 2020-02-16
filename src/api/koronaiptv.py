@@ -31,7 +31,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg-korona/"
+		self.site = "http://technic.cf/epg-korona/"
 		self.playlist = ""
 		s = self.getSettings()
 		self.playlist_url = "http://pl.korona-tv.top/%s/%s/%s/%s/tv.m3u" % (

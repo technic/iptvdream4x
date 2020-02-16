@@ -20,6 +20,6 @@ class OTTProvider(M3UProvider):
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg-soveni/"
+		self.site = "http://technic.cf/epg-soveni/"
 		self.playlist = "ottclub_pl.m3u8"
 		self.playlist_url = "http://soveni.leolitz.info/plist/ottclub_epg_ico.m3u8"

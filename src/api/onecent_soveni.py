@@ -27,7 +27,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg-soveni"
+		self.site = "http://technic.cf/epg-soveni"
 		self.playlist = "only4tv_pl.m3u8"
 		s = self.getSettings()
 		self.playlist_url = "http://soveni.leolitz.info/plist/only4tv_epg_%s.m3u8" % s['playlist'].value
