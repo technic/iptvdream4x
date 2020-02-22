@@ -158,6 +158,7 @@ class ConfInteger(ConfEntry):
 		self.limits = limits
 
 	def safeSetValue(self, value):
+		value = int(value)
 		if self.limits[0] <= value <= self.limits[1]:
 			self.value = value
 
