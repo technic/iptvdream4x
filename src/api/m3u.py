@@ -98,7 +98,7 @@ class M3UProvider(OfflineFavourites):
 				self.trace("error!", e)
 				raise APIException(e)
 
-	def makeChannel(self, num, name, url, tvg, logo):
+	def makeChannel(self, num, name, url, tvg, logo, rec):
 		"""
 		Return tuple (Channel instance, internal data) based on parameters extracted from playlist
 		"""
@@ -119,10 +119,12 @@ class M3UProvider(OfflineFavourites):
 		group = "Unknown"
 		logo = ""
 		tvg = None
+		rec = False
 
 		tvg_regexp = re.compile('#EXTINF:.*tvg-id="([^"]*)"')
 		group_regexp = re.compile('#EXTINF:.*group-title="([^"]*)"')
 		logo_regexp = re.compile('#EXTINF:.*tvg-logo="([^"]*)"')
+		rec_regexp = re.compile('#EXTINF:.*tvg-rec="([^"]*)"')
 
 		import codecs
 		if lines:
@@ -154,6 +156,11 @@ class M3UProvider(OfflineFavourites):
 					logo = m.group(1)
 				else:
 					logo = ""
+				m = rec_regexp.match(line)
+				if m:
+					rec = m.group(1) == "1"
+				else:
+					rec = False
 			elif line.startswith("#EXTGRP:"):
 				group = line.strip().split(':')[1]
 			elif line.startswith("#EXTM3U"):
@@ -174,7 +181,7 @@ class M3UProvider(OfflineFavourites):
 					g = self.groups[gid] = Group(gid, group, [])
 
 				num += 1
-				c, d = self.makeChannel(num, name, url, tvg, logo)
+				c, d = self.makeChannel(num, name, url, tvg, logo, rec)
 				cid = c.cid
 				self.channels[cid] = c
 				g.channels.append(c)

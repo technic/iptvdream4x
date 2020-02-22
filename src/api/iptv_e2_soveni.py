@@ -40,7 +40,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 		url_regexp = re.compile(r"https?://([\w.]+)/(\w+)/\d+/hls/pl.m3u8")
 		self._extractKeyFromPlaylist(url_regexp)
 
-	def makeChannel(self, num, name, url, tvg, logo):
+	def makeChannel(self, num, name, url, tvg, logo, rec):
 		m = self._url_regexp.match(url)
 		if m:
 			cid = int(m.group(1))

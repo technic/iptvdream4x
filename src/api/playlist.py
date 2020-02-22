@@ -66,14 +66,14 @@ class OTTProvider(JsonSettings, M3UProvider):
 			self.trace("error!", e, type(e))
 			raise APIException(e)
 
-	def makeChannel(self, num, name, url, tvg, logo):
+	def makeChannel(self, num, name, url, tvg, logo, rec):
 		if tvg is None:
 			try:
 				tvg = self.name_map[name.decode('utf-8')]
 			except KeyError:
 				pass
 		if self.archive_tag == 'tagged':
-			archive = name.endswith('(A)')
+			archive = name.endswith('(A)') or rec
 		else:
 			archive = True
 		return Channel(hash(url), name, num, archive), {'tvg': tvg, 'url': url, 'logo': logo}
