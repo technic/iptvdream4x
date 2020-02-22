@@ -44,7 +44,7 @@ class NewrusAPI(AbstractAPI):
 		# TODO: implement me
 		pass
 
-	def getJsonData(self, url, params, fromauth=False):
+	def getJsonData(self, url, params, name='', fromauth=False):
 		if not fromauth:
 			params.update({self.sid_name: self.sid})
 		return super(NewrusAPI, self).getJsonData(url, params, fromauth=fromauth)

@@ -11,8 +11,9 @@
 from __future__ import print_function
 
 from datetime import datetime
-from ..utils import Channel, Group, APIWrongPin, EPG
+
 from abstract_api import OfflineFavourites
+from ..utils import Channel, Group, APIWrongPin, EPG
 
 
 class OTTProvider(OfflineFavourites):

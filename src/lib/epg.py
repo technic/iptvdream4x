@@ -16,7 +16,7 @@ from Components.Sources.Source import Source
 # system imports
 try:
 	# noinspection PyUnresolvedReferences
-	from typing import Callable, Optional, List
+	from typing import Callable, Optional, List  # pylint: disable=unused-import
 except ImportError:
 	pass
 

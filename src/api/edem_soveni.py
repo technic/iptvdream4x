@@ -11,9 +11,10 @@
 from __future__ import print_function
 
 # plugin imports
-from ..utils import ConfSelection
 from abstract_api import JsonSettings
 from m3u import M3UProvider
+
+from ..utils import ConfSelection
 try:
 	from ..loc import translate as _
 except ImportError:

@@ -167,7 +167,7 @@ class ProvisionScreen(MessageBox):
 		else:
 			yield ScreenTask(
 				self.session, MessageBox, _("Setup finished with %d errors.") % errors, MessageBox.TYPE_WARNING)
-		
+
 		self.updateRevision()
 		trace("Finished.")
 		self.close()

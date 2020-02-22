@@ -19,7 +19,6 @@ from twisted.internet.defer import Deferred, succeed, CancelledError
 
 from Components.AVSwitch import AVSwitch
 from Components.config import config, ConfigSelection
-from Tools.LoadPixmap import LoadPixmap
 from enigma import eBackgroundFileEraser, ePicLoad
 
 from ..loc import translate as _

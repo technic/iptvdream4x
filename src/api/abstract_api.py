@@ -20,14 +20,11 @@ from json import loads as json_loads
 from os import path as os_path
 from datetime import datetime
 try:
-	from typing import Dict
+	from typing import Dict  # pylint: disable=unused-import
 except ImportError:
 	pass
 
-from twisted.internet.defer import Deferred, succeed
-from twisted.web.client import getPage
-
-from ..utils import getHwAddr, syncTime, Group, Channel, APIException, APILoginFailed, EPG
+from ..utils import getHwAddr, Group, Channel, APIException, APILoginFailed, EPG
 from ..dist import VERSION
 
 MODE_STREAM = 0
@@ -85,9 +82,7 @@ class AbstractAPI(object):
 			return o.read()
 
 	def getData(self, url, params, name='', fromauth=None):
-		reauthOnError = True
 		if not self.sid and not fromauth:
-			reauthOnError = False
 			self.cookiejar.clear()
 			self.authorize()
 		elif fromauth:
