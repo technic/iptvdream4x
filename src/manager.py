@@ -27,8 +27,7 @@ from Components.Sources.List import List
 from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
 from Tools.Import import my_import
 from Tools.LoadPixmap import LoadPixmap
-from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER
-from enigma import gFont, getDesktop, gMainDC, eSize
+from enigma import getDesktop, gMainDC, eSize
 from skin import loadSkin
 
 # plugin imports

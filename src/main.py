@@ -33,7 +33,6 @@ from Components.Input import Input
 from Components.MenuList import MenuList
 from Components.Pixmap import Pixmap
 from Components.GUIComponent import GUIComponent
-from Components.Pixmap import Pixmap
 from Screens.InfoBarGenerics import InfoBarPlugins, InfoBarExtensions, \
 	InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport
 from Screens.Screen import Screen
@@ -52,7 +51,7 @@ from skin import parseFont
 
 # plugin imports
 from layer import eTimer
-from common import StaticTextService, NumberEnter
+from common import NumberEnter
 from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG
 from api.abstract_api import AbstractStream
 from loc import translate as _
