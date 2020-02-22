@@ -36,7 +36,6 @@ class OTTProvider(JsonSettings, M3UProvider):
 
 	def start(self):
 		self._downloadTvgMap()
-		self.tvg_map["xxx"] = 0
 		try:
 			self._parsePlaylist(self.readHttp(self.playlist_url).split('\n'))
 		except HTTPError as e:
