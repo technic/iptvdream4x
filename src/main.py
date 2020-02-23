@@ -1418,9 +1418,9 @@ class IPtvDreamEpgInfo(Screen):
 	def updateProgress(self, value):
 		t = syncTime()
 		if self.entry.isAt(t):
-			self["epgDuration"] = Label("+%s min" % (self.entry.timeLeft(t) / 60))
+			self["epgDuration"].setText("+%s min" % (self.entry.timeLeft(t) / 60))
 		else:
-			self["epgDuration"] = Label("%s min" % (self.entry.duration() / 60))
+			self["epgDuration"].setText("%s min" % (self.entry.duration() / 60))
 		self["epgProgress"].setValue(int(100 * value))
 
 # gettext HACK:
