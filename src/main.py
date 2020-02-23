@@ -1253,7 +1253,11 @@ class IPtvDreamEpg(Screen):
 		self.day = 0
 		self.single = False
 		self.list.onSelectionChanged.append(self.updateLabels)
-		self.onLayoutFinish.append(self.fillList)
+		self.onShown.append(self.start)
+
+	def start(self):
+		self.onShown.remove(self.start)
+		self.fillList()
 
 	def buildEpgEntry(self, entry):
 		if self.db.channels[self.cid].has_archive and entry.begin < syncTime():
