@@ -35,3 +35,10 @@ We want `git push` command to upload tags, so that CI system can trigger release
 ```
 git config --global push.followTags true
 ```
+
+## Subtrees
+
+Pull or push docker image changes upstream
+```
+git subtree push -P docker git@github.com:technic/e2xvfb.git master
+```
