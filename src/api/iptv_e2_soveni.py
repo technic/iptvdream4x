@@ -11,102 +11,58 @@
 from __future__ import print_function
 
 # system imports
-import os
+import re
 
 # plugin imports
+from abstract_api import JsonSettings
 from m3u import M3UProvider
-from ..utils import syncTime, APIException, EPG, Channel, Group
+from ..utils import Channel, ConfSelection
+try:
+	from ..loc import translate as _
+except ImportError:
+	def _(text):
+		return text
 
 
-class OTTProvider(M3UProvider):
+class OTTProvider(JsonSettings, M3UProvider):
 	NAME = "IPTV-E2-soveni"
+	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg-soveni"
+		self.site = "http://technic.cf/epg-soveni"
 		self.playlist = "iptv-e2_pl.m3u8"
-		self.playlist_url = "http://soveni.leolitz.info/plist/iptv-e2_epg_ico.m3u8"
+		s = self.getSettings()
+		self.playlist_url = "http://soveni.leolitz.info/plist/iptv-e2_epg_%s.m3u8" % s['playlist'].value
+		self._url_regexp = re.compile(r"https?://[\w.]+/(\d+)\?token=.*")
 
 	def start(self):
-		import re
 		url_regexp = re.compile(r"https?://([\w.]+)/(\w+)/\d+/hls/pl.m3u8")
 		self._extractKeyFromPlaylist(url_regexp)
 
-	def _parsePlaylist(self, lines):
-		self.tvg_ids = {}
-		group_names = {}
-		num = 0
-
-		name = ""
-		group = "Unknown"
-		tvg = None
-
-		import re
-		tvg_regexp = re.compile('#EXTINF:.*tvg-id="([^"]*)"')
-		group_regexp = re.compile('#EXTINF:.*group-title="([^"]*)"')
-		url_regexp = re.compile(r"https?://[\w.]+/(\d+)\?token=.*")
-
-		for line in lines:
-			# print(line)
-			if line.startswith("#EXTINF:"):
-				name = line.strip().split(',')[1]
-				m = tvg_regexp.match(line)
-				if m:
-					if self.tvg_map:
-						k = unicode(m.group(1))
-						try:
-							tvg = self.tvg_map[k]
-						except KeyError:
-							tvg = None
-							self.trace("unknown tvg-id", k)
-					else:
-						tvg = int(m.group(1))
-				else:
-					tvg = None
-				m = group_regexp.match(line)
-				if m:
-					group = m.group(1)
-				else:
-					group = "Unknown"
-			elif line.startswith("#EXTGRP:"):
-				group = line.strip().split(':')[1]
-			elif line.startswith("#EXTM3U"):
-				continue
-			elif not line.strip():
-				continue
-			else:
-				url = line.strip()
-				assert url.find("://") > 0, "line: " + url
-				try:
-					gid = group_names[group]
-					g = self.groups[gid]
-				except KeyError:
-					gid = len(group_names)
-					group_names[group] = gid
-					g = self.groups[gid] = Group(gid, group, [])
-
-				num += 1
-				m = url_regexp.match(line)
-				if m:
-					cid = int(m.group(1))
-				else:
-					cid = hash(url)
-					self.trace("Failed to get cid from url", url)
-				c = Channel(cid, gid, name, num, name.endswith("(A)"))
-				self.channels[cid] = c
-				g.channels.append(c)
-				url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
-				self.channels_data[cid] = {'tvg': tvg, 'url': url}
-				if tvg is not None:
-					try:
-						self.tvg_ids[tvg].append(cid)
-					except KeyError:
-						self.tvg_ids[tvg] = [cid]
-
-		self.trace("Loaded {} channels".format(len(self.channels)))
+	def makeChannel(self, num, name, url, tvg, logo, rec):
+		m = self._url_regexp.match(url)
+		if m:
+			cid = int(m.group(1))
+		else:
+			cid = hash(url)
+			self.trace("Failed to get cid from url", url)
+		url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
+		return Channel(cid, name, num, name.endswith("(A)")), {'tvg': tvg, 'url': url, 'logo': logo}
 
 	def getStreamUrl(self, cid, pin, time=None):
 		url = self.channels_data[cid]['url']
 		if time:
 			url += '&utcstart=%s' % (time.strftime('%s'))
 		return url
+
+	def getSettings(self):
+		settings = {
+			'playlist': ConfSelection(_("Playlist"), 'ico', [('ico', "Lite"), ('full', "Full")]),
+		}
+		return self._safeLoadSettings(settings)
+
+	def pushSettings(self, settings):
+		data = self._loadSettings()
+		data.update(settings)
+		self._saveSettings(data)

@@ -35,25 +35,25 @@
   </colors>
   <screen backgroundColor="#ff000000" flags="wfNoBorder" name="IPtvDreamStreamPlayer" position="center,540" size="1182,172" title="IPTV">
     <ePixmap alphatest="blend" pixmap="IPtvDream/infobar.png" position="0,0" size="1182,172" zPosition="-5"/>
-    <ePixmap alphatest="blend" pixmap="IPtvDream/frame.png" position="1047,47" size="120,76" zPosition="1"/>
-    <widget alphatest="blend" render="Picon" source="providerRef" position="1057,55" size="100,60" zPosition="3" transparent="1"/>
+    <widget alphatest="blend" position="1048,65" size="100,40" zPosition="3" transparent="1" name="provider"/>
     <widget backgroundColor="#00343c4f" font="Regular;24" foregroundColor="#00f23d21" halign="center" position="54,127" render="FixedLabel" shadowColor="#00f23d21" size="70,26" source="inArchive" text="A" transparent="1" zPosition="5">
       <convert type="ConditionalShowHide">Blink</convert>
     </widget>
-    <widget backgroundColor="#2518252e" font="Regular;18" halign="right" position="1047,22" render="Label" shadowColor="#00389416" shadowOffset="-1,-1" size="45,22" source="session.CurrentService" transparent="1" zPosition="1">
+    <widget backgroundColor="#2518252e" font="Regular;18" halign="right" position="1046,36" render="Label" size="45,22" source="session.CurrentService" transparent="1" zPosition="1">
       <convert type="ServiceInfo">VideoWidth</convert>
     </widget>
-    <eLabel backgroundColor="#00000000" font="Regular;18" halign="center" position="1093,22" shadowColor="#00389416" shadowOffset="-1,-1" size="15,22" text="x" transparent="1"/>
-    <widget backgroundColor="#2518252e" font="Regular;18" position="1109,22" render="Label" shadowColor="#00389416" shadowOffset="-1,-1" size="42,22" source="session.CurrentService" transparent="1" zPosition="1">
+    <eLabel backgroundColor="#00000000" font="Regular;18" halign="center" position="1092,36" size="15,22" text="x" transparent="1"/>
+    <widget backgroundColor="#2518252e" font="Regular;18" position="1108,36" render="Label" size="42,22" source="session.CurrentService" transparent="1" zPosition="1">
       <convert type="ServiceInfo">VideoHeight</convert>
     </widget>
-    <widget backgroundColor="#00333333" font="Regular;26" foregroundColor="#00ffffff" halign="center" position="53,18" render="Label" shadowColor="#00e5b243" shadowOffset="-1,-1" size="83,26" source="global.CurrentTime" transparent="1">
+    <ePixmap position="42,21" size="25,25" pixmap="IPtvDream/icons/clock.png" alphatest="blend"/>
+    <widget backgroundColor="#00333333" font="Regular;26" foregroundColor="#00ffffff" halign="center" position="71,18" render="Label" shadowOffset="-1,-1" size="74,28" source="global.CurrentTime" transparent="1">
       <convert type="ClockToText">Default</convert>
     </widget>
     <widget backgroundColor="#0038435a" font="Regular;25" foregroundColor="#00e5b243" halign="center" name="channelName" position="319,12" size="574,28" transparent="1"/>
-    <widget backgroundColor="#00000000" font="Regular;22" foregroundColor="#00ffffff" halign="right" position="852,134" render="Label" size="196,22" source="Title" transparent="1"/>
-    <ePixmap alphatest="blend" pixmap="IPtvDream/frame.png" position="32,47" size="120,76" zPosition="1"/>
-    <widget alphatest="blend" position="42,55" render="Picon" size="100,60" source="piconRef" transparent="1" zPosition="3"/>
+    <widget backgroundColor="#00000000" font="Regular;14" position="1040,108" size="120,24" transparent="1" zPosition="1" halign="center" render="Label" source="Title" foregroundColor="snow"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/frame.png" position="33,center" size="120,76" zPosition="1"/>
+    <widget alphatest="blend" position="43,center" name="picon" size="100,60" transparent="1" zPosition="3"/>
     <widget backgroundColor="#00343c4f" font="Regular;22" foregroundColor="#45ffffff" name="currentTime" position="165,49" size="66,26" transparent="1"/>
     <widget backgroundColor="#00343c4f" font="Regular;25" foregroundColor="#45ffffff" name="currentName" noWrap="1" position="243,47" size="665,30" transparent="1" zPosition="21"/>
     <widget backgroundColor="#00343c4f" font="Regular;22" foregroundColor="#45ffffff" halign="right" name="currentDuration" position="919,48" size="106,26" transparent="1"/>
@@ -82,35 +82,45 @@
       <convert type="ValueRange">721,1980</convert>
       <convert type="ConditionalShowHide"/>
     </widget>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/red.png" position="182,138" size="18,18"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/green.png" position="398,138" size="18,18"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/yellow.png" position="625,138" size="18,18"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/blue.png" position="838,138" size="18,18"/>
+    <widget backgroundColor="#00000000" font="Regular;18" name="key_red" position="207,135" size="120,24" transparent="1" zPosition="1" foregroundColor="snow"/>
+    <widget backgroundColor="#00000000" font="Regular;18" name="key_green" position="424,135" size="120,24" transparent="1" zPosition="1" foregroundColor="snow"/>
+    <widget backgroundColor="#00000000" font="Regular;18" name="key_yellow" position="651,135" size="120,24" transparent="1" zPosition="1" foregroundColor="snow"/>
+    <widget backgroundColor="#00000000" font="Regular;18" name="key_blue" position="862,135" size="120,24" transparent="1" foregroundColor="snow"/>
   </screen>
   <screen flags="wfNoBorder" name="IPtvDreamChannels" position="0,0" size="1280,720" title="Channel Selection">
-    <ePixmap pixmap="IPtvDream/menu/back1.png" position="0,0" size="1280,720" zPosition="-10"/>
+    <ePixmap pixmap="IPtvDream/menu/back1.png" position="1,center" size="1280,720" zPosition="-10" alphatest="blend"/>
     <eLabel backgroundColor="#00ffffff" position="800,120" size="430,244" zPosition="2"/>
     <widget backgroundColor="#ff000000" position="802,122" render="Pig" size="426,240" source="session.VideoPicture" zPosition="3"/>
-    <widget backgroundColor="#001b2c47" font="Regular;26" halign="right" position="799,71" render="Label" size="100,28" source="global.CurrentTime" transparent="1">
+    <widget backgroundColor="#001b2c47" font="Regular;26" position="837,67" render="Label" size="100,28" source="global.CurrentTime" transparent="1">
       <convert type="ClockToText">Default</convert>
     </widget>
-    <widget backgroundColor="#001b2c47" font="Regular;20" halign="right" position="969,74" render="Label" size="252,25" source="global.CurrentTime" transparent="1">
+    <widget backgroundColor="#001b2c47" font="Regular;20" position="1122,74" render="Label" size="128,25" source="global.CurrentTime" transparent="1">
       <convert type="ClockToText">Format:%d.%m.%Y</convert>
     </widget>
-    <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/info.png" position="204,669" size="70,30" zPosition="3"/>
-    <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/menu.png" position="129,669" size="70,30" zPosition="3"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/info.png" position="1187,679" size="70,30" zPosition="3"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/menu.png" position="1112,679" size="70,30" zPosition="3"/>
     <eLabel backgroundColor="#001b2c47" font="Regular;35" halign="center" position="392,23" shadowColor="#000064c7" size="459,43" text="Channel Selection" transparent="1"/>
     <widget backgroundColor="#00343c4f" font="Regular;23" position="70,71" render="Label" shadowColor="#000064c7" size="700,28" source="Title" transparent="1"/>
-    <widget backgroundColor="#15000000" backgroundColorSelected="#000a1822" colorEventProgressbar="#005DB5" colorEventProgressbarBorder="#00bbbbbb" colorEventProgressbarBorderSelected="#FFC387" colorServiceDescription="#C1E3FF" colorServiceDescriptionSelected="#FFC387" colorServicePlaying="#00ff0000" colorServicePlayingSelected="#00ff880a" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" name="list" picServiceArchive="IPtvDream/rec.png" position="56,107" scrollbarMode="showOnDemand" serviceInfoFont="Regular;21" serviceItemHeight="28" serviceNameFont="Regular;23" serviceNumberFont="Regular;23" size="714,506" transparent="1"/>
+    <widget backgroundColor="#15000000" backgroundColorSelected="#000a1822" colorEventProgressbar="#005DB5" colorEventProgressbarBorder="#00bbbbbb" colorEventProgressbarBorderSelected="#FFC387" colorServiceDescription="#C1E3FF" colorServiceDescriptionSelected="#FFC387" colorServicePlaying="#00ff0000" colorServicePlayingSelected="#00ff880a" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" name="list" picServiceArchive="IPtvDream/rec.png" position="56,107" scrollbarMode="showOnDemand" serviceInfoFont="Regular;21" serviceItemHeight="28" serviceNameFont="Regular;23" serviceNumberFont="Regular;23" size="714,532" transparent="1"/>
     <widget backgroundColor="#0038435a" font="Regular;22" foregroundColor="#00e5b243" halign="center" name="epgName" position="795,375" size="430,25" transparent="1"/>
     <widget backgroundColor="#0038435a" font="Regular;19" name="epgTime" position="795,405" size="145,22" transparent="1"/>
     <widget backgroundColor="#0038435a" borderColor="#00bbbbbb" borderWidth="1" name="epgProgress" position="945,412" size="140,12" transparent="1"/>
-    <widget backgroundColor="#0038435a" font="Regular;18" foregroundColor="#00bbbbbb" name="epgDescription" position="795,437" size="435,170" transparent="1"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/buttons/red.png" position="70,635" size="24,24"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/buttons/green.png" position="360,635" size="24,24"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/buttons/yellow.png" position="650,635" size="24,24"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/buttons/blue.png" position="940,635" size="24,24"/>
-    <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="100,635" size="260,24" transparent="1" zPosition="1"/>
-    <widget backgroundColor="#00000000" font="Regular;20" name="key_green" position="390,635" size="260,24" transparent="1" zPosition="1"/>
-    <widget backgroundColor="#00000000" font="Regular;20" name="key_yellow" position="680,635" size="260,24" transparent="1" zPosition="1"/>
-    <widget backgroundColor="#00000000" font="Regular;20" name="key_blue" position="970,635" size="260,24" transparent="1" zPosition="1"/>
-    <widget backgroundColor="#001b2c47" font="Regular;18" halign="center" name="packetExpire" position="400,669" size="300,22" transparent="1"/>
+    <widget backgroundColor="#0038435a" font="Regular;18" foregroundColor="#00bbbbbb" name="epgDescription" position="795,437" size="435,208" transparent="1"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/red.png" position="68,680" size="24,24"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/green.png" position="317,680" size="24,24"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/yellow.png" position="582,680" size="24,24"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/blue.png" position="832,680" size="24,24"/>
+    <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="97,680" size="200,24" transparent="1" zPosition="1"/>
+    <widget backgroundColor="#00000000" font="Regular;20" name="key_green" position="352,680" size="200,24" transparent="1" zPosition="1"/>
+    <widget backgroundColor="#00000000" font="Regular;20" name="key_yellow" position="617,680" size="200,24" transparent="1" zPosition="1"/>
+    <widget backgroundColor="#00000000" font="Regular;20" name="key_blue" position="867,680" size="200,24" transparent="1" zPosition="1"/>
+    <widget backgroundColor="#001b2c47" font="Regular;18" halign="right" name="packetExpire" position="956,14" size="277,22" transparent="1"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/calendar.png" size="20,22" position="1097,73"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/clock.png" size="25,25" position="807,70"/>
   </screen>
   <screen flags="wfNoBorder" name="IPtvDreamEpg" position="0,0" size="1280,720" title="Channel EPG">
     <ePixmap pixmap="IPtvDream/menu/back1.png" position="0,0" size="1280,720" zPosition="-10"/>
@@ -124,7 +134,7 @@
     </widget>
     <eLabel backgroundColor="#001b2c47" font="Regular;35" halign="center" position="392,23" shadowColor="#000064c7" size="459,43" text="EPG List" transparent="1"/>
     <widget backgroundColor="#00343c4f" font="Regular;23" position="70,71" render="Label" shadowColor="#000064c7" size="700,28" source="Title" transparent="1"/>
-    <widget source="list" render="Listbox" backgroundColor="#15000000" backgroundColorSelected="#000a1822" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" position="56,107" scrollbarMode="showOnDemand" size="714,506" transparent="1">
+    <widget source="list" render="Listbox" backgroundColor="#15000000" backgroundColorSelected="#000a1822" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" position="56,107" scrollbarMode="showOnDemand" size="714,532" transparent="1">
       <convert type="TemplatedMultiContent">
           {
             "template": [
@@ -143,10 +153,10 @@
     <widget backgroundColor="#0038435a" font="Regular;19" name="epgDuration" position="945,405" size="145,22" transparent="1"/>
     <widget name="epgProgress" position="1098,408" size="127,15" backgroundColor="#0038435a" borderColor="#00bbbbbb" borderWidth="1" transparent="1"/>
     <widget backgroundColor="#0038435a" font="Regular;18" foregroundColor="#00bbbbbb" name="epgDescription" position="795,437" size="435,170" transparent="1"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/buttons/red.png" position="360,635" size="24,24"/>
-    <ePixmap alphatest="on" pixmap="IPtvDream/buttons/green.png" position="650,635" size="24,24"/>
-    <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="390,635" size="260,24" transparent="1" zPosition="1"/>
-    <widget backgroundColor="#00000000" font="Regular;20" name="key_green" position="680,635" size="260,24" transparent="1" zPosition="1"/>
+    <widget name="btn_red" alphatest="blend" pixmap="IPtvDream/buttons/red.png" position="360,680" size="24,24"/>
+    <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="390,680" size="260,24" transparent="1" zPosition="1"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/green.png" position="650,680" size="24,24"/>
+    <widget backgroundColor="#00000000" font="Regular;20" name="key_green" position="680,680" size="260,24" transparent="1" zPosition="1"/>
   </screen>
   <screen size="862,552" name="IPtvDreamEpgInfo" position="center,center">
     <widget size="816,48" name="epgName" position="24,18" font="Regular;28" foregroundColor="gold2" transparent="1"/>
@@ -154,7 +164,9 @@
     <widget size="802,419" name="epgDescription" position="31,74" transparent="1" font="Regular;25"/>
     <widget size="84,32" name="epgTime" position="31,505" font="Regular;26"/>
     <widget size="100,32" name="epgDuration" position="284,505" font="Regular;26"/>
-    <widget size="200,30" name="epgDate" position="634,511" font="Regular;21" foregroundColor="blue2" halign="right"/>
+    <widget size="121,30" name="epgDate" position="713,511" font="Regular;21" foregroundColor="blue2" halign="right"/>
+    <widget name="btn_red" alphatest="blend" pixmap="IPtvDream/buttons/red.png" position="405,509" size="24,24"/>
+    <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="441,509" size="188,24" transparent="1" zPosition="1"/>
   </screen>
   <screen name="IPtvDreamSeekScreen" position="center,495" size="200,40" backgroundColor="bgwindow" flags="wfNoBorder">
     <widget name="status" size="200,40" position="0,0" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#20000000" font="Regular;29"/>
@@ -247,12 +259,25 @@
     <widget name="key_blue" position="420,0" zPosition="5" size="140,40" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" backgroundColor="kblue"/>
   </screen>
   <screen name="IPtvDreamManager" position="center,center" size="560,320">
-    <widget name="list" position="5,45" size="540,270" scrollbarMode="showOnDemand"/>
+    <widget source="list" render="Listbox" position="5,45" size="540,270" scrollbarMode="showOnDemand">
+      <convert type="TemplatedMultiContent">
+          {
+            "template": [
+                MultiContentEntryPixmapAlphaTest(pos = (1, 2), size = (100, 40), png = 1), # logo
+                MultiContentEntryText(pos = (110, 2),  size = (400, 40), flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 2), # title,
+            ],
+            "fonts": [gFont("Regular", 22)],
+            "itemHeight": 45
+          }
+      </convert>
+    </widget>
     <ePixmap position="0,0" zPosition="4" size="140,40" pixmap="skin_default/buttons/red.png" transparent="1" alphatest="on"/>
     <ePixmap position="140,0" zPosition="4" size="140,40" pixmap="skin_default/buttons/green.png" transparent="1" alphatest="on"/>
-    <ePixmap position="280,0" zPosition="4" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on"/>
+    <ePixmap position="280,0" zPosition="4" size="140,40" pixmap="skin_default/buttons/yellow.png" transparent="1" alphatest="on"/>
+    <ePixmap position="420,0" zPosition="4" size="140,40" pixmap="skin_default/buttons/blue.png" transparent="1" alphatest="on"/>
     <widget name="key_red" position="0,0" zPosition="5" size="140,40" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" backgroundColor="kred"/>
     <widget name="key_green" position="140,0" zPosition="5" size="140,40" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" backgroundColor="kgreen"/>
-    <widget name="key_blue" position="280,0" zPosition="5" size="140,40" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" backgroundColor="kblue"/>
+    <widget name="key_yellow" position="280,0" zPosition="5" size="140,40" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" backgroundColor="kyellow"/>
+    <widget name="key_blue" position="420,0" zPosition="5" size="140,40" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" backgroundColor="kblue"/>
   </screen>
 </skin>

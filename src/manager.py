@@ -24,17 +24,17 @@ from Components.config import config, configfile, ConfigSubsection, ConfigSubDic
 	ConfigText, ConfigYesNo, ConfigSelection
 from Components.ActionMap import ActionMap
 from Components.Button import Button
-from Components.MenuList import MenuList
 from Components.Input import Input
+from Components.Sources.List import List
 from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
 from Tools.Import import my_import
 from Tools.LoadPixmap import LoadPixmap
-from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_VALIGN_CENTER
-from enigma import gFont, getDesktop, gMainDC, eSize
+from enigma import getDesktop, gMainDC, eSize
 from skin import loadSkin
 
 # plugin imports
 from dist import NAME, VERSION
+from provision import pluginConfig
 from common import ConfigNumberText
 from utils import trace, APIException, APILoginFailed
 from loc import translate as _
@@ -44,9 +44,8 @@ from main import IPtvDreamStreamPlayer
 PLAYERS = [('1', "enigma2 ts (1)"), ('4097', "gstreamer (4097)"), ('5002', "exteplayer3 (5002)")]
 loadSkin("IPtvDream/iptvdream.xml")
 
-config.plugins.IPtvDream = ConfigSubsection()
 KEYMAPS = [('enigma', 'enigma'), ('neutrino', 'neutrino')]
-config.plugins.IPtvDream.keymap_type = ConfigSelection(KEYMAPS)
+pluginConfig.keymap_type = ConfigSelection(KEYMAPS)
 
 
 def getPlugins():
@@ -77,7 +76,7 @@ def loadProviders():
 
 
 class PluginStarter(Screen):
-	def __init__(self, session, name):
+	def __init__(self, session, name, task=None):
 		trace("Starting provider", name)
 
 		desktop = getDesktop(0)
@@ -89,6 +88,7 @@ class PluginStarter(Screen):
 		Screen.__init__(self, session)
 		self.cfg = manager.getConfig(name)
 		self.apiClass = manager.getApi(name)
+		self.task = task
 		self.db = None
 
 		try:
@@ -110,7 +110,12 @@ class PluginStarter(Screen):
 		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
 		try:
 			self.db.start()
-			return self.run()
+			if self.task == 'provider_settings':
+				self.task = None
+				self.openProviderSettings()
+			else:
+				self.run()
+			return
 		except APILoginFailed as e:
 			cb = lambda ret: self.login()
 			message = _("Authorization error") + "\n" + str(e)
@@ -132,8 +137,9 @@ class PluginStarter(Screen):
 			self.db.setChannelsList()
 		except APIException as e:
 			trace(e)
-			return self.session.openWithCallback(lambda ret: self.exit(), MessageBox, str(e), MessageBox.TYPE_ERROR)
-		self.session.openWithCallback(self.finished, IPtvDreamStreamPlayer, self.db)
+			self.session.openWithCallback(lambda ret: self.exit(), MessageBox, str(e), MessageBox.TYPE_ERROR)
+		else:
+			self.session.openWithCallback(self.finished, IPtvDreamStreamPlayer, self.db)
 
 	def finished(self, ret):
 		if ret == 'settings':
@@ -252,7 +258,6 @@ class Manager(object):
 			try:
 				trace("Loading module", f)
 				module = my_import('%s.%s' % (prefix, f))
-				print(module)
 				if not hasattr(module, api_provider):
 					continue
 				provider = getattr(module, api_provider)
@@ -267,7 +272,7 @@ class Manager(object):
 				self.config[name].last_played = ConfigText()
 
 			except Exception:
-				print("[IPtvDream] Exception")
+				trace("Exception")
 				import traceback
 				traceback.print_exc()
 				continue
@@ -301,35 +306,30 @@ class IPtvDreamManager(Screen):
 		self.setTitle(_("IPtvDream %s. Providers list:") % VERSION)
 		self["key_red"] = Button(_("Exit"))
 		self["key_green"] = Button(_("Setup"))
+		self["key_yellow"] = Button(_("Options"))
 		self["key_blue"] = Button(_("Keymap"))
 		self["actions"] = ActionMap(
 				["OkCancelActions", "ColorActions"], {
 					"cancel": self.cancel,
 					"ok": self.ok,
 					"green": self.setup,
+					"yellow": self.providerSetup,
 					"red": self.cancel,
 					"blue": self.selectKeymap,
 				}, -1)
-		self.listbox = self["list"] = MenuList([], content=eListboxPythonMultiContent)
-		self.listbox.l.setFont(0, gFont("Regular", 22))
-		self.listbox.l.setItemHeight(45)
+		self.list = self["list"] = List()
 		self.onFirstExecBegin.append(self.start)
 
 	def start(self):
-		self.listbox.setList(map(self.makeEntry, manager.getList()))
+		self.list.setList(map(self.makeEntry, manager.getList()))
 
 	def makeEntry(self, entry):
 		prefix = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream')
 		pixmap = LoadPixmap(os.path.join(prefix, 'logo/%s.png' % entry['name']))
-		return [
-			entry,
-			(eListboxPythonMultiContent.TYPE_PIXMAP, 1, 2, 100, 40, pixmap),
-			(eListboxPythonMultiContent.TYPE_TEXT, 110, 2, 400, 40,
-				0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, entry['name']),
-		]
+		return entry, pixmap, entry['name']
 
 	def getSelected(self):
-		sel = self.listbox.getCurrent()
+		sel = self.list.getCurrent()
 		if sel is not None:
 			return sel[0]
 		else:
@@ -344,6 +344,11 @@ class IPtvDreamManager(Screen):
 		entry = self.getSelected()
 		if entry is not None:
 			self.session.open(IPtvDreamConfig, manager.getApi(entry['name']))
+
+	def providerSetup(self):
+		entry = self.getSelected()
+		if entry is not None:
+			self.session.open(PluginStarter, entry['name'], 'provider_settings')
 
 	def cancel(self):
 		self.close()
@@ -372,8 +377,8 @@ class IPtvDreamManager(Screen):
 			else:
 				raise e
 
-		config.plugins.IPtvDream.keymap_type.value = style
-		config.plugins.IPtvDream.keymap_type.save()
+		pluginConfig.keymap_type.value = style
+		pluginConfig.keymap_type.save()
 		configfile.save()
 
 		def cb(ret):

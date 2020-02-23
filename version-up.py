@@ -59,7 +59,7 @@ if __name__ == "__main__":
 				if m:
 					ver = m.group(1)
 					print("Current version", ver)
-					ver = map(int, ver.split('.'))
+					ver = list(map(int, ver.split('.')))
 					nextVer = ver
 					nextVer[1] += 1
 					lines[i] = 'VERSION = "%s"' % '.'.join(map(str, nextVer))

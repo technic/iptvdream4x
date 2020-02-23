@@ -44,7 +44,7 @@ class NewrusAPI(AbstractAPI):
 		# TODO: implement me
 		pass
 
-	def getJsonData(self, url, params, fromauth=False):
+	def getJsonData(self, url, params, name='', fromauth=False):
 		if not fromauth:
 			params.update({self.sid_name: self.sid})
 		return super(NewrusAPI, self).getJsonData(url, params, fromauth=fromauth)
@@ -68,7 +68,7 @@ class OTTProvider(AbstractStream, NewrusAPI):
 				num += 1
 				cid = int(c['id'])
 				channel = Channel(
-					cid, gid, c['name'].encode('utf-8'), num,
+					cid, c['name'].encode('utf-8'), num,
 					bool(c['have_archive']), bool(c['protected']))
 				self.channels[cid] = channel
 				channels.append(channel)

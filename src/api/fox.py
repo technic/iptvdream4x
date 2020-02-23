@@ -11,14 +11,12 @@
 from __future__ import print_function
 
 # system imports
-import re
 from urllib2 import HTTPError
-from json import loads as json_loads
 
 # plugin imports
-from m3u import M3UProvider
 from abstract_api import JsonSettings
-from ..utils import Channel, APIException, APILoginFailed, ConfInteger
+from m3u import M3UProvider
+from ..utils import APIException, APILoginFailed
 try:
 	from ..loc import translate as _
 except ImportError:
@@ -27,25 +25,16 @@ except ImportError:
 
 
 class OTTProvider(JsonSettings, M3UProvider):
-	NAME = "ShuraTV"
+	NAME = "FoxTV"
 	AUTH_TYPE = "Login"
-	TVG_MAP = False
+	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://technic.cf/epg-1ott/"
-		server = self.getSettings()['server'].value
-		self.playlist_url = "http://pl.tvshka.net/?uid=%s&srv=%s&type=halva" % (username, server)
-		self._url_regexp = re.compile(r"https?://[\w.]+/~\w+/(\d+)/hls/.*\.m3u8")
-		self.name_map = {}
+		self.site = "http://technic.cf/epg-fox/"
+		self.playlist_url = "http://pl.fox-tv.fun/%s/%s/tv.m3u" % (username, password)
 
 	def start(self):
-		try:
-			self.name_map = json_loads(self.readHttp(self.site + "/channels_names"))['data']
-		except IOError as e:
-			self.trace("error!", e)
-			raise APIException(e)
-
 		self._downloadTvgMap()
 		try:
 			self._parsePlaylist(self.readHttp(self.playlist_url).split('\n'))
@@ -62,23 +51,3 @@ class OTTProvider(JsonSettings, M3UProvider):
 	def setChannelsList(self):
 		# Channels are downloaded during start, to allow handling login exceptions
 		pass
-
-	def makeChannel(self, num, name, url, tvg, logo, rec):
-		if tvg is None:
-			try:
-				tvg = self.name_map[name.decode('utf-8')]
-			except KeyError:
-				pass
-		m = self._url_regexp.match(url)
-		if m:
-			cid = int(m.group(1))
-		else:
-			cid = hash(url)
-			self.trace("Failed to get cid from url", url)
-		return Channel(cid, name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
-
-	def getSettings(self):
-		settings = {
-			'server': ConfInteger(_("Server"), 1, (0, 10000)),
-		}
-		return self._safeLoadSettings(settings)

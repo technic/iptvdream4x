@@ -35,7 +35,8 @@ ifeq ($(PROVIDER),all)
 pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py src/api/amigo.py src/api/emigranttv.py \
 	src/api/pure.py src/api/kinoboom.py \
 	src/api/m3u.py src/api/edem_soveni.py src/api/ottclub.py src/api/shura.py \
-	src/api/iptv_e2_soveni.py src/api/1cent_soveni.py src/api/kingmodiptv.py \
+	src/api/iptv_e2_soveni.py src/api/onecent_soveni.py src/api/koronaiptv.py \
+	src/api/playlist.py src/api/1ott.py src/api/fox.py \
 	src/api/kartina.py src/api/ktv.py src/api/newrus.py \
 	src/api/mywy.py src/api/naschetv.py src/api/ozo.py src/api/sovok.py src/api/baltic.py
 datafiles += $(wildcard src/logo/*.png)
@@ -88,7 +89,7 @@ $(build)/etc/iptvdream/iptvdream.epgmap: src/iptvdream.epgmap
 	install -D -m644 $^ $@
 
 
-langs := ru en de
+langs := uk ru en de
 
 langs_po := $(addprefix po/,$(langs))
 langs_po := $(addsuffix .po,$(langs_po))

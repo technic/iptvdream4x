@@ -61,7 +61,7 @@ class VirtualKeyBoard(VirtualKeyBoard_e2):
 			except KeyError:
 				continue
 		VirtualKeyBoard_e2.__init__(self, session, title=title, text=text)
-	
+
 	def setLang(self):
 		print("setLang", self.lang)
 		l = self.languages.keys()
@@ -71,9 +71,9 @@ class VirtualKeyBoard(VirtualKeyBoard_e2):
 			self.lang = l[0]
 			i = 0
 		self.nextLang = l[(i + 1) % len(l)]
-		
+
 		self.keys_list = self.languages[self.lang][0]
 		self.shiftkeys_list = self.languages[self.lang][1]
-		
+
 		self["country"].setText(self.lang)
 		self.max_key = 47+len(self.keys_list[4])

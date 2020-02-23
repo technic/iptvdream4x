@@ -174,4 +174,4 @@ class IPtvDreamApiConfig(ConfigListScreen, Screen):
 		except APIException as ex:
 			self.session.openWithCallback(
 				lambda ret: self.close(False),
-				MessageBox, _("Failed to send settings to server.") + "\n%s" % str(ex))
+				MessageBox, _("Failed to send settings to server.") + "\n%s" % str(ex), MessageBox.TYPE_ERROR)

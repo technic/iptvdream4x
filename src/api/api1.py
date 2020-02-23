@@ -11,14 +11,11 @@
 
 from __future__ import print_function
 
-from urllib import urlencode
-from json import loads as json_loads
 from datetime import datetime
 from hashlib import md5
-from twisted.internet.defer import maybeDeferred, succeed
 
-from abstract_api import MODE_STREAM, MODE_VIDEOS, AbstractAPI, AbstractStream
-from ..utils import tdSec, APIException, EPG, Group, Channel
+from abstract_api import MODE_STREAM, AbstractAPI, AbstractStream
+from ..utils import EPG, Group, Channel
 try:
 	from ..loc import translate as _
 except ImportError:
@@ -36,7 +33,7 @@ class TeleportAPI(AbstractAPI):
 		self.time_shift = 0
 		self.time_zone = 0
 		self.settings = {}
-		
+
 	def start(self):
 		self.authorize()
 
@@ -45,10 +42,10 @@ class TeleportAPI(AbstractAPI):
 		md5pass = md5(md5(self.username).hexdigest() + md5(self.password).hexdigest()).hexdigest()
 		params = {"login": self.username, "pass": md5pass, "with_cfg": '', "with_acc": ''}
 		response = self.getJsonData(self.site+"/login?", params, fromauth=True)
-		
+
 		if 'sid' in response:
 			self.sid = response['sid'].encode("utf-8")
-	
+
 		if 'settings' in response:
 			self.parseSettings(response['settings'])
 		if 'account' in response:
@@ -75,6 +72,8 @@ class TeleportStream(AbstractStream, TeleportAPI):
 
 	def __init__(self, username, password):
 		super(TeleportStream, self).__init__(username, password)
+		self.icons = {}
+		self.icons_url = ""
 
 	def epgEntry(self, e):
 		return EPG(int(e['begin']), int(e['end']), e['title'].encode('utf-8'), e['info'].encode('utf-8'))
@@ -88,12 +87,14 @@ class TeleportStream(AbstractStream, TeleportAPI):
 			for c in g['channels']:
 				cid = c['id']
 				channel = Channel(
-						cid, gid, c['name'].encode('utf-8'), c['number'],
+						cid, c['name'].encode('utf-8'), c['number'],
 						bool(c['has_archive']), bool(c['protected']))
 				self.channels[cid] = channel
 				channels.append(channel)
+				self.icons[cid] = c['icon'].encode('utf-8')
 			self.groups[gid] = Group(gid, g['user_title'].encode('utf-8'), channels)
-		print(self.groups)
+		self.icons_url = data['icons']['default'].encode('utf-8')
+		self.trace(self.groups)
 
 	def getStreamUrl(self, cid, pin, time=None):
 		params = {"cid": cid, "time_shift": self.time_shift}
@@ -103,7 +104,7 @@ class TeleportStream(AbstractStream, TeleportAPI):
 			params["uts"] = time.strftime("%s")
 		data = self.getJsonData(self.site+"/get_url_tv?", params, "stream url")
 		return data["url"].encode("utf-8")
-	
+
 	def getChannelsEpg(self, cids):
 		params = {"cid": ','.join(str(c) for c in cids), "time_shift": self.time_shift}
 		data = self.getJsonData(self.site+"/get_epg_current?", params)
@@ -113,19 +114,19 @@ class TeleportStream(AbstractStream, TeleportAPI):
 			for e in c['current'], c['next']:
 				try:
 					programs.append(self.epgEntry(e))
-				except (KeyError, TypeError) as e:
-					self.trace(e)
+				except (KeyError, TypeError) as err:
+					self.trace(err)
 					continue
 			yield (cid, programs)
 
 	def getCurrentEpg(self, cid):
 		return self.getChannelsEpg([cid])
-	
+
 	def getDayEpg(self, cid, date):
 		params = {"cid": cid, "from_uts": datetime(date.year, date.month, date.day).strftime('%s'), "hours": 24}
 		data = self.getJsonData(self.site + "/get_epg?", params)
 		return map(self.epgEntry, data['channels'][0]['epg'])
-	
+
 	def getSettings(self):
 		return self.settings
 
@@ -146,3 +147,6 @@ class TeleportStream(AbstractStream, TeleportAPI):
 
 	def uploadFavourites(self, current):
 		self.getJsonData(self.site + "/set_favorites_tv?", {'val': ','.join(map(str, self.favourites))})
+
+	def getPiconUrl(self, cid):
+		return self.icons_url.replace("%ICON%", self.icons[cid])

@@ -15,6 +15,7 @@ from twisted.internet.defer import Deferred
 from twisted.internet import task
 from tests.timer import eTimerTwisted, reactor
 
+
 class TestTimer(unittest.TestCase):
 	def test_repeating(self):
 		self.t = eTimerTwisted()
@@ -49,6 +50,7 @@ class TestTimer(unittest.TestCase):
 	def test_stopSingle(self):
 		self.t = eTimerTwisted()
 		self.t.start(50, True)
+
 		def f():
 			self.t.stop()
 		return task.deferLater(reactor, 0.03, f)
@@ -56,6 +58,7 @@ class TestTimer(unittest.TestCase):
 	def test_stopRepeating(self):
 		self.t = eTimerTwisted()
 		self.t.start(20)
+
 		def f():
 			self.t.stop()
 		return task.deferLater(reactor, 0.5, f)

@@ -16,8 +16,9 @@ from functools import wraps
 
 from Components.config import ConfigText
 from Components.Sources.StaticText import StaticText
-from Components.ActionMap import ActionMap
+from Components.ActionMap import ActionMap, NumberActionMap
 from Components.config import config
+from Components.Label import Label
 from Components.ServiceEventTracker import ServiceEventTracker
 from Screens.Screen import Screen
 from enigma import iPlayableService
@@ -25,6 +26,7 @@ from skin import colorNames, SkinError
 
 from layer import eTimer
 from utils import trace
+from loc import translate as _
 # provide it from common file
 from updater import fatalError
 
@@ -39,6 +41,17 @@ def safecb(callback):
 			return None
 		return callback(obj, data)
 	return wrapper
+
+
+class DownloadException(Exception):
+	"""Twisted download exception"""
+	def __init__(self, message):
+		Exception.__init__(self, message)
+
+
+def downloadError(err):
+	"""Wrap twisted download failure in DownloadException"""
+	raise DownloadException(err.getErrorMessage())
 
 
 class ConfigNumberText(ConfigText):
@@ -78,9 +91,9 @@ class ShowHideScreen(Screen):
 		self.__state = self.STATE_SHOWN
 
 		self["ShowHideActions"] = ActionMap(["InfobarShowHideActions"], {
-				"toggleShow": self.toggleShow,
-				"hide": self.hide,
-			}, 1)  # lower prio to make it possible to override ok and cancel..
+						"toggleShow": self.toggleShow,
+						"hide": self.hide,
+				}, 1)  # lower prio to make it possible to override ok and cancel..
 
 		self.hideTimer = eTimer()
 		self.hideTimer.callback.append(self.doTimerHide)
@@ -136,13 +149,42 @@ class ShowHideScreen(Screen):
 			self.startHideTimer()
 
 
+# Reimplementation of InfoBarMenu
+class MainMenuScreen(Screen):
+	""" Handles a menu action, to open the (main) menu """
+	def __init__(self, session):
+		super(MainMenuScreen, self).__init__(session)
+		self["MenuActions"] = ActionMap(["InfobarMenuActions"], {
+			"mainMenu": self.mainMenu,
+		})
+		self.session.infobar = None
+
+	def mainMenu(self):
+		try:
+			from Screens.Menu import mdom, MainMenu
+			print("loading mainmenu XML...")
+			menu = mdom.getroot()
+			assert menu.tag == "menu", "root element in menu must be 'menu'!"
+		except Exception as e:
+			print("Incompatible menu:", e)
+
+		self.session.infobar = self
+		# so we can access the currently active infobar from screens opened from within the mainmenu
+		# at the moment used from the SubserviceSelection
+
+		self.session.openWithCallback(self.mainMenuClosed, MainMenu, menu)
+
+	def mainMenuClosed(self, *val):
+		self.session.infobar = None
+
+
 class AutoAudioSelection(Screen):
 	def __init__(self, session):
 		super(AutoAudioSelection, self).__init__(session)
 		self.__ev_tracker = ServiceEventTracker(screen=self, eventmap={
-				iPlayableService.evUpdatedInfo: self.audioSelect,
-				iPlayableService.evStart: self.audioClear
-			})
+						iPlayableService.evUpdatedInfo: self.audioSelect,
+						iPlayableService.evStart: self.audioClear
+				})
 		self.audio_selected = False
 
 	def audioSelect(self):
@@ -165,3 +207,47 @@ class AutoAudioSelection(Screen):
 	def audioClear(self):
 		trace("audioClear")
 		self.audio_selected = False
+
+
+class NumberEnter(Screen):
+	TIMEOUT = 1800
+
+	def __init__(self, session, number):
+		Screen.__init__(self, session)
+		self.skinName = "NumberZap"  # TODO own skin
+
+		self["channel"] = Label(_("Channel:"))
+		self["number"] = Label(str(number))
+
+		self["actions"] = NumberActionMap(["SetupActions"], {
+				"cancel": self.exit,
+				"ok": self.keyOK,
+				"1": self.keyNumberGlobal,
+				"2": self.keyNumberGlobal,
+				"3": self.keyNumberGlobal,
+				"4": self.keyNumberGlobal,
+				"5": self.keyNumberGlobal,
+				"6": self.keyNumberGlobal,
+				"7": self.keyNumberGlobal,
+				"8": self.keyNumberGlobal,
+				"9": self.keyNumberGlobal,
+				"0": self.keyNumberGlobal
+		})
+
+		self.timer = eTimer()
+		self.timer.callback.append(self.keyOK)
+		self.timer.start(self.TIMEOUT)
+
+	def exit(self):
+		self.timer.stop()
+		self.close(None)
+
+	def keyOK(self):
+		self.timer.stop()
+		self.close(int(self["number"].text))
+
+	def keyNumberGlobal(self, number):
+		self.timer.start(self.TIMEOUT)
+		self["number"].text += str(number)
+		if len(self["number"].text) > 5:
+			self.keyOK()

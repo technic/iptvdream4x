@@ -11,9 +11,9 @@
 from __future__ import print_function
 
 # plugin imports
-from ..utils import ConfSelection
 from abstract_api import JsonSettings
 from m3u import M3UProvider
+from ..utils import ConfSelection
 try:
 	from ..loc import translate as _
 except ImportError:
@@ -21,12 +21,13 @@ except ImportError:
 		return text
 
 
-class OTTProvider(M3UProvider, JsonSettings):
+class OTTProvider(JsonSettings, M3UProvider):
 	NAME = "Only4TV-soveni"
+	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg-soveni"
+		self.site = "http://technic.cf/epg-soveni"
 		self.playlist = "only4tv_pl.m3u8"
 		s = self.getSettings()
 		self.playlist_url = "http://soveni.leolitz.info/plist/only4tv_epg_%s.m3u8" % s['playlist'].value
@@ -35,12 +36,7 @@ class OTTProvider(M3UProvider, JsonSettings):
 		settings = {
 			'playlist': ConfSelection(_("Playlist"), 'lite', [('lite', "Lite"), ('full', "Full")]),
 		}
-		for k, v in self._loadSettings().items():
-			try:
-				settings[k].safeSetValue(str(v))
-			except KeyError:
-				continue
-		return settings
+		return self._safeLoadSettings(settings)
 
 	def pushSettings(self, settings):
 		data = self._loadSettings()

@@ -3,6 +3,7 @@
   <screen>
     <name>IPtvDreamStreamPlayer</name>
     <entries>
+      <entry name="provider" value="IPtvDream/provider_logo.png" render="Pixmap" type="string"/>
       <entry name="channelName" value="23. BBC Entertainment" render="Label" type="string"/>
       <entry name="" value="FoobarTV" render="Label" type="string"/>
       <entry name="currentTime" value="18:03" render="Label" type="string"/>
@@ -12,12 +13,15 @@
       <entry name="nextTime" value="20:15" render="Label" type="string"/>
       <entry name="nextName" value="The Musketeers (Episode 5) (12+)" render="Label" type="string"/>
       <entry name="nextDuration" value="50 min" render="Label" type="string"/>
+      <entry name="key_red" value="Archive" render="Label" type="string"/>
+      <entry name="key_green" value="Settings" render="Label" type="string"/>
+      <entry name="key_yellow" value="Audio" render="Label" type="string"/>
+      <entry name="key_blue" value="Extensions" render="Label" type="string"/>
     </entries>
   </screen>
   <screen>
     <name>IPtvDreamChannels</name>
     <entries>
-      <entry name="" value="FoobarTV / Movies" render="Label" type="string"/>
       <entry name="epgName" value="Oblivion (2013 film)" render="Label" type="string"/>
       <entry name="epgTime" value="18:05 - 20:13" render="Label" type="string"/>
       <entry name="epgProgress" value="40" render="Slider" type="string"/>
@@ -48,6 +52,7 @@
       <entry name="epgTime" value="18:00" render="Label" type="string"/>
       <entry name="epgDuration" value="30 min" render="Label" type="string"/>
       <entry name="epgDate" value="01.02.2003" render="Label" type="string"/>
+      <entry name="key_red" value="Archive" render="Label" type="string"/>
     </entries>
   </screen>
   <screen>

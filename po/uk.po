@@ -1,0 +1,216 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tuxbox-enigma 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-09 10:06+0000\n"
+"PO-Revision-Date: 2015-06-25 00:40+0200\n"
+"Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
+"Language-Team: Russian / enigma(c) Ukraine, Kiev>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: iso-8859-15\n"
+"X-Generator: Poedit 1.8.1\n"
+
+msgid "Add"
+msgstr "Додати"
+
+msgid "Add \"%s\" to favourites"
+msgstr "Додати \"%s\" в обрані"
+
+msgid "All"
+msgstr "Всі"
+
+msgid "All channels"
+msgstr "Всі канали"
+
+msgid "Archive"
+msgstr "Архів"
+
+msgid "Authorization error"
+msgstr "Помилка авторизації"
+
+msgid "Cancel"
+msgstr "Скасувати"
+
+msgid "Channel Locked"
+msgstr "Канал закритий"
+
+msgid "Checking depends"
+msgstr "Перевірка залежностей"
+
+msgid "Checking updates"
+msgstr "Перевірка оновлення"
+
+msgid "Clear login data and exit"
+msgstr "Видалити дані авторизації і вийти"
+
+msgid "Configuration of %s"
+msgstr "Налаштування %s"
+
+msgid "Context menu"
+msgstr "Контекстне меню"
+
+msgid "Details"
+msgstr "Деталі"
+
+msgid "Enter edit mode"
+msgstr "Ввійти в режим сортування"
+
+msgid "Enter protect password"
+msgstr "Введіть захисний код"
+
+msgid "Error while getting stream url:"
+msgstr "Помилка при отриманні посилання на потік:"
+
+msgid "Exit"
+msgstr "Вихід"
+
+msgid "Exit edit mode"
+msgstr "Вийти з режиму сортування"
+
+msgid "Exit plugin?"
+msgstr "Вийти з плагіна?"
+
+msgid "Exiting edit mode"
+msgstr "Вихід з режиму редактування"
+
+msgid "Failed to install %s!"
+msgstr "Не вдалося встановити %s!"
+
+msgid "Failed to save favourites list."
+msgstr "Не вдалося зберегти список обраних."
+
+msgid "Failed to send settings to server."
+msgstr "Не вдалося зберегти налаштування на сервері."
+
+msgid "Failed to update package list!"
+msgstr "Не вдалося оновити списик пакетів!"
+
+msgid "Favourites"
+msgstr "Обрані"
+
+msgid "Groups"
+msgstr "Групи"
+
+msgid "High"
+msgstr "Високе"
+
+msgid "IPtvDream %s. Providers list:"
+msgstr "IPtvDream %s. Список провайдерів:"
+
+msgid "IPtvDream critical error"
+msgstr "IPtvDream кретична помилка"
+
+msgid "IPtvDream plugin is already running!"
+msgstr "IPtvDream плагін вже запущений!"
+
+msgid ""
+"In the editing mode you can reorder your favourites list. Quick help:\n"
+"- Select channel that you want to put to a new position.\n"
+"- Press OK to start moving the channel around with arrow buttons.\n"
+"- Press OK again to fix the position of the channel.\n"
+"- Press EXIT when done.\n"
+"Start editing mode?"
+msgstr ""
+"В режимі редактування Ви можете упорядкувати список обрані. Довідка:\n"
+"- Виберіть канал, який Ви хочете перемістити на нову позицію.\n"
+"- Натисніть OK та почніть переміщувати канал стрілками вверх або вниз.\n"
+"- Натисніть OK знову щоб зафіксувати нове положення каналу.\n"
+"- Натисніть EXIT для завершення.\n"
+"Ввійти в режим редактування?"
+
+msgid "Installing %s"
+msgstr "Встановлення %s"
+
+msgid "Installing update, please wait"
+msgstr "Встановлення оновлення, будь ласка зачекайте"
+
+msgid "Keyboard"
+msgstr "Клавіатура"
+
+msgid "Login"
+msgstr "Логін"
+
+msgid "Low"
+msgstr "Низьке"
+
+msgid "Media server"
+msgstr "Медіа сервер"
+
+msgid "No detailed information"
+msgstr "Немає докладної інформації"
+
+msgid "OK"
+msgstr "ОК"
+
+msgid "Open plugin settings"
+msgstr "Відкрити налаштування плагіна"
+
+msgid "Open provider settings"
+msgstr "Відкрити параметри провайдера"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Payment expires: "
+msgstr "Підписка закінчується: "
+
+msgid "Playlist"
+msgstr "Плейлист"
+
+msgid "Quality"
+msgstr "Якість"
+
+msgid "Remove"
+msgstr "Видалити"
+
+msgid "Remove \"%s\" from favourites"
+msgstr "Видалити \"%s\" з обраного"
+
+msgid "Restart enigma2 to apply keymap changes?"
+msgstr "Перезапустіть enigma2 для застосування змін?"
+
+msgid "Restarting enigma2 after IPtvDream update..."
+msgstr "Перезавантаження enigma2 після оновлення IPtvDream..."
+
+msgid "Server"
+msgstr "Сервер"
+
+msgid "Setup"
+msgstr "Налаштування"
+
+msgid "Setup finished with %d errors."
+msgstr "Налаштування завершено помилок %d."
+
+msgid "Setup finished without errors."
+msgstr "Налаштування завершено без помилок."
+
+msgid "Show all iptv providers"
+msgstr "Cписок провайдерів iptv"
+
+msgid "Show in main menu"
+msgstr "Відображати в головному меню"
+
+msgid "Sort by name"
+msgstr "Відсортувати по імені"
+
+msgid "Sort by number"
+msgstr "Відсортувати по номеру"
+
+msgid "Start of %s failed"
+msgstr "Не вдалося запустити %s"
+
+msgid "Time shift"
+msgstr "Зсув часу"
+
+msgid "Update failed"
+msgstr "Помилка при оновленні"
+
+msgid "Updating package list, please wait ..."
+msgstr "Оновлення списку пакетів, будь ласка зачекайте ..."
+
+msgid "Wrong pin!"
+msgstr "Не вірний код!"

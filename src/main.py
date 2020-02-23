@@ -12,7 +12,7 @@
 from __future__ import print_function
 
 # system imports
-from datetime import timedelta
+from datetime import datetime, timedelta
 try:
 	# noinspection PyUnresolvedReferences
 	from typing import Callable, Optional, List, Tuple  # pylint: disable=unused-import
@@ -31,17 +31,17 @@ from Components.Button import Button
 from Components.ServiceEventTracker import InfoBarBase
 from Components.Input import Input
 from Components.MenuList import MenuList
+from Components.Pixmap import Pixmap
 from Components.GUIComponent import GUIComponent
-from Screens.InfoBarGenerics import InfoBarMenu, InfoBarPlugins, InfoBarExtensions, \
+from Screens.InfoBarGenerics import InfoBarPlugins, InfoBarExtensions, \
 	InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport
 from Screens.Screen import Screen
-from Screens.InfoBarGenerics import NumberZap as NumberZapProxy
 from Screens.MessageBox import MessageBox
 from Screens.MinuteInput import MinuteInput
 from Screens.ChoiceBox import ChoiceBox
 from Screens.InputBox import InputBox
 from Tools.LoadPixmap import LoadPixmap
-from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC
+from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
 
 # enigma2 core imports
 from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, \
@@ -51,15 +51,15 @@ from skin import parseFont
 
 # plugin imports
 from layer import eTimer
-from common import StaticTextService
+from common import NumberEnter
 from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG
 from api.abstract_api import AbstractStream
 from loc import translate as _
-from common import parseColor, ShowHideScreen, AutoAudioSelection
+from common import parseColor, ShowHideScreen, AutoAudioSelection, MainMenuScreen
 from standby import standbyNotifier
 from cache import LiveEpgWorker
 from lib.epg import EpgProgress
-from lib.tv import SortOrderSettings
+from lib.tv import SortOrderSettings, Picon
 
 SKIN_PATH = resolveFilename(SCOPE_SKIN, 'IPtvDream')
 ENIGMA_CONF_PATH = resolveFilename(SCOPE_SYSETC, 'enigma2')
@@ -72,18 +72,9 @@ PROGRESS_SIZE = 500
 ARCHIVE_TIME_FIX = 5  # sec. When archive paused, we could miss some video
 
 
-class NumberZap(NumberZapProxy):
-	def __init__(self, session, number):
-		NumberZapProxy.__init__(self, session, number)
-
-	def keyOK(self):
-		self.Timer.stop()
-		self.close(int(self["number"].getText()))
-
-
 class IPtvDreamStreamPlayer(
-		ShowHideScreen, AutoAudioSelection,
-		InfoBarBase, InfoBarMenu, InfoBarPlugins, InfoBarExtensions,
+		ShowHideScreen, AutoAudioSelection, MainMenuScreen,
+		InfoBarBase, InfoBarPlugins, InfoBarExtensions,
 		InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport):
 	"""
 	:type channels: IPtvDreamChannels
@@ -95,7 +86,6 @@ class IPtvDreamStreamPlayer(
 	def __init__(self, session, db):
 		super(IPtvDreamStreamPlayer, self).__init__(session)
 		InfoBarBase.__init__(self, steal_current_service=True)
-		InfoBarMenu.__init__(self)
 		InfoBarExtensions.__init__(self)
 		InfoBarPlugins.__init__(self)
 		InfoBarNotifications.__init__(self)
@@ -125,19 +115,29 @@ class IPtvDreamStreamPlayer(
 		self["currentDuration"] = Label("")
 		self["nextDuration"] = Label("")
 		self["progressBar"] = Slider(0, PROGRESS_SIZE)
+		# Buttons
+		self["key_red"] = Button(_("Archive"))
+		self["key_green"] = Button(_("Settings"))
+		self["key_yellow"] = Button(_("Audio"))
+		self["key_blue"] = Button(_("Extensions"))
 
 		# TODO: think more
 		self["archiveDate"] = Label("")
 		self["inArchive"] = Boolean(False)
-		self["piconRef"] = StaticTextService()
-		self["providerRef"] = StaticTextService(self.db.NAME)
+
+		self["picon"] = Pixmap()
+		self._picon = Picon(self["picon"])
+
+		self["provider"] = Pixmap()
+		icon_path = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream/logo/%s.png' % self.db.NAME)
+		self.onFirstExecBegin.insert(0, lambda: self["provider"].instance.setPixmap(LoadPixmap(icon_path)))
 
 		# TODO: ActionMap add help.
-
 		self["actions"] = ActionMap(["IPtvDreamInfobarActions", "ColorActions", "OkCancelActions"], {
 				"cancel": self.confirmExit,
 				"closePlugin": self.exit,
 				"openVideos": self.openVod,
+				"red": self.showEpg,
 				"green": self.openSettings,
 				"openServiceList": self.showList,
 				"zapUp": self.previousChannel,
@@ -254,8 +254,8 @@ class IPtvDreamStreamPlayer(
 
 	def updateLabels(self):
 		cid = self.cid
-		# self["piconRef"].text = self.db.getPiconName(cid)
 		self["channelName"].setText("%d. %s" % (self.db.channels[cid].number, self.db.channels[cid].name))
+		self._picon.setIcon(self.db.getPiconUrl(cid))
 		self.epgEvent()
 
 	def standbyChanged(self, sleep):
@@ -297,14 +297,14 @@ class IPtvDreamStreamPlayer(
 		self.session.openWithCallback(self.rwdJumpTo, MinuteInput)
 
 	def fwdJumpTo(self, minutes):
-		print("[IPtvDream] fwdSeek", minutes)
+		trace("fwdSeek", minutes)
 		self.shift += minutes*60
 		if self.shift > 0:
 			self.setArchiveShift(0)
 		self.play(self.cid)
 
 	def rwdJumpTo(self, minutes):
-		print("[IPtvDream] rwdSeek", minutes)
+		trace("rwdSeek", minutes)
 		self.shift -= minutes*60
 		self.play(self.cid)
 
@@ -358,7 +358,7 @@ class IPtvDreamStreamPlayer(
 			try:
 				self.db.loadDayEpg(cid, time)
 			except APIException as e:
-				print("[IPtvDream] ERROR load epg failed! cid =", cid, bool(self.shift), e)
+				trace("ERROR load epg failed! cid =", cid, bool(self.shift), e)
 			if not setEpgCurrent():
 				self["currentName"].setText('')
 				self["currentTime"].setText('')
@@ -378,7 +378,7 @@ class IPtvDreamStreamPlayer(
 			try:
 				self.db.loadDayEpg(cid, time)
 			except APIException:
-				print("[IPtvDream] load epg next failed!")
+				trace("load epg next failed!")
 			if not setEpgNext():
 				self["nextName"].setText('')
 				self["nextDuration"].setText('')
@@ -452,7 +452,7 @@ class IPtvDreamStreamPlayer(
 			self.switchChannel(cid)
 
 	def keyNumberGlobal(self, number):
-		self.session.openWithCallback(self.numberEntered, NumberZap, number)
+		self.session.openWithCallback(self.numberEntered, NumberEnter, number)
 
 	def numberEntered(self, num=None):
 		trace("numberEntered", num)
@@ -1039,11 +1039,15 @@ class IPtvDreamChannels(Screen):
 				actions += [
 					(_('Add "%s" to favourites') % current.name, self.addRemoveFavourites),
 				]
+				if current.has_archive:
+					actions += [(_('Open archive for "%s"') % current.name, self.showEpgList)]
 		if self.mode == self.FAV:
 			if current:
 				actions += [
 					(_('Remove "%s" from favourites') % current.name, self.addRemoveFavourites),
 				]
+				if current.has_archive:
+					actions += [(_('Open archive for "%s"') % current.name, self.showEpgList)]
 				if not self.edit_mode:
 					actions += [(_("Enter edit mode"), self.confirmStartEditing)]
 				else:
@@ -1215,6 +1219,7 @@ class IPtvDreamEpg(Screen):
 	def __init__(self, session, db, cid, shift):
 		Screen.__init__(self, session)
 
+		self["btn_red"] = Pixmap()
 		self["key_red"] = Button(_("Archive"))
 		self["key_green"] = Button(_("Details"))
 		self["list"] = self.list = ListSource()
@@ -1261,24 +1266,24 @@ class IPtvDreamEpg(Screen):
 		if self.cid is None:
 			return
 
-		d = syncTime() + secTd(self.shift) + timedelta(self.day)
-		epg_list = self.db.channels[self.cid].epgDay(d)
-		if len(epg_list) == 0:
-			try:
-				self.db.loadDayEpg(self.cid, d)
-			except APIException as e:
-				trace("getDayEpg failed cid =", self.cid, str(e))
-			epg_list = self.db.channels[self.cid].epgDay(d)
+		time = syncTime()
+		d = time + secTd(self.shift) + timedelta(self.day)
+
+		epg_list = []
+		try:
+			epg_list = self.db.getDayEpg(self.cid, datetime(d.year, d.month, d.day))
+		except APIException as e:
+			self.session.open(MessageBox, _("Can not load EPG:") + str(e), MessageBox.TYPE_ERROR, 5)
 
 		self.list.setList(map(self.buildEpgEntry, epg_list))
 		self.setTitle("EPG / %s / %s %s" % (self.db.channels[self.cid].name, d.strftime("%d"), _(d.strftime("%b"))))
 		self.list.setIndex(0)
-		e = self.db.channels[self.cid].epgCurrent(d)
-		if e and self.day == 0:
-			try:
-				self.list.setIndex(epg_list.index(e))
-			except ValueError:
-				trace("epgCurrent at other date!")
+
+		if self.day == 0:
+			for i, e in enumerate(epg_list):
+				if e.isAt(time):
+					self.list.setIndex(i)
+					break
 
 	def updateLabels(self):
 		entry = self.list.getCurrent()
@@ -1290,6 +1295,12 @@ class IPtvDreamEpg(Screen):
 		self["epgTime"].setText(entry.begin.strftime("%d.%m %H:%M"))
 		self["epgDescription"].setText(entry.description)
 		self["epgDuration"].setText("%s min" % (entry.duration() / 60))
+		if self.db.channels[self.cid].has_archive and entry.begin < syncTime():
+			self["btn_red"].show()
+			self["key_red"].show()
+		else:
+			self["btn_red"].hide()
+			self["key_red"].hide()
 		self._progress.setEpg(entry)
 
 	def archive(self):
@@ -1297,7 +1308,7 @@ class IPtvDreamEpg(Screen):
 		if not entry:
 			return
 		entry = entry[0]
-		if self.db.channels[self.cid].has_archive:
+		if self.db.channels[self.cid].has_archive and entry.begin < syncTime():
 			self.close(self.cid, entry.begin)
 
 	def showInfo(self):
@@ -1305,7 +1316,11 @@ class IPtvDreamEpg(Screen):
 		if not entry:
 			return
 		entry = entry[0]
-		self.session.open(IPtvDreamEpgInfo, self.db.channels[self.cid], entry)
+		self.session.openWithCallback(self.infoClosed, IPtvDreamEpgInfo, self.db.channels[self.cid], entry)
+
+	def infoClosed(self, time=None):
+		if time is not None:
+			self.close(self.cid, time)
 
 	def exit(self):
 		self.close()
@@ -1371,8 +1386,16 @@ class IPtvDreamEpgInfo(Screen):
 		self._progress.onChanged.append(self.updateProgress)
 		self.onLayoutFinish.append(self.initGui)
 
-		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions"], {
+		self["btn_red"] = Pixmap()
+		self["key_red"] = Button(_("Archive"))
+
+		if not self.hasArchive():
+			self["btn_red"].hide()
+			self["key_red"].hide()
+
+		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions", "ColorActions"], {
 			"cancel": self.close,
+			"red": self.playArchive,
 			"ok": self.close,
 			"up": self["epgDescription"].pageUp,
 			"down": self["epgDescription"].pageDown
@@ -1380,6 +1403,13 @@ class IPtvDreamEpgInfo(Screen):
 
 	def initGui(self):
 		self._progress.setEpg(self.entry)
+
+	def hasArchive(self):
+		return self.channel.has_archive and self.entry.begin < syncTime()
+
+	def playArchive(self):
+		if self.hasArchive():
+			self.close(self.entry.begin)
 
 	def updateProgress(self, value):
 		t = syncTime()

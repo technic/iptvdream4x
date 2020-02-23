@@ -12,6 +12,7 @@ from __future__ import print_function
 
 # system imports
 import os
+import re
 from time import mktime
 from json import loads as json_loads
 
@@ -42,6 +43,8 @@ class M3UProvider(OfflineFavourites):
 		self.tvg_ids = {}
 		self._domain = ''
 		self._key = ''
+		# regexp to extract channel id
+		self._url_regexp = re.compile(r"https?://[\w.]+/iptv/\w+/(\d+)/index.m3u8")
 
 	def _locatePlaylist(self):
 		"""Returns path to the playlist file"""
@@ -75,7 +78,6 @@ class M3UProvider(OfflineFavourites):
 			raise APIException("Failed to parse %s playlist located at %s." % (self.NAME, m3u8))
 
 	def start(self):
-		import re
 		url_regexp = re.compile(r"https?://([\w.]+)/iptv/(\w+)/\d+/index.m3u8")
 		self._extractKeyFromPlaylist(url_regexp)
 
@@ -96,33 +98,52 @@ class M3UProvider(OfflineFavourites):
 				self.trace("error!", e)
 				raise APIException(e)
 
+	def makeChannel(self, num, name, url, tvg, logo, rec):
+		"""
+		Return tuple (Channel instance, internal data) based on parameters extracted from playlist
+		"""
+		m = self._url_regexp.match(url)
+		if m:
+			cid = int(m.group(1))
+		else:
+			cid = hash(url)
+			self.trace("Failed to get cid from url", url)
+		url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
+		return Channel(cid, name, num, True), {'tvg': tvg, 'url': url, 'logo': logo}
+
 	def _parsePlaylist(self, lines):
-		self.tvg_ids = {}
 		group_names = {}
 		num = 0
 
 		name = ""
 		group = "Unknown"
+		logo = ""
 		tvg = None
+		rec = False
 
-		import re
 		tvg_regexp = re.compile('#EXTINF:.*tvg-id="([^"]*)"')
 		group_regexp = re.compile('#EXTINF:.*group-title="([^"]*)"')
-		url_regexp = re.compile(r"https?://[\w.]+/iptv/\w+/(\d+)/index.m3u8")
+		logo_regexp = re.compile('#EXTINF:.*tvg-logo="([^"]*)"')
+		rec_regexp = re.compile('#EXTINF:.*tvg-rec="([^"]*)"')
+
+		import codecs
+		if lines:
+			if lines[0].startswith(codecs.BOM_UTF8):
+				self.trace("Discard BOM_UTF8")
+				lines[0] = lines[0][3:]
 
 		for line in lines:
-			# print(line)
 			if line.startswith("#EXTINF:"):
 				name = line.strip().split(',')[1]
 				m = tvg_regexp.match(line)
 				if m:
 					if self.tvg_map:
-						k = unicode(m.group(1))
+						k = m.group(1).decode('utf-8')
 						try:
 							tvg = self.tvg_map[k]
 						except KeyError:
 							tvg = None
-							self.trace("unknown tvg-id", k)
+							# self.trace("unknown tvg-id", k)
 					else:
 						tvg = int(m.group(1))
 				else:
@@ -130,11 +151,21 @@ class M3UProvider(OfflineFavourites):
 				m = group_regexp.match(line)
 				if m:
 					group = m.group(1)
+				m = logo_regexp.match(line)
+				if m:
+					logo = m.group(1)
 				else:
-					group = "Unknown"
+					logo = ""
+				m = rec_regexp.match(line)
+				if m:
+					rec = m.group(1) == "1"
+				else:
+					rec = False
 			elif line.startswith("#EXTGRP:"):
 				group = line.strip().split(':')[1]
 			elif line.startswith("#EXTM3U"):
+				continue
+			elif line.startswith("#EXT-X-ENDLIST"):
 				continue
 			elif not line.strip():
 				continue
@@ -150,22 +181,24 @@ class M3UProvider(OfflineFavourites):
 					g = self.groups[gid] = Group(gid, group, [])
 
 				num += 1
-				m = url_regexp.match(line)
-				if m:
-					cid = int(m.group(1))
-				else:
-					cid = hash(url)
-					self.trace("Failed to get cid from url", url)
-				c = Channel(cid, gid, name, num, True)
+				c, d = self.makeChannel(num, name, url, tvg, logo, rec)
+				cid = c.cid
 				self.channels[cid] = c
 				g.channels.append(c)
-				url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
-				self.channels_data[cid] = {'tvg': tvg, 'url': url}
-				if tvg is not None:
-					try:
-						self.tvg_ids[tvg].append(cid)
-					except KeyError:
-						self.tvg_ids[tvg] = [cid]
+				self.channels_data[cid] = d
+
+				# reset
+				group = "Unknown"
+
+		# Create inverse mapping from tvg to cid, required for epg_list
+		self.tvg_ids = {}
+		for cid, data in self.channels_data.items():
+			tvg = data['tvg']
+			if tvg is not None:
+				try:
+					self.tvg_ids[tvg].append(cid)
+				except KeyError:
+					self.tvg_ids[tvg] = [cid]
 
 		self.trace("Loaded {} channels".format(len(self.channels)))
 
@@ -196,3 +229,6 @@ class M3UProvider(OfflineFavourites):
 				yield cid, map(lambda e: EPG(
 					int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
 					e['description'].encode('utf-8')), c['programs'])
+
+	def getPiconUrl(self, cid):
+		return self.channels_data[cid]['logo']

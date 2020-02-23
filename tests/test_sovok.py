@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #  enigma2 iptv player
 #
-#  Copyright (c) 2010 Alex Maystrenko <alexeytech@gmail.com>
+#  Copyright (c) 2018 Alex Maystrenko <alexeytech@gmail.com>
 #
 # This is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free
@@ -10,10 +10,14 @@
 
 from __future__ import print_function
 
-from ktv import KtvStream
+import ott_provider
+from src.api.sovok import OTTProvider
 
 
-class OTTProvider(KtvStream):
-	NAME = "KartinaTV"
-	site = "http://iptv.kartina.tv/api/json"
-	icons_url = "http://iptv.kartina.tv"
+class TestSovok(ott_provider.TestOTTProvider):
+	ProviderClass = OTTProvider
+
+
+if __name__ == "__main__":
+	from unittest import main
+	main()

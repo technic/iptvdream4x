@@ -14,6 +14,11 @@ from hashlib import md5
 
 from abstract_api import AbstractAPI, OfflineFavourites
 from ..utils import toDate, EPG, Channel, Group, APIWrongPin
+try:
+	from ..loc import translate as _
+except ImportError:
+	def _(text):
+		return text
 
 
 class KartinaAPI(AbstractAPI):
@@ -30,32 +35,49 @@ class KartinaAPI(AbstractAPI):
 	def start(self):
 		self.authorize()
 		self.getJsonData(self.site + "/settings_set?", {'var': 'stream_standard', 'val': 'http_h264'})
+		self.getSettings()
 
 	def authorize(self):
 		self.trace("Authorization of username = %s" % self.username)
 		params = {
-			"login": self.username, "pass": self.password, "settings": "all",
+			"login": self.username, "pass": self.password,
 			"softid": self.softid, "cli_serial": self.uuid,
 		}
 		reply = self.getJsonData(self.site + '/login?', params, fromauth=True)
 		self.parseAccount(reply['account'])
-		self.parseSettings(reply['settings'])
 		self.trace("Packet expire: %s" % self.packet_expire)
 		self.sid = True
 
 	def parseAccount(self, account):
 		self.packet_expire = datetime.fromtimestamp(int(account['packet_expire']))
 
-	def parseSettings(self, settings):
-		pass
+	def parseSettings(self, data):
+		from ..utils import ConfSelection
+		d = data['bitrate']
+		self.settings['bitrate'] = ConfSelection(
+			title=_("Bitrate"), value=str(d['value']), choices=[
+				(str(n['val']), n['title'].encode('utf-8')) for n in d['names']
+			])
+		d = data['stream_server']
+		self.settings['stream_server'] = ConfSelection(
+			title=_("Stream server"), value=str(d['value']), choices=[
+				(str(s['ip']), s['descr'].encode('utf-8')) for s in d['list']
+			])
+		d = data['stream_standard']
+		self.settings['stream_standard'] = ConfSelection(
+			title=_("Stream format"), value=str(d['value']), choices=[
+				(str(s['value']), s['title'].encode('utf-8')) for s in d['list']
+			])
 
 
 class KtvStream(OfflineFavourites, KartinaAPI):
 	HAS_PIN = True
+	icons_url = ""
 
 	def __init__(self, username, password):
 		super(KtvStream, self).__init__(username, password)
 		self.day_ends = defaultdict(dict)
+		self.icons = {}
 
 	@staticmethod
 	def parseName(txt):
@@ -76,10 +98,11 @@ class KtvStream(OfflineFavourites, KartinaAPI):
 			for c in g['channels']:
 				cid = int(c['id'])
 				channel = Channel(
-					cid, gid, c['name'].encode('utf-8'), cid,
+					cid, c['name'].encode('utf-8'), cid,
 					bool(int(c.get('have_archive', 0))), bool(int(c.get('protected', 0)))
 				)
 				self.channels[cid] = channel
+				self.icons[cid] = c['icon'].encode('utf-8')
 				channels.append(channel)
 			self.groups[gid] = Group(gid, g['name'].encode('utf-8'), channels)
 
@@ -146,10 +169,18 @@ class KtvStream(OfflineFavourites, KartinaAPI):
 			name, desc = self.parseName(program['progname'].encode("utf-8"))
 			yield (t, name, desc)
 
+	def getPiconUrl(self, cid):
+		url = self.icons[cid]
+		if url:
+			return self.icons_url + url
+		return ""
+
 	def getSettings(self):
+		if not self.settings:
+			data = self.getJsonData(self.site + "/settings?", {"var": "all"})
+			self.parseSettings(data['settings'])
 		return self.settings
 
 	def pushSettings(self, settings):
-		for x in settings:
-			params = {"var": x[0]['id'], "val": x[1]}
-			self.getData(self.site + "/settings_set?", params, "setting %s" % x[0]['id'])
+		for k, v in settings.items():
+			self.getJsonData(self.site + "/settings_set?", {"var": k, "val": v})

@@ -20,14 +20,11 @@ from json import loads as json_loads
 from os import path as os_path
 from datetime import datetime
 try:
-	from typing import Dict
+	from typing import Dict  # pylint: disable=unused-import
 except ImportError:
 	pass
 
-from twisted.internet.defer import Deferred, succeed
-from twisted.web.client import getPage
-
-from ..utils import getHwAddr, syncTime, Group, Channel, APIException, APILoginFailed, EPG
+from ..utils import getHwAddr, Group, Channel, APIException, APILoginFailed, EPG
 from ..dist import VERSION
 
 MODE_STREAM = 0
@@ -56,7 +53,7 @@ class AbstractAPI(object):
 		self.password = password
 		self.sid = None
 		self.packet_expire = None
-		self.settings = []
+		self.settings = {}
 
 		socket.setdefaulttimeout(10)
 		self.uuid = getHwAddr('eth0')
@@ -85,9 +82,7 @@ class AbstractAPI(object):
 			return o.read()
 
 	def getData(self, url, params, name='', fromauth=None):
-		reauthOnError = True
 		if not self.sid and not fromauth:
-			reauthOnError = False
 			self.cookiejar.clear()
 			self.authorize()
 		elif fromauth:
@@ -274,6 +269,10 @@ class AbstractStream(AbstractAPI):
 		"""
 		pass
 
+	def getPiconUrl(self, cid):
+		""" Return url to channel icon """
+		return ""
+
 
 class OfflineFavourites(AbstractStream):
 	def __init__(self, username, password):
@@ -304,16 +303,32 @@ class JsonSettings(AbstractAPI):
 		self._settings_file = self._resolveConfigurationFile('%s.json' % self.NAME)
 
 	def _loadSettings(self):
+		"""Read json from settings file without verification"""
 		from json import load as json_load
 		if not os_path.isfile(self._settings_file):
 			return {}
 		with open(self._settings_file) as f:
 			return json_load(f) or {}
 
+	def _safeLoadSettings(self, defaults):
+		"""Update defaults with verified values loaded from json"""
+		for k, v in self._loadSettings().items():
+			try:
+				defaults[k].safeSetValue(str(v))
+			except KeyError:
+				continue
+		return defaults
+
 	def _saveSettings(self, settings):
+		"""Dump settings dictionary to file"""
 		from json import dump as json_dump
 		try:
 			with open(self._settings_file, 'w') as f:
 				json_dump(settings, f)
 		except Exception as e:
 			raise APIException(str(e))
+
+	def pushSettings(self, settings):
+		data = self._loadSettings()
+		data.update(settings)
+		self._saveSettings(data)

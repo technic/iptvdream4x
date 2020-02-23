@@ -129,14 +129,6 @@ class EPG(object):
 	def isAt(self, t):
 		return self.begin <= t < self.end
 
-	def __getitem__(self, key):
-		# print("DEPRECATED")
-		return self.__dict__[key]
-
-	def __setitem__(self, key, value):
-		# print("DEPRECATED")
-		self.__dict__[key] = value
-
 	def __repr__(self):
 		return "%s-%s|%s" % (self.begin.strftime("%H:%M"), self.end.strftime("%H:%M"), self.name)
 
@@ -148,6 +140,7 @@ class ConfEntry(object):
 		:type title: str
 		"""
 		self.title = title
+		self.value = None
 
 	def safeSetValue(self, value):
 		""" Override and do validation if required """
@@ -165,6 +158,7 @@ class ConfInteger(ConfEntry):
 		self.limits = limits
 
 	def safeSetValue(self, value):
+		value = int(value)
 		if self.limits[0] <= value <= self.limits[1]:
 			self.value = value
 
@@ -201,7 +195,7 @@ class EPGDB(object):
 		self.last = 0
 
 	# bisect copies from python library
-	
+
 	def bisect(self, x, lo=0, hi=None):
 		if lo < 0:
 			raise ValueError('lo must be non-negative')
@@ -214,7 +208,7 @@ class EPGDB(object):
 			else:
 				lo = mid+1
 		return lo
-	
+
 	def bisect_left(self, x, lo=0, hi=None):
 		if lo < 0:
 			raise ValueError('lo must be non-negative')
@@ -227,7 +221,7 @@ class EPGDB(object):
 			else:
 				hi = mid
 		return lo
-	
+
 	def findEpg(self, time):
 		if time is None:
 			time = syncTime()
@@ -243,7 +237,7 @@ class EPGDB(object):
 		t = toTimestamp(time)
 		i = self.bisect(t)
 		return self.atTime(time, i, update)
-	
+
 	def atTime(self, time, i, update):
 		if i == 0 or i-1 >= len(self.l):
 			return None
@@ -254,19 +248,19 @@ class EPGDB(object):
 			return i-1
 		else:
 			return None
-	
+
 	def checkHint(self, i, t):
 		return i > 0 and (i == len(self.l) or t < self.l[i][0]) and (i == 0 or self.l[i-1] <= t)
 
 	### Public methods
-	
+
 	def epgCurrent(self, time=None):
 		i = self.findEpg(time)
 		if i is not None:
 			return self.l[i][1]
 		else:
 			return None
-	
+
 	def epgNext(self, time=None):
 		i = self.findEpg(time)
 		if (i is not None) and (i+1 < len(self.l)):
@@ -278,7 +272,7 @@ class EPGDB(object):
 				return None
 		else:
 			return None
-	
+
 	def epgDay(self, date):
 		# for apis that can't get correct range in getDayEpg
 		try:
@@ -289,7 +283,7 @@ class EPGDB(object):
 		i1 = self.bisect_left(toTimestamp(t1))
 		i2 = self.bisect_left(toTimestamp(t2), lo=i1)
 		return [x[1] for x in self.l[i1:i2]]  # FIXME: extra copy
-	
+
 	def addEpg(self, epg, hint=-1):
 		t = toTimestamp(epg.begin)
 		if self.checkHint(hint, t):
@@ -299,19 +293,19 @@ class EPGDB(object):
 		if i > 0:
 			prev = self.l[i-1][1]
 			if prev.begin == epg.begin or prev.end > epg.begin:
-				print("[IPtvDream] EPG conflict!")
+				trace("EPG conflict!")
 				self.l[i-1] = (t, epg)
 				return i
 		self.l.insert(i, (t, epg))
 		if self.last >= i:
 			self.last += 1
 		return i+1
-	
+
 	def addEpgSorted(self, epg_list):
 		hint = 0
 		for e in epg_list:
 			hint = self.addEpg(e, hint)
-	
+
 	def addEpgDay(self, date, epglist):
 		self.days_start[toDate(date)] = date
 		self.addEpgSorted(epglist)
@@ -344,10 +338,9 @@ class Group(object):
 
 
 class Channel(EPGDB):
-	def __init__(self, cid, gid, name, number, has_archive=False, is_protected=False):
+	def __init__(self, cid, name, number, has_archive=False, is_protected=False):
 		"""
 		:param int cid: channel id
-		:param int gid: group id, that channel belongs to
 		:param str name: channel title
 		:param int number: channel number
 		:param has_archive:
@@ -355,7 +348,6 @@ class Channel(EPGDB):
 		"""
 		EPGDB.__init__(self)
 		self.cid = cid
-		self.gid = gid
 		self.name = name
 		self.number = number
 		self.has_archive = has_archive

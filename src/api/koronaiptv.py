@@ -24,17 +24,17 @@ except ImportError:
 		return text
 
 
-class OTTProvider(M3UProvider, JsonSettings):
-	NAME = "KingModIPTV"
+class OTTProvider(JsonSettings, M3UProvider):
+	NAME = "KoronaTV"
 	AUTH_TYPE = "Login"
 	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://iptvdream.zapto.org/epg-king/"
+		self.site = "http://technic.cf/epg-korona/"
 		self.playlist = ""
 		s = self.getSettings()
-		self.playlist_url = "http://%s.kingmodiptv.top/%s/%s/%s/tv.m3u" % (
+		self.playlist_url = "http://pl.korona-tv.top/%s/%s/%s/%s/tv.m3u" % (
 			s['server'].value, s['quality'].value, username, password)
 
 	def setChannelsList(self):
@@ -117,10 +117,11 @@ class OTTProvider(M3UProvider, JsonSettings):
 
 				num += 1
 				cid = num  # TODO: use url_regexp
-				c = Channel(cid, gid, name, num, archive)
+				c = Channel(cid, name, num, archive)
 				self.channels[cid] = c
 				g.channels.append(c)
-				self.channels_data[cid] = {'tvg': tvg, 'url': url}
+				# TODO: add logo if we have it
+				self.channels_data[cid] = {'tvg': tvg, 'url': url, 'logo': ""}
 				if tvg is not None:
 					try:
 						self.tvg_ids[tvg].append(cid)
@@ -132,20 +133,15 @@ class OTTProvider(M3UProvider, JsonSettings):
 	def getSettings(self):
 		settings = {
 			'server': ConfSelection(
-				_("Server"), 'pl1',
-				[('pl1', "Server 1"), ('pl2', "Server 2"), ('pl3', "Server 3")]
+				_("Server"), '1',
+				[('1', "Server 1"), ('2', "Server 2"), ('3', "Server 3")]
 			),
 			'quality': ConfSelection(
 				_("Quality"), 'hi',
 				[('hi', _("High")), ('lo', _("Low"))]
 			),
 		}
-		for k, v in self._loadSettings().items():
-			try:
-				settings[k].safeSetValue(str(v))
-			except KeyError:
-				continue
-		return settings
+		return self._safeLoadSettings(settings)
 
 	def pushSettings(self, settings):
 		data = self._loadSettings()
