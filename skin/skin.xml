@@ -160,13 +160,13 @@
   </screen>
   <screen size="862,552" name="IPtvDreamEpgInfo" position="center,center">
     <widget size="816,48" name="epgName" position="24,18" font="Regular;28" foregroundColor="gold2" transparent="1"/>
-    <widget name="epgProgress" position="124,515" size="127,15" backgroundColor="#0038435a" borderColor="#00bbbbbb" borderWidth="1" transparent="1"/>
+    <widget name="epgProgress" position="164,515" size="127,15" backgroundColor="#0038435a" borderColor="#00bbbbbb" borderWidth="1" transparent="1"/>
     <widget size="802,419" name="epgDescription" position="31,74" transparent="1" font="Regular;25"/>
-    <widget size="84,32" name="epgTime" position="31,505" font="Regular;26"/>
-    <widget size="100,32" name="epgDuration" position="284,505" font="Regular;26"/>
+    <widget size="130,32" name="epgTime" position="31,505" font="Regular;26"/>
+    <widget size="100,32" name="epgDuration" position="304,505" font="Regular;26"/>
     <widget size="121,30" name="epgDate" position="713,511" font="Regular;21" foregroundColor="blue2" halign="right"/>
-    <widget name="btn_red" alphatest="blend" pixmap="IPtvDream/buttons/red.png" position="405,509" size="24,24"/>
-    <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="441,509" size="188,24" transparent="1" zPosition="1"/>
+    <widget name="btn_red" alphatest="blend" pixmap="IPtvDream/buttons/red.png" position="430,509" size="24,24"/>
+    <widget font="Regular;20" name="key_red" position="466,509" size="188,24" transparent="1" zPosition="1" halign="left"/>
   </screen>
   <screen name="IPtvDreamSeekScreen" position="center,495" size="200,40" backgroundColor="bgwindow" flags="wfNoBorder">
     <widget name="status" size="200,40" position="0,0" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#20000000" font="Regular;29"/>
