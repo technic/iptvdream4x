@@ -79,7 +79,7 @@ class PluginStarter(Screen):
 
 		desktop = getDesktop(0)
 		self.resolution = desktop.size().width(), desktop.size().height()
-		if self.resolution[0] != 1280:
+		if self.resolution[0] != 1280 and not self.compatibleSkin():
 			gMainDC.getInstance().setResolution(1280, 720)
 			desktop.resize(eSize(1280, 720))
 
@@ -162,12 +162,17 @@ class PluginStarter(Screen):
 	def exit(self):
 		self.close()
 
+	def compatibleSkin(self):
+		SUPPORTED_SKINS = ['BlueMetalFHD']
+		current = config.skin.primary_skin.value
+		return any(current.find(s) > -1 for s in SUPPORTED_SKINS)
+
 	def restoreService(self):
 		self.session.nav.playService(self.last_service)
 		desktop = getDesktop(0)
 		w, h = self.resolution
 		trace("restore resolution", w, h)
-		if w != 1280:
+		if w != 1280 and not self.compatibleSkin():
 			gMainDC.getInstance().setResolution(w, h)
 			desktop.resize(eSize(w, h))
 
