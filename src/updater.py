@@ -92,6 +92,7 @@ class Updater(object):
 				return err
 			else:
 				fatalError(err)
+				return None
 
 		ts = int(time.time())
 		return getPage(self.url + "version-%s.txt?ts=%s" % (NAME.lower(), ts)).addCallback(cb).addErrback(eb)
@@ -121,6 +122,7 @@ class Updater(object):
 				return err
 			else:
 				fatalError(err)
+				return None
 
 		return downloadPage(url, file_name).addCallback(cb).addErrback(eb)
 
