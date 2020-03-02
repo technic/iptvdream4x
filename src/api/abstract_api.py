@@ -284,10 +284,9 @@ class OfflineFavourites(AbstractStream):
 			return []
 		with open(self._favorites_file) as f:
 			data = f.read().strip()
-			fav = []
-			for cid in map(int, data.split(',')):
-				fav.append(cid)
-			return fav
+			if not data:
+				return []
+			return [int(c) for c in data.split(',')]
 
 	def uploadFavourites(self, current):
 		try:
