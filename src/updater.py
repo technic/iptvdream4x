@@ -10,6 +10,8 @@
 
 from __future__ import print_function
 
+import time
+
 # enigma2 imports
 from Screens.MessageBox import MessageBox
 from Components.Console import Console
@@ -92,7 +94,8 @@ class Updater(object):
 			else:
 				fatalError(err)
 
-		return getPage(self.url + "version-%s.txt" % NAME.lower()).addCallback(cb).addErrback(eb)
+		ts = int(time.time())
+		return getPage(self.url + "version-%s.txt?ts=%s" % (NAME.lower(), ts)).addCallback(cb).addErrback(eb)
 
 	def installUpdate(self):
 		print("[IPtvDream] install update")
