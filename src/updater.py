@@ -74,7 +74,6 @@ class Updater(object):
 		self.url = "http://technic.cf/iptvdream4x/packages/"
 		self.console = Console()
 		self.prefix = "enigma2-plugin-extensions"
-		self.agent = "IPtvDream-%s/%s" % (NAME, VERSION)
 		self._version = None
 
 	def checkUpdate(self):
