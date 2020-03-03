@@ -80,7 +80,7 @@ class OTTProvider(OfflineFavourites):
 				g = self.groups[gid] = Group(gid, group, [])
 
 			cid = hash(ch['web_name'])
-			c = Channel(cid, gid, ch['name'].encode('utf-8'), number, bool(ch['archive']))
+			c = Channel(cid, ch['name'].encode('utf-8'), number, bool(ch['archive']), False)
 			self.channels[cid] = c
 			self.web_names[cid] = ch['web_name'].encode('utf-8')
 			self.urls[cid] = ch['url'].encode('utf-8')

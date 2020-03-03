@@ -343,8 +343,8 @@ class Channel(EPGDB):
 		:param int cid: channel id
 		:param str name: channel title
 		:param int number: channel number
-		:param has_archive:
-		:param is_protected:
+		:param bool has_archive:
+		:param bool is_protected:
 		"""
 		EPGDB.__init__(self)
 		self.cid = cid
