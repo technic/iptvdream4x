@@ -24,13 +24,12 @@ except ImportError:
 		return text
 
 
-class OTTProvider(JsonSettings, M3UProvider):
-	NAME = "KoronaTV"
+class Korona(JsonSettings, M3UProvider):
 	AUTH_TYPE = "Login"
 	TVG_MAP = True
 
 	def __init__(self, username, password):
-		super(OTTProvider, self).__init__(username, password)
+		super(Korona, self).__init__(username, password)
 		self.site = "http://technic.cf/epg-korona/"
 		self.playlist = ""
 		s = self.getSettings()
@@ -147,3 +146,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 		data = self._loadSettings()
 		data.update(settings)
 		self._saveSettings(data)
+
+
+class OTTProvider(Korona):
+	NAME = "KoronaTV"
