@@ -320,6 +320,9 @@ class IPtvDreamStreamPlayer(
 			self.archive_pause = syncTime()
 			self.session.nav.stopService()
 			self.lockShow()
+			# freeze epg labels
+			self.epgTimer.stop()
+			self.epgProgressTimer.stop()
 
 	def exitArchive(self):
 		self.setArchiveShift(0)
