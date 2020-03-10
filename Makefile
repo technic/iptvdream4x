@@ -69,7 +69,7 @@ $(plugindir)/README.md: README.md
 install: $(plugindir)/LICENSE $(plugindir)/README.md
 
 
-skinfiles := $(shell find skin/ -name *.png) skin/iptvdream.xml
+skinfiles := $(shell find skin/ -name '*.png') skin/iptvdream.xml
 skininstall := $(patsubst skin/%,$(skindir)/%,$(skinfiles))
 
 $(skininstall): $(skindir)/%: skin/%
@@ -113,6 +113,7 @@ endif
 update-po:
 	$(MAKE) UPDATE_PO=y $(langs_po)
 
+$(info AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $(skininstall))
 
 #install: $(build)/etc/iptvdream/iptvdream.epgmap
 install: $(pycinstall) $(datainstall) $(skininstall) $(moinstall)
