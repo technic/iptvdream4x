@@ -580,7 +580,7 @@ class ChannelList(MenuList):
 		self.list[index] = self.buildChannelEntry(channel)
 		self.l.invalidateEntry(index)
 
-	def moveUp(self):
+	def moveEntryUp(self):
 		index = self.getSelectedIndex()
 		if index == 0:
 			return
@@ -591,7 +591,7 @@ class ChannelList(MenuList):
 		self._updateIndexMap(index)
 		self.up()
 
-	def moveDown(self):
+	def moveEntryDown(self):
 		index = self.getSelectedIndex()
 		if index + 1 == len(self.list):
 			return
@@ -1116,13 +1116,13 @@ class IPtvDreamChannels(Screen):
 
 	def moveUp(self):
 		if self.marked:
-			self.list.moveUp()
+			self.list.moveEntryUp()
 		else:
 			self.list.up()
 
 	def moveDown(self):
 		if self.marked:
-			self.list.moveDown()
+			self.list.moveEntryDown()
 		else:
 			self.list.down()
 
