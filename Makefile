@@ -9,6 +9,7 @@ PROVIDER ?= all
 plugin_name := IPtvDream
 plugin_path := /usr/lib/enigma2/python/Plugins/Extensions/$(plugin_name)
 skin_path := /usr/share/enigma2/$(plugin_name)
+skin-fhd_path := /usr/share/enigma2/$(plugin_name)FHD
 
 ifeq ($(DEB),y)
 pkgext := deb
@@ -19,7 +20,6 @@ architecture := $(ARCH)
 
 build := $(DESTDIR)
 plugindir = $(build)$(plugin_path)
-skindir = $(build)$(skin_path)
 
 all: package
 
@@ -69,16 +69,26 @@ $(plugindir)/README.md: README.md
 install: $(plugindir)/LICENSE $(plugindir)/README.md
 
 
-skinfiles := $(shell find skin/ -name '*.png') skin/iptvdream.xml
-skininstall := $(patsubst skin/%,$(skindir)/%,$(skinfiles))
+skin_dir := $(build)$(skin_path)
+skin_files := $(shell find skin/ -name '*.png') skin/iptvdream.xml
+skin_install := $(patsubst skin/%,$(skin_dir)/%,$(skin_files))
 
-$(skininstall): $(skindir)/%: skin/%
+$(skin_install): $(skin_dir)/%: skin/%
 	install -D -m644 $< $@
 
-skin/iptvdream.xml: skin/skin.xml
+skin-fhd_dir := $(build)$(skin-fhd_path)
+skin-fhd_files := $(shell find skin-fhd/ -name '*.png') skin-fhd/iptvdream.xml
+skin-fhd_install := $(patsubst skin-fhd/%,$(skin-fhd_dir)/%,$(skin-fhd_files))
+
+$(skin-fhd_install): $(skin-fhd_dir)/%: skin-fhd/%
+	install -D -m644 $< $@
+
+skinxmls = $(addsuffix /iptvdream.xml,skin skin-fhd)
+
+$(skinxmls): %/iptvdream.xml: %/skin.xml
 	python skin-post.py $< $@
 
-prepare: skin/iptvdream.xml
+prepare: $(skinxmls)
 
 
 $(build)/etc/iptvdream/iptvdream.epgmap: src/iptvdream.epgmap
@@ -116,7 +126,7 @@ update-po:
 $(info AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $(skininstall))
 
 #install: $(build)/etc/iptvdream/iptvdream.epgmap
-install: $(pycinstall) $(datainstall) $(skininstall) $(moinstall)
+install: $(pycinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(moinstall)
 	install -d $(build)/etc/iptvdream
 
 

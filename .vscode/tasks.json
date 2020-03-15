@@ -22,6 +22,17 @@
             "group": "build",
         },
         {
+            "label": "Skin-fhd post",
+            "type": "process",
+            "command": "${config:python.pythonPath}",
+            "args": [
+                "./skin-post.py",
+                "skin-fhd/skin.xml",
+                "skin-fhd/iptvdream.xml"
+            ],
+            "group": "build",
+        },
+        {
             "label": "Docker kill enigma2",
             "type": "process",
             "command": "docker",
@@ -71,7 +82,7 @@
                 ]
             },
             "dependsOn": [
-                "Skin post", "Copy keymap"
+                "Skin post", "Skin-fhd post", "Copy keymap"
             ]
         },
         {

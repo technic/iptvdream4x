@@ -10,11 +10,10 @@ RUN sudo apt-get update && sudo apt-get install -y \
 
 RUN sudo apt-get install -y bash-completion command-not-found psmisc htop vim wput
 
-RUN echo "config.skin.primary_skin=PLi-HD/skin.xml" >> /etc/enigma2/settings \
- && echo "config.misc.do_overscanwizard=false" >> /etc/enigma2/settings
 RUN mkdir /etc/iptvdream
 
 RUN sudo pip install ptvsd
 EXPOSE 5678
 COPY mytest-ptvsd.py /opt/mytest-ptvsd.py
-CMD [ "x11vnc", "-forever" ]
+COPY start.sh /opt/start.sh
+CMD ["/opt/start.sh"]

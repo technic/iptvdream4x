@@ -54,7 +54,11 @@ class SkinManager(object):
 			if os.path.isfile(os.path.join(skins_dir, p, self.SKIN_FILE)):
 				self.skins.append(p)
 
-		default = 'IPtvDream'
+		desktop = getDesktop(0)
+		if desktop.size().width() >= 1920:
+			default = 'IPtvDreamFHD'
+		else:
+			default = 'IPtvDream'
 		assert default in self.skins
 		pluginConfig.skin = ConfigSelection(self.skins, default=default)
 
@@ -104,12 +108,6 @@ def loadProviders():
 class PluginStarter(Screen):
 	def __init__(self, session, name, task=None):
 		trace("Starting provider", name)
-
-		desktop = getDesktop(0)
-		self.resolution = desktop.size().width(), desktop.size().height()
-		if self.resolution[0] != 1280 and not self.compatibleSkin():
-			gMainDC.getInstance().setResolution(1280, 720)
-			desktop.resize(eSize(1280, 720))
 
 		Screen.__init__(self, session)
 		self.cfg = manager.getConfig(name)
@@ -197,12 +195,6 @@ class PluginStarter(Screen):
 
 	def restoreService(self):
 		self.session.nav.playService(self.last_service)
-		desktop = getDesktop(0)
-		w, h = self.resolution
-		trace("restore resolution", w, h)
-		if w != 1280 and not self.compatibleSkin():
-			gMainDC.getInstance().setResolution(w, h)
-			desktop.resize(eSize(w, h))
 
 
 class Manager(object):
