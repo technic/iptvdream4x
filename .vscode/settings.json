@@ -26,5 +26,6 @@
         "editor.tabSize": 4
     },
     "python.linting.flake8Enabled": false,
-    "cSpell.language": "en,ru"
+    "cSpell.language": "en,ru",
+    "debug.onTaskErrors": "debugAnyway"
 }
