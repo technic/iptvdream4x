@@ -34,5 +34,5 @@ package="${name}_${version}_all.ipk"
 ipk="packages/${package}"
 
 rm -f "$ipk" && make "$ipk"
-wput -u -nc "$ipk" "ftp://root@${host}/tmp/test.ipk"
+scp "$ipk" "root@${host}:/tmp/test.ipk"
 ssh "root@${host}" opkg install --force-reinstall "/tmp/test.ipk"
