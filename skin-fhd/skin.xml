@@ -84,11 +84,11 @@
     <widget backgroundColor="#00000000" font="Regular;24" name="key_blue" position="1257,210" size="257,34" transparent="1" foregroundColor="snow" halign="left"/>
   </screen>
   <screen name="IPtvDreamChannels" position="146,50" size="1624,978" title="Channel Selection" halign="left">
-    <ePixmap halign="left" alphatest="on" transparent="1" pixmap="IPtvDreamFHD/icons/clock.png" position="1161,36" size="32,32"/>
+    <ePixmap halign="left" alphatest="blend" transparent="1" pixmap="IPtvDreamFHD/icons/clock.png" position="1161,36" size="32,32"/>
     <widget backgroundColor="#001b2c47" font="Regular;35" halign="left" position="1205,28" render="Label" size="106,48" source="global.CurrentTime" transparent="1" foregroundColor="fg">
       <convert type="ClockToText">Default</convert>
     </widget>
-    <ePixmap halign="left" alphatest="on" pixmap="IPtvDreamFHD/icons/calendar.png" position="1399,36" size="32,35"/>
+    <ePixmap halign="left" alphatest="blend" pixmap="IPtvDreamFHD/icons/calendar.png" position="1399,36" size="32,35"/>
     <widget backgroundColor="#001b2c47" font="Regular;29" halign="left" position="1442,33" render="Label" size="175,44" source="global.CurrentTime" transparent="1" foregroundColor="fg">
       <convert type="ClockToText">Format:%d.%m.%Y</convert>
     </widget>
@@ -109,11 +109,11 @@
     <widget backgroundColor="#001b2c47" font="Regular;18" halign="center" name="packetExpire" position="1226,850" size="300,22" transparent="1"/>
   </screen>
   <screen name="IPtvDreamEpg" position="center,center" size="1624,978" title="Channel EPG" halign="left">
-    <ePixmap halign="left" alphatest="on" transparent="1" pixmap="IPtvDreamFHD/icons/clock.png" position="1161,36" size="32,32"/>
+    <ePixmap halign="left" alphatest="blend" transparent="1" pixmap="IPtvDreamFHD/icons/clock.png" position="1161,36" size="32,32"/>
     <widget backgroundColor="#001b2c47" font="Regular;35" halign="left" position="1205,28" render="Label" size="106,48" source="global.CurrentTime" transparent="1" foregroundColor="fg">
       <convert type="ClockToText">Default</convert>
     </widget>
-    <ePixmap halign="left" alphatest="on" pixmap="IPtvDreamFHD/icons/calendar.png" position="1399,36" size="32,35"/>
+    <ePixmap halign="left" alphatest="blend" pixmap="IPtvDreamFHD/icons/calendar.png" position="1399,36" size="32,35"/>
     <widget backgroundColor="#001b2c47" font="Regular;29" halign="left" position="1442,33" render="Label" size="175,44" source="global.CurrentTime" transparent="1" foregroundColor="fg">
       <convert type="ClockToText">Format:%d.%m.%Y</convert>
     </widget>
