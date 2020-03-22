@@ -56,22 +56,6 @@
     </entries>
   </screen>
   <screen>
-    <name>IPtvDreamSeekScreen</name>
-    <entries/>
-  </screen>
-  <screen>
-    <name>IPtvDreamPlayer</name>
-    <entries/>
-  </screen>
-  <screen>
-    <name>IPtvDreamMovies</name>
-    <entries/>
-  </screen>
-  <screen>
-    <name>VirtualKeyBoardRu</name>
-    <entries/>
-  </screen>
-  <screen>
     <name>IPtvDreamConfig</name>
     <entries/>
   </screen>
