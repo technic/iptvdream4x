@@ -18,11 +18,13 @@ import os
 # enigma2 imports
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
+from Screens.InputBox import InputBox
 from Screens.ChoiceBox import ChoiceBox
 from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
 	ConfigText, ConfigYesNo, ConfigSelection
 from Components.ActionMap import ActionMap
 from Components.Button import Button
+from Components.Input import Input
 from Components.Sources.List import List
 from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
 from Tools.Import import my_import
@@ -203,6 +205,60 @@ class PluginStarter(Screen):
 		if w != 1280 and not self.compatibleSkin():
 			gMainDC.getInstance().setResolution(w, h)
 			desktop.resize(eSize(w, h))
+
+
+class TokenPluginStarter(PluginStarter):
+	def __init__(self, session, name):
+		super(TokenPluginStarter, self).__init__(session, name)
+
+	def start(self):
+		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
+		if self.cfg.password.value == '':
+			self.askToken()
+		else:
+			self.auth()
+
+	def auth(self):
+		try:
+			self.db.start()
+			return self.run()
+		except APILoginFailed as e:
+			cb = lambda ret: self.askToken()
+			message = _("We need to authenticate your device") + "\n" + str(e)
+		except APIException as e:
+			cb = lambda ret: self.exit()
+			message = _("Start of %s failed") % self.db.NAME + "\n" + str(e)
+		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
+
+	def askToken(self):
+		""" Ask user for pin code and obtain a token"""
+		self.session.openWithCallback(
+			self._codeEntered, InputBox, title=_("Please go to %s and generate pin code") % self.apiClass.token_page,
+			windowTitle=_("Input pin"), type=Input.NUMBER)
+
+	def _codeEntered(self, code):
+		if code is None:
+			return self.exit()
+		try:
+			token = self.db.getToken(code)
+			self._saveToken(token)
+			return self.auth()
+		except APILoginFailed as e:
+			cb = lambda ret: self.askToken()
+			message = _("Failed to authentificate your device") + "\n" + str(e)
+		except APIException as e:
+			cb = lambda ret: self.exit()
+			message = _("Start of %s failed") % self.db.NAME + "\n" + str(e)
+		self._saveToken(None)
+		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
+
+	def _saveToken(self, token):
+		if token is None:
+			token = ''
+		assert isinstance(token, str)
+		self.cfg.password.value = token
+		self.cfg.password.save()
+		manager.saveConfig()
 
 
 class Manager(object):
