@@ -416,7 +416,7 @@ class IPtvDreamManager(Screen):
 			if selected is not None:
 				skinManager.setSkin(selected[0])
 				self.session.openWithCallback(
-					self.restart, MessageBox, _("Restart enigma2 to apply keymap changes?"), MessageBox.TYPE_YESNO)
+					self.restart, MessageBox, _("Restart enigma2 to apply skin changes?"), MessageBox.TYPE_YESNO)
 
 		self.session.openWithCallback(cb, ChoiceBox, title=_("Select skin"), list=[(s, s) for s in skinManager.skins])
 
