@@ -395,12 +395,12 @@ class IPtvDreamManager(Screen):
 		self.close()
 
 	def showMenu(self):
-		
+
 		def cb(entry=None):
 			if entry is not None:
 				func = entry[1]
 				func()
-		
+
 		actions = [
 			(_("Choose keymap"), self.selectKeymap),
 			(_("Choose skin"), self.selectSkin),
