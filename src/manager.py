@@ -208,9 +208,6 @@ class PluginStarter(Screen):
 
 
 class TokenPluginStarter(PluginStarter):
-	def __init__(self, session, name):
-		super(TokenPluginStarter, self).__init__(session, name)
-
 	def start(self):
 		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
 		if self.cfg.password.value == '':
@@ -221,7 +218,12 @@ class TokenPluginStarter(PluginStarter):
 	def auth(self):
 		try:
 			self.db.start()
-			return self.run()
+			if self.task == 'provider_settings':
+				self.task = None
+				self.openProviderSettings()
+			else:
+				self.run()
+			return
 		except APILoginFailed as e:
 			cb = lambda ret: self.askToken()
 			message = _("We need to authenticate your device") + "\n" + str(e)
@@ -315,7 +317,7 @@ class Manager(object):
 	def getList(self):
 		return sorted(
 			({'name': v.NAME, 'title': v.TITLE} for v in self.apiDict.values()),
-			key=lambda item: item['name'])
+			key=lambda item: item['name'].lower())
 
 	def getApi(self, name):
 		return self.apiDict[name]
@@ -371,7 +373,7 @@ class IPtvDreamManager(Screen):
 	def ok(self):
 		entry = self.getSelected()
 		if entry is not None:
-			self.session.open(PluginStarter, entry['name'])
+			self.startPlugin(entry['name'])
 
 	def setup(self):
 		entry = self.getSelected()
@@ -381,7 +383,13 @@ class IPtvDreamManager(Screen):
 	def providerSetup(self):
 		entry = self.getSelected()
 		if entry is not None:
-			self.session.open(PluginStarter, entry['name'], 'provider_settings')
+			self.startPlugin(entry['name'], 'provider_settings')
+
+	def startPlugin(self, name, task=None):
+		if manager.getApi(name).AUTH_TYPE == 'Token':
+			self.session.open(TokenPluginStarter, name, task)
+		else:
+			self.session.open(PluginStarter, name, task)
 
 	def cancel(self):
 		self.close()
