@@ -162,12 +162,6 @@ package: $(pkgdir)/$(pkgname).$(pkgext) info
 info:
 	echo '{"name": "$(name)"}' > $@.json
 
-sshinstall: $(pkgdir)/$(pkgname).$(pkgext)
-	test -n '$(HOST)'
-	wput -u -nc -nv $< ftp://root@$(HOST)/tmp/$(notdir $<)
-	ssh root@$(HOST) opkg install --force-reinstall /tmp/$(notdir $<)
-
-
 clean:
 	rm -rf build
 	rm -f version
