@@ -76,33 +76,6 @@ skinManager = SkinManager()
 skinManager.load()
 
 
-def getPlugins():
-	plugins = []
-	if NAME == 'all':
-		f_name = resolveFilename(SCOPE_SYSETC, 'iptvdream.json')
-		try:
-			with open(f_name, 'r') as f:
-				to_import = json_load(f)['imports']
-		except Exception as e:
-			trace("[IPtvDream] config error:", e)
-			to_import = []
-		for n in to_import:
-			mod = __import__('api.%s' % n)
-			getProviders = getattr(mod, 'getProviders')
-	return plugins
-
-
-def loadProviders():
-	if NAME == 'all':
-		fname = resolveFilename(SCOPE_SYSETC, 'iptvdream.json')
-		try:
-			with open(fname, 'r') as f:
-				to_import = json_load(f)['imports']
-		except Exception as e:
-			trace("[IPtvDream] config error:", e)
-			to_import = []
-
-
 class PluginStarter(Screen):
 	def __init__(self, session, name, task=None):
 		trace("Starting provider", name)
