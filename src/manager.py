@@ -306,7 +306,7 @@ class Manager(object):
 				self.config[name].playerid = ConfigSelection(PLAYERS, default='4097')
 				self.config[name].last_played = ConfigText()
 
-			except Exception:
+			except Exception:  # pylint: disable=broad-except
 				trace("Exception")
 				import traceback
 				traceback.print_exc()
