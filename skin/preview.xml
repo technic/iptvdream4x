@@ -9,7 +9,7 @@
       <entry name="currentTime" value="18:03" render="Label" type="string"/>
       <entry name="currentName" value="Keeping Up Appearances (Episode 7) (12+)" render="Label" type="string"/>
       <entry name="currentDuration" value="+90 min" render="Label" type="string"/>
-      <entry name="progressBar" value="40" render="Label" type="string"/>
+      <entry name="progressBar" value="40" render="Slider" type="string"/>
       <entry name="nextTime" value="20:15" render="Label" type="string"/>
       <entry name="nextName" value="The Musketeers (Episode 5) (12+)" render="Label" type="string"/>
       <entry name="nextDuration" value="50 min" render="Label" type="string"/>
@@ -46,7 +46,7 @@
   <screen>
     <name>IPtvDreamEpgInfo</name>
     <entries>
-      <entry name="epgName" value="Program Name" render="Label" type="string"/>
+      <entry name="epgName" value="Program name Program name Program name Program name Program name Program name" render="Label" type="string"/>
       <entry name="epgProgress" value="50" render="Slider" type="string"/>
       <entry name="epgDescription" value="Program Description. Program Description." render="Label" type="string"/>
       <entry name="epgTime" value="Sun 18:00" render="Label" type="string"/>

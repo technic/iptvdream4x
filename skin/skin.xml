@@ -159,9 +159,9 @@
     <widget backgroundColor="#00000000" font="Regular;20" name="key_green" position="680,680" size="260,24" transparent="1" zPosition="1"/>
   </screen>
   <screen size="862,552" name="IPtvDreamEpgInfo" position="center,center">
-    <widget size="816,48" name="epgName" position="24,18" font="Regular;28" foregroundColor="gold2" transparent="1"/>
+    <widget size="816,76" name="epgName" position="24,18" font="Regular;28" foregroundColor="gold2" transparent="1"/>
     <widget name="epgProgress" position="164,515" size="127,15" backgroundColor="#0038435a" borderColor="#00bbbbbb" borderWidth="1" transparent="1"/>
-    <widget size="802,419" name="epgDescription" position="31,74" transparent="1" font="Regular;25"/>
+    <widget size="802,390" name="epgDescription" position="31,103" transparent="1" font="Regular;25"/>
     <widget size="130,32" name="epgTime" position="31,505" font="Regular;26"/>
     <widget size="100,32" name="epgDuration" position="304,505" font="Regular;26"/>
     <widget size="121,30" name="epgDate" position="713,511" font="Regular;21" foregroundColor="blue2" halign="right"/>
