@@ -34,7 +34,7 @@ from Components.MenuList import MenuList
 from Components.Pixmap import Pixmap
 from Components.GUIComponent import GUIComponent
 from Screens.InfoBarGenerics import InfoBarPlugins, InfoBarExtensions, \
-	InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport
+	InfoBarNotifications, InfoBarAudioSelection, InfoBarSubtitleSupport, InfoBarSummary
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Screens.MinuteInput import MinuteInput
@@ -427,6 +427,9 @@ class IPtvDreamStreamPlayer(
 
 	def openVod(self):
 		self.exit('vod')
+
+	def createSummary(self):
+		return InfoBarSummary
 
 	# Channels
 
