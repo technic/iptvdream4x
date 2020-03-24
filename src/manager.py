@@ -21,7 +21,7 @@ from Screens.MessageBox import MessageBox
 from Screens.InputBox import InputBox
 from Screens.ChoiceBox import ChoiceBox
 from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
-	ConfigText, ConfigYesNo, ConfigSelection
+	ConfigText, ConfigYesNo, ConfigSelection, ConfigInteger
 from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Input import Input
@@ -238,6 +238,9 @@ class TokenPluginStarter(PluginStarter):
 
 class Manager(object):
 	def __init__(self):
+		pluginConfig.max_playlists = ConfigInteger(0, (0, 9))
+		self.max_playlists = pluginConfig.max_playlists.value
+
 		self.enabled = {}
 		self.apiDict = {}
 		self.config = config.IPtvDream = ConfigSubDict()
@@ -246,6 +249,7 @@ class Manager(object):
 
 	def initList(self):
 		api_provider = 'OTTProvider'
+		api_function = 'getOTTProviders'
 		prefix = 'Plugins.Extensions.IPtvDream.api'
 		api_path = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream/api')
 
@@ -264,20 +268,27 @@ class Manager(object):
 			seen.add(f)
 
 			try:
+				def process(provider):
+					name = provider.NAME
+					if self.isIgnored(name):
+						trace("Ignore", name)
+						return
+					self.apiDict[name] = provider
+					self.config[name] = ConfigSubsection()
+					self.config[name].login = ConfigNumberText()
+					self.config[name].password = ConfigNumberText()
+					self.config[name].parental_code = ConfigNumberText()
+					self.config[name].in_menu = ConfigYesNo(default=False)
+					self.config[name].playerid = ConfigSelection(PLAYERS, default='4097')
+					self.config[name].last_played = ConfigText()
+
 				trace("Loading module", f)
 				module = my_import('%s.%s' % (prefix, f))
-				if not hasattr(module, api_provider):
-					continue
-				provider = getattr(module, api_provider)
-				name = provider.NAME
-				self.apiDict[name] = provider
-				self.config[name] = ConfigSubsection()
-				self.config[name].login = ConfigNumberText()
-				self.config[name].password = ConfigNumberText()
-				self.config[name].parental_code = ConfigNumberText()
-				self.config[name].in_menu = ConfigYesNo(default=False)
-				self.config[name].playerid = ConfigSelection(PLAYERS, default='4097')
-				self.config[name].last_played = ConfigText()
+				if hasattr(module, api_function):
+					for p in getattr(module, api_function)():
+						process(p)
+				elif hasattr(module, api_provider):
+					process(getattr(module, api_provider))
 
 			except Exception:  # pylint: disable=broad-except
 				trace("Exception")
@@ -286,6 +297,16 @@ class Manager(object):
 				continue
 
 		trace("Config generated for", self.config.keys())
+
+	def isIgnored(self, name):
+		return name.startswith('M3U-Playlist-') and int(name[-1]) > self.max_playlists
+
+	def getNumberChoices(self):
+		return [(str(n), n) for n in range(4)]
+
+	def setPlaylistNumber(self, n):
+		pluginConfig.max_playlists.value = n
+		pluginConfig.max_playlists.save()
 
 	def getList(self):
 		return sorted(
@@ -377,6 +398,7 @@ class IPtvDreamManager(Screen):
 		actions = [
 			(_("Choose keymap"), self.selectKeymap),
 			(_("Choose skin"), self.selectSkin),
+			(_("Additional playlists number"), self.selectPlaylistNumber),
 		]
 		self.session.openWithCallback(cb, ChoiceBox, _("Context menu"), actions)
 
@@ -414,11 +436,21 @@ class IPtvDreamManager(Screen):
 	def selectSkin(self):
 		def cb(selected):
 			if selected is not None:
-				skinManager.setSkin(selected[0])
+				skinManager.setSkin(selected[1])
 				self.session.openWithCallback(
 					self.restart, MessageBox, _("Restart enigma2 to apply skin changes?"), MessageBox.TYPE_YESNO)
 
 		self.session.openWithCallback(cb, ChoiceBox, title=_("Select skin"), list=[(s, s) for s in skinManager.skins])
+
+	def selectPlaylistNumber(self):
+		def cb(selected):
+			if selected is not None:
+				manager.setPlaylistNumber(selected[1])
+				self.session.openWithCallback(
+					self.restart, MessageBox, _("Restart enigma2 to apply changes?"), MessageBox.TYPE_YESNO)
+
+		self.session.openWithCallback(
+			cb, ChoiceBox, title=_("Select playlist number"), list=manager.getNumberChoices())
 
 	def restart(self, ret):
 		if ret:

@@ -24,19 +24,20 @@ except ImportError:
 		return text
 
 
-class OTTProvider(JsonSettings, M3UProvider):
+class Playlist(JsonSettings, M3UProvider):
 	NAME = "M3U-Playlist"
+	PLAY_LIST = "playlist.m3u"
 	TVG_MAP = True
 
 	def __init__(self, username, password):
-		super(OTTProvider, self).__init__(username, password)
+		super(Playlist, self).__init__(username, password)
 		s = self.getSettings()
 		self.site = s['epg_url'].value
 		self._m3u_from = s['from'].value
 		self.playlist_url = s['playlist_url'].value
 		self._archive_url = s['archive_url'].value
 		self.archive_tag = s['archive'].value
-		self.playlist = "playlist.m3u"
+		self.playlist = self.PLAY_LIST
 		self.name_map = {}
 
 	def start(self):
@@ -106,3 +107,12 @@ class OTTProvider(JsonSettings, M3UProvider):
 			'epg_url': ConfString(_("EPG-json url"), "http://technic.cf/epg-soveni")
 		}
 		return self._safeLoadSettings(settings)
+
+
+def getOTTProviders():
+	yield Playlist
+	for i in range(1, 4):
+		class Provider(Playlist):
+			NAME = "M3U-Playlist-%d" % i
+			PLAY_LIST = "playlist_%d.m3u" % i
+		yield Provider
