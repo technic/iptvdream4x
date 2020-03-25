@@ -12,6 +12,7 @@ from __future__ import print_function
 
 # system imports
 import urllib
+import zlib
 from json import loads as json_loads, dumps as json_dumps
 
 # plugin imports
@@ -56,7 +57,17 @@ class OTTProvider(OfflineFavourites):
 	def _getJson(self, url, params):
 		self.trace(url)
 		try:
-			reply = self.readHttp(url + urllib.urlencode(params))
+			if params:
+				data = urllib.urlencode(params)
+			else:
+				data = None
+			# post request
+			o = self.urlopener.open(url, data=data)
+			enc = o.headers.get('Content-Encoding')
+			if enc and 'gzip' in enc:
+				reply = zlib.decompress(o.read(), 16+zlib.MAX_WBITS)
+			else:
+				reply = o.read()
 		except IOError as e:
 			raise APIException(e)
 		try:
@@ -86,7 +97,7 @@ class OTTProvider(OfflineFavourites):
 
 	def getDayEpg(self, cid, date):
 		data = self._getJson(self.site + '/epg/%s/%s' % (self.channels_data[cid]['id'], date.strftime('%Y-%m-%d')), {})
-		return (EPG(int(e['startTime']), int(e['stopTime']), e['title'].encode('utf-8')) for e in data['res'])
+		return [EPG(int(e['startTime']), int(e['stopTime']), e['title'].encode('utf-8')) for e in data['res']]
 
 	def getPiconUrl(self, cid):
 		return self.channels_data[cid]['logo']
