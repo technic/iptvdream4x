@@ -23,7 +23,7 @@ from ..utils import syncTime, APIException, APILoginFailed, EPG, Channel, Group
 class OTTProvider(OfflineFavourites):
 	NAME = "ITVLive"
 	TITLE = "ITV.LIVE"
-	AUTH_TYPE = "Login"
+	AUTH_TYPE = "Key"
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
