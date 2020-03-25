@@ -152,16 +152,22 @@ class IPtvDreamStreamPlayer(
 				"zapDown": self.nextChannel,
 			}, -1)
 
-		self["archive_actions"] = ActionMap(["IPtvDreamArchiveActions"], {
+		self["archive_actions"] = ActionMap(["IPtvDreamArchiveActions", "NumberActions"], {
 				"exitArchive": self.exitArchive,
 				"playpause": self.playPauseArchive,
 				"play": lambda: self.playPauseArchive(True, False),
 				"pause": lambda: self.playPauseArchive(False, True),
 				"seekForward": self.archiveSeekFwd,
 				"seekBackward": self.archiveSeekRwd,
+				"1": lambda: self.jump(1),
+				"3": lambda: self.jump(3),
+				"4": lambda: self.jump(4),
+				"6": lambda: self.jump(6),
+				"7": lambda: self.jump(7),
+				"9": lambda: self.jump(9),
 			}, -1)
 
-		self["NumberActions"] = NumberActionMap(["NumberActions"], {
+		self["number_actions"] = NumberActionMap(["NumberActions"], {
 				"1": self.keyNumberGlobal,
 				"2": self.keyNumberGlobal,
 				"3": self.keyNumberGlobal,
@@ -277,11 +283,13 @@ class IPtvDreamStreamPlayer(
 		if time_shift:
 			self.archive_pause = None
 			self["live_actions"].setEnabled(False)
+			self["number_actions"].setEnabled(False)
 			self["archive_actions"].setEnabled(True)
 			self["inArchive"].setBoolean(True)
 		else:
 			self["archive_actions"].setEnabled(False)
 			self["live_actions"].setEnabled(True)
+			self["number_actions"].setEnabled(True)
 			self["inArchive"].setBoolean(False)
 
 	def time(self):
@@ -291,22 +299,44 @@ class IPtvDreamStreamPlayer(
 			return None
 
 	def archiveSeekFwd(self):
-		self.session.openWithCallback(self.fwdJumpTo, MinuteInput)
+		self.session.openWithCallback(self.fwdJumpMinutes, MinuteInput)
 
 	def archiveSeekRwd(self):
-		self.session.openWithCallback(self.rwdJumpTo, MinuteInput)
+		self.session.openWithCallback(self.rwdJumpMinutes, MinuteInput)
 
-	def fwdJumpTo(self, minutes):
-		trace("fwdSeek", minutes)
-		self.shift += minutes*60
+	def fwdJumpMinutes(self, minutes):
+		return self.fwdJump(minutes * 60)
+
+	def rwdJumpMinutes(self, minutes):
+		return self.rwdJump(minutes * 60)
+
+	def fwdJump(self, seconds):
+		trace("fwdSeek", seconds)
+		self.shift += seconds
 		if self.shift > 0:
 			self.setArchiveShift(0)
 		self.play(self.cid)
 
-	def rwdJumpTo(self, minutes):
-		trace("rwdSeek", minutes)
-		self.shift -= minutes*60
+	def rwdJump(self, seconds):
+		trace("rwdSeek", seconds)
+		self.shift -= seconds
 		self.play(self.cid)
+
+	def jump(self, n):
+		try:
+			t13 = config.seek.selfdefined_13.value
+			t46 = config.seek.selfdefined_46.value
+			t79 = config.seek.selfdefined_79.value
+		except AttributeError:
+			t13 = 15
+			t46 = 60
+			t79 = 300
+
+		t = {1: -t13, 3: t13, 4: -t46, 6: -t46, 7: -t79, 9: t79}[n]
+		if t < 0:
+			self.rwdJump(abs(t))
+		else:
+			self.fwdJump(abs(t))
 
 	def playPauseArchive(self, play=True, pause=True):
 		if self.archive_pause and play:
