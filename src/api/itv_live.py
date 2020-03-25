@@ -44,7 +44,7 @@ class OTTProvider(OfflineFavourites):
 			except KeyError:
 				g = self.groups[gid] = Group(gid, group, [])
 
-			cid = hash(ch['ch_id'])
+			cid = int(ch['ch_id'][2:])
 			c = Channel(cid, ch['channel_name'].encode('utf-8'), number, bool(int(ch['rec'])), False)
 			self.channels[cid] = c
 			self.channels_data[cid] = {
@@ -57,17 +57,7 @@ class OTTProvider(OfflineFavourites):
 	def _getJson(self, url, params):
 		self.trace(url)
 		try:
-			if params:
-				data = urllib.urlencode(params)
-			else:
-				data = None
-			# post request
-			o = self.urlopener.open(url, data=data)
-			enc = o.headers.get('Content-Encoding')
-			if enc and 'gzip' in enc:
-				reply = zlib.decompress(o.read(), 16+zlib.MAX_WBITS)
-			else:
-				reply = o.read()
+			reply = self.readHttp(url + urllib.urlencode(params))
 		except IOError as e:
 			raise APIException(e)
 		try:
@@ -84,12 +74,9 @@ class OTTProvider(OfflineFavourites):
 		return url.replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
 
 	def getChannelsEpg(self, cids):
-		data = self._getJson(self.site + '/epg.php?', {
-			'obj': json_dumps({
-				'action': 'arraychepg',
-				'chid': ["%d:%s" % (cid, value['id']) for cid, value in self.channels_data.items()],
-			})
-		})
+		data = self._getJson(self.site + '/epg/{"chid": [%s]}/1' % ",".join(
+			'"%d:%s"' % (cid, self.channels_data[cid]['id']) for cid in cids), {})
+
 		for e in data['res']:
 			yield int(e['id']), [EPG(
 				int(e['startTime']), int(e['stopTime']), e['title'].encode('utf-8'), e['desc'].encode('utf-8')
