@@ -85,10 +85,8 @@ class OTTProvider(OfflineFavourites):
 			)]
 
 	def getDayEpg(self, cid, date):
-		data = self._getJson(self.site + '/epg.php?', {
-			'action': 'epg', 'chid': self.channels_data[cid]['id']
-		})
-		return [EPG(int(e['startTime']), int(e['stopTime']), e['title'].encode('utf-8')) for e in data['res']]
+		data = self._getJson(self.site + '/epg/%s/%s' % (self.channels_data[cid]['id'], date.strftime('%Y-%m-%d')), {})
+		return (EPG(int(e['startTime']), int(e['stopTime']), e['title'].encode('utf-8')) for e in data['res'])
 
 	def getPiconUrl(self, cid):
 		return self.channels_data[cid]['logo']
