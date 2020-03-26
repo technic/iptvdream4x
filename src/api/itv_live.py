@@ -12,6 +12,7 @@ from __future__ import print_function
 
 # system imports
 import urllib
+import urllib2
 import zlib
 from json import loads as json_loads, dumps as json_dumps
 
@@ -74,8 +75,9 @@ class OTTProvider(OfflineFavourites):
 		return url.replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
 
 	def getChannelsEpg(self, cids):
-		data = self._getJson(self.site + '/epg/{"chid": [%s]}/1' % ",".join(
-			'"%d:%s"' % (cid, self.channels_data[cid]['id']) for cid in cids), {})
+		req = '/epg/{"chid": [%s]}/1' % ",".join(
+			'"%d:%s"' % (cid, self.channels_data[cid]['id']) for cid in cids)
+		data = self._getJson(self.site + urllib2.quote(req, safe='/:,'), {})
 
 		for e in data['res']:
 			yield int(e['id']), [EPG(
