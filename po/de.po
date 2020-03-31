@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPtvDream 4X\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-09 10:06+0000\n"
+"POT-Creation-Date: 2020-03-31 16:30+0200\n"
 "PO-Revision-Date: 2019-08-21 20:27+0200\n"
 "Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
 "Language-Team: Open Source contribution\n"
@@ -25,6 +25,9 @@ msgstr "Zufügen"
 msgid "Add \"%s\" to favourites"
 msgstr "Zufügen \"%s\" zu favoriten"
 
+msgid "Additional playlists number"
+msgstr ""
+
 msgid "All"
 msgstr "Alle"
 
@@ -34,8 +37,20 @@ msgstr "Alle Sender"
 msgid "Archive"
 msgstr "Archiv"
 
+msgid "Archive url type"
+msgstr ""
+
+msgid "Audio"
+msgstr ""
+
 msgid "Authorization error"
 msgstr "Fehler Autorisation"
+
+msgid "Bitrate"
+msgstr ""
+
+msgid "Can not load EPG:"
+msgstr ""
 
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -43,11 +58,20 @@ msgstr "Abbrechen"
 msgid "Channel Locked"
 msgstr "Sender Gespert"
 
+msgid "Channel:"
+msgstr ""
+
 msgid "Checking depends"
 msgstr "Überprüfung der abhängigkeit"
 
 msgid "Checking updates"
 msgstr "Update Überprüfung"
+
+msgid "Choose keymap"
+msgstr ""
+
+msgid "Choose skin"
+msgstr ""
 
 msgid "Clear login data and exit"
 msgstr "Persöhnliche daten löschen und beenden"
@@ -61,6 +85,12 @@ msgstr "Kontexmenü"
 
 msgid "Details"
 msgstr "Einzelheiten"
+
+msgid "EPG-json url"
+msgstr ""
+
+msgid "Enable archive"
+msgstr ""
 
 msgid "Enter edit mode"
 msgstr "zum Sender bearbeiten"
@@ -83,6 +113,12 @@ msgstr "Plugin Beenden?"
 msgid "Exiting edit mode"
 msgstr "Bearbeitungsmodus verlassen"
 
+msgid "Extensions"
+msgstr ""
+
+msgid "Failed to authentificate your device"
+msgstr ""
+
 #, python-format
 msgid "Failed to install %s!"
 msgstr "Instalation fehlgeschlagen %s!"
@@ -101,6 +137,9 @@ msgstr "Favoriten"
 
 msgid "Finished!"
 msgstr "Fertig!"
+
+msgid "Get playlist"
+msgstr ""
 
 msgid "Groups"
 msgstr "Gruppen"
@@ -133,6 +172,9 @@ msgstr ""
 "- Drücken Sie EXIT, um den Vorgang abzuschließen.\n"
 "Aktivieren Sie den Bearbeitungsmodus?"
 
+msgid "Input pin"
+msgstr ""
+
 #, python-format
 msgid "Installing %s"
 msgstr "Instalation %s"
@@ -140,11 +182,11 @@ msgstr "Instalation %s"
 msgid "Installing update, please wait"
 msgstr "Update Instaliert bitte warten"
 
+msgid "Key"
+msgstr ""
+
 msgid "Keyboard"
 msgstr "Tastatur"
-
-msgid "Keymap"
-msgstr ""
 
 msgid "Login"
 msgstr "Login"
@@ -155,17 +197,27 @@ msgstr "Niedrig"
 msgid "Media server"
 msgstr "Media Server"
 
+msgid "Menu"
+msgstr ""
+
 msgid "No detailed information"
 msgstr "Keine genaue information"
 
 msgid "OK"
 msgstr "ОК"
 
+#, python-format
+msgid "Open archive for \"%s\""
+msgstr ""
+
 msgid "Open plugin settings"
 msgstr "Plugin Einstellungen Öffnen"
 
 msgid "Open provider settings"
 msgstr "Provider Einstellungen Öffnen"
+
+msgid "Options"
+msgstr ""
 
 msgid "Password"
 msgstr "Passwort"
@@ -179,6 +231,13 @@ msgstr ""
 msgid "Playlist"
 msgstr "Playlist"
 
+msgid "Playlist url"
+msgstr ""
+
+#, python-format
+msgid "Please go to %s and generate pin code"
+msgstr ""
+
 msgid "Quality"
 msgstr "Qalität"
 
@@ -189,8 +248,14 @@ msgstr "Löschen"
 msgid "Remove \"%s\" from favourites"
 msgstr "Löschen \"%s\" aus Favoriten"
 
+msgid "Restart enigma2 to apply changes?"
+msgstr ""
+
 msgid "Restart enigma2 to apply keymap changes?"
 msgstr "Starten Sie enigma2 neu, um die Änderungen zu übernehmen?"
+
+msgid "Restart enigma2 to apply skin changes?"
+msgstr ""
 
 msgid "Restarting enigma2 after IPtvDream update..."
 msgstr "Starten Sie enigma2 nach dem Update von IPtvDream neu..."
@@ -198,8 +263,17 @@ msgstr "Starten Sie enigma2 nach dem Update von IPtvDream neu..."
 msgid "Select keymap style"
 msgstr ""
 
+msgid "Select playlist number"
+msgstr ""
+
+msgid "Select skin"
+msgstr ""
+
 msgid "Server"
 msgstr "Server"
+
+msgid "Settings"
+msgstr ""
 
 msgid "Setup"
 msgstr "Einstellungen"
@@ -214,6 +288,9 @@ msgstr "Einstellungen efolgreich beendet."
 msgid "Show all iptv providers"
 msgstr "Alle IPTV-Anbieter anzeigen"
 
+msgid "Show in extensions list"
+msgstr ""
+
 msgid "Show in main menu"
 msgstr "Im Hauptmenü anzeigen"
 
@@ -227,6 +304,12 @@ msgstr "Nach Nummer sortieren"
 msgid "Start of %s failed"
 msgstr "Starten Fehlgeschlagen %s"
 
+msgid "Stream format"
+msgstr ""
+
+msgid "Stream server"
+msgstr ""
+
 msgid "Time shift"
 msgstr "Zeitversätzen"
 
@@ -236,6 +319,12 @@ msgstr "Update Fehlgeschlagen"
 msgid "Updating package list, please wait ..."
 msgstr "Aktualisierung der Paketliste bitte warten sie ..."
 
+msgid "We need to authenticate your device"
+msgstr ""
+
+msgid "Wrong number or pin"
+msgstr ""
+
 msgid "Wrong pin!"
 msgstr "Falsches Passwort!"
 
@@ -243,6 +332,12 @@ msgid "by name"
 msgstr ""
 
 msgid "by number"
+msgstr ""
+
+msgid "from playlist.m3u file"
+msgstr ""
+
+msgid "from url"
 msgstr ""
 
 #~ msgid ""
