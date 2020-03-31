@@ -86,7 +86,7 @@ $(build)/etc/iptvdream/iptvdream.epgmap: src/iptvdream.epgmap
 	install -D -m644 $^ $@
 
 
-langs := uk ru en de
+langs := uk ru en de lt
 
 langs_po := $(addprefix po/,$(langs))
 langs_po := $(addsuffix .po,$(langs_po))

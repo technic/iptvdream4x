@@ -1,0 +1,252 @@
+# English translations for tuxbox-enigma package.
+# Copyright (C) 2005 THE tuxbox-enigma'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the tuxbox-enigma package.
+# Automatically generated, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tuxbox-enigma 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-09 10:06+0000\n"
+"PO-Revision-Date: 2020-03-31 11:53+0300\n"
+"Last-Translator: technic <alexeytech@gmail.com>\n"
+"Language-Team: none\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.3\n"
+
+msgid "Add"
+msgstr "Pridėti"
+
+#, python-format
+msgid "Add \"%s\" to favourites"
+msgstr "Pridėti \"%s\" kanalą į paketą"
+
+msgid "All"
+msgstr "Visi"
+
+msgid "All channels"
+msgstr "Visi kanalai"
+
+msgid "Archive"
+msgstr "Archyvas"
+
+msgid "Authorization error"
+msgstr "Autorizacijos klaida"
+
+msgid "Cancel"
+msgstr "Atšaukti"
+
+msgid "Channel Locked"
+msgstr "Kanalas užrakintas"
+
+msgid "Checking depends"
+msgstr "Tikrinamos priklausomybės"
+
+msgid "Checking updates"
+msgstr "Tikrinami atnaujinimai"
+
+msgid "Clear login data and exit"
+msgstr "Išvalykite prisijungimo duomenis ir išeikite"
+
+#, python-format
+msgid "Configuration of %s"
+msgstr "%s Konfigūracija"
+
+msgid "Context menu"
+msgstr "Kontekstinis meniu"
+
+msgid "Details"
+msgstr "Išsami informacija"
+
+msgid "Enter edit mode"
+msgstr "Įjunkite redagavimo režimą"
+
+msgid "Enter protect password"
+msgstr "Įveskite saugos slaptažodį"
+
+msgid "Error while getting stream url:"
+msgstr "Klaida gaunant srauto URL:"
+
+msgid "Exit"
+msgstr "Išeiti"
+
+msgid "Exit edit mode"
+msgstr "Išeiti iš redagavimo režimo"
+
+msgid "Exit plugin?"
+msgstr "Išeiti iš priedo?"
+
+msgid "Exiting edit mode"
+msgstr "Išeiti iš redagavimo režimo"
+
+#, python-format
+msgid "Failed to install %s!"
+msgstr "Nepavyko įdiegti %s!"
+
+msgid "Failed to save favourites list."
+msgstr "Nepavyko išsaugoti mėgstamų sąrašo."
+
+msgid "Failed to send settings to server."
+msgstr "Nepavyko nusiųsti nustatymų į serverį."
+
+msgid "Failed to update package list!"
+msgstr "Nepavyko atnaujinti paketų sąrašo!"
+
+msgid "Favourites"
+msgstr "Mėgstami"
+
+msgid "Finished!"
+msgstr "Baigta!"
+
+msgid "Groups"
+msgstr "Grupės"
+
+msgid "High"
+msgstr "Aukštas"
+
+#, python-format
+msgid "IPtvDream %s. Providers list:"
+msgstr "„IPtvDream“ %s. Teikėjų sąrašas:"
+
+msgid "IPtvDream critical error"
+msgstr "„IPtvDream“ kritinė klaida"
+
+msgid "IPtvDream plugin is already running!"
+msgstr "„IPtvDream“ priedas jau veikia!"
+
+msgid ""
+"In the editing mode you can reorder your favourites list. Quick help:\n"
+"- Select channel that you want to put to a new position.\n"
+"- Press OK to start moving the channel around with arrow buttons.\n"
+"- Press OK again to fix the position of the channel.\n"
+"- Press EXIT when done.\n"
+"Start editing mode?"
+msgstr ""
+"Redagavimo režime galite pertvarkyti savo mėgstamų sąrašą. Greita pagalba:\n"
+"- Pasirinkite kanalą, kurį norite perkelti į naują vietą.\n"
+"- Spauskite OK, jei norite perkelti kanalą rodyklių aukštyn/žemyn mygtukais.\n"
+"- Spauskite OK, kad išsaugotumėte naują kanalo vietą.\n"
+"- Paspauskite EXIT, kai baigsite.\n"
+"- Pradėti redagavimo režimą?"
+
+#, python-format
+msgid "Installing %s"
+msgstr "Įdiegiama %s"
+
+msgid "Installing update, please wait"
+msgstr "Įdiegiate naujinimą, palaukite"
+
+msgid "Keyboard"
+msgstr "Klaviatūra"
+
+msgid "Keymap"
+msgstr "Klavišų žemėlapis"
+
+msgid "Login"
+msgstr "Prisijungti"
+
+msgid "Low"
+msgstr "Žemas"
+
+msgid "Media server"
+msgstr "Medijos serveris"
+
+msgid "No detailed information"
+msgstr "Nėra išsamios informacijos"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Open archive for \"%s\""
+msgstr "Atidaryti  \"%s\" kanalo archyvą"
+
+msgid "Open plugin settings"
+msgstr "Atidarykite priedo nustatymus"
+
+msgid "Open provider settings"
+msgstr "Atidarykite teikėjo nustatymus"
+
+msgid "Password"
+msgstr "Slaptažodis"
+
+msgid "Payment expires: "
+msgstr "Mokėjimo terminas baigiasi: "
+
+msgid "Player ID"
+msgstr "Grotuvo ID"
+
+msgid "Playlist"
+msgstr "Grojaraštis"
+
+msgid "Quality"
+msgstr "Kokybė"
+
+msgid "Remove"
+msgstr "Šalinti"
+
+#, python-format
+msgid "Remove \"%s\" from favourites"
+msgstr "Šalinkite \"%s\" iš mėgstamų"
+
+msgid "Restart enigma2 to apply keymap changes?"
+msgstr "Iš naujo paleiskite enigma2, kad pritaikytumėte klavišų žemėlapio pakeitimus?"
+
+msgid "Restarting enigma2 after IPtvDream update..."
+msgstr "Iš naujo paleidžiama enigma2 po „IPtvDream“ naujinimo ..."
+
+msgid "Select keymap style"
+msgstr "Pasirinkite klaviatūros stilių"
+
+msgid "Server"
+msgstr "Serveris"
+
+msgid "Setup"
+msgstr "Valdymas"
+
+#, python-format
+msgid "Setup finished with %d errors."
+msgstr "Valdymas baigtas su %d klaidomis."
+
+msgid "Setup finished without errors."
+msgstr "Valdymas baigtas be klaidų."
+
+msgid "Show all iptv providers"
+msgstr "Rodyti visus „iptv“ teikėjus"
+
+msgid "Show in main menu"
+msgstr "Rodyti pagrindiniame meniu"
+
+msgid "Sort by name"
+msgstr "Rūšiuoti pagal pavadinimą"
+
+msgid "Sort by number"
+msgstr "Rūšiuoti pagal numerį"
+
+#, python-format
+msgid "Start of %s failed"
+msgstr "%s pradžia nepavyko"
+
+msgid "Time shift"
+msgstr "Laiko poslinkis"
+
+msgid "Update failed"
+msgstr "Naujinimas nepavyko"
+
+msgid "Updating package list, please wait ..."
+msgstr "Naujinamas paketų sąrašas, palaukite ..."
+
+msgid "Wrong pin!"
+msgstr "Neteisingas PIN kodas!"
+
+msgid "by name"
+msgstr "pagal pavadinimą"
+
+msgid "by number"
+msgstr "pagal numerį"
+
+#~ msgid "text"
+#~ msgstr "search"
