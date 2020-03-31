@@ -66,6 +66,7 @@ class IPtvDreamConfig(ConfigListScreen, Screen):
 			]
 		cfg_list += [
 			getConfigListEntry(_("Show in main menu"), cfg.in_menu),
+			getConfigListEntry(_("Show in extensions list"), cfg.in_extensions),
 			getConfigListEntry(_("Player ID"), cfg.playerid)
 		]
 		ConfigListScreen.__init__(self, cfg_list, session)

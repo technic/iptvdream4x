@@ -279,6 +279,7 @@ class Manager(object):
 					self.config[name].password = ConfigNumberText()
 					self.config[name].parental_code = ConfigNumberText()
 					self.config[name].in_menu = ConfigYesNo(default=False)
+					self.config[name].in_extensions = ConfigYesNo(default=False)
 					self.config[name].playerid = ConfigSelection(PLAYERS, default='4097')
 					self.config[name].last_played = ConfigText()
 
