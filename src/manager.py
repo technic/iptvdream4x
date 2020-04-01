@@ -18,11 +18,13 @@ import os
 # enigma2 imports
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
+from Screens.InputBox import InputBox
 from Screens.ChoiceBox import ChoiceBox
 from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
-	ConfigText, ConfigYesNo, ConfigSelection
+	ConfigText, ConfigYesNo, ConfigSelection, ConfigInteger
 from Components.ActionMap import ActionMap
 from Components.Button import Button
+from Components.Input import Input
 from Components.Sources.List import List
 from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
 from Tools.Import import my_import
@@ -76,33 +78,6 @@ class SkinManager(object):
 
 skinManager = SkinManager()
 skinManager.load()
-
-
-def getPlugins():
-	plugins = []
-	if NAME == 'all':
-		f_name = resolveFilename(SCOPE_SYSETC, 'iptvdream.json')
-		try:
-			with open(f_name, 'r') as f:
-				to_import = json_load(f)['imports']
-		except Exception as e:
-			trace("[IPtvDream] config error:", e)
-			to_import = []
-		for n in to_import:
-			mod = __import__('api.%s' % n)
-			getProviders = getattr(mod, 'getProviders')
-	return plugins
-
-
-def loadProviders():
-	if NAME == 'all':
-		fname = resolveFilename(SCOPE_SYSETC, 'iptvdream.json')
-		try:
-			with open(fname, 'r') as f:
-				to_import = json_load(f)['imports']
-		except Exception as e:
-			trace("[IPtvDream] config error:", e)
-			to_import = []
 
 
 class PluginStarter(Screen):
@@ -197,8 +172,67 @@ class PluginStarter(Screen):
 		self.session.nav.playService(self.last_service)
 
 
+class TokenPluginStarter(PluginStarter):
+	def start(self):
+		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
+		if self.cfg.password.value == '':
+			self.askToken()
+		else:
+			self.auth()
+
+	def auth(self):
+		try:
+			self.db.start()
+			if self.task == 'provider_settings':
+				self.task = None
+				self.openProviderSettings()
+			else:
+				self.run()
+			return
+		except APILoginFailed as e:
+			cb = lambda ret: self.askToken()
+			message = _("We need to authenticate your device") + "\n" + str(e)
+		except APIException as e:
+			cb = lambda ret: self.exit()
+			message = _("Start of %s failed") % self.db.NAME + "\n" + str(e)
+		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
+
+	def askToken(self):
+		""" Ask user for pin code and obtain a token"""
+		self.session.openWithCallback(
+			self._codeEntered, InputBox, title=_("Please go to %s and generate pin code") % self.apiClass.token_page,
+			windowTitle=_("Input pin"), type=Input.NUMBER)
+
+	def _codeEntered(self, code):
+		if code is None:
+			return self.exit()
+		try:
+			token = self.db.getToken(code)
+			self._saveToken(token)
+			return self.auth()
+		except APILoginFailed as e:
+			cb = lambda ret: self.askToken()
+			message = _("Failed to authentificate your device") + "\n" + str(e)
+		except APIException as e:
+			cb = lambda ret: self.exit()
+			message = _("Start of %s failed") % self.db.NAME + "\n" + str(e)
+		self._saveToken(None)
+		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
+
+	def _saveToken(self, token):
+		if token is None:
+			token = ''
+		assert isinstance(token, str)
+		self.cfg.password.value = token
+		self.cfg.password.save()
+		manager.saveConfig()
+
+
 class Manager(object):
 	def __init__(self):
+		pluginConfig.max_playlists = ConfigInteger(0, (0, 9))
+		self.max_playlists = pluginConfig.max_playlists.value
+
 		self.enabled = {}
 		self.apiDict = {}
 		self.config = config.IPtvDream = ConfigSubDict()
@@ -207,6 +241,7 @@ class Manager(object):
 
 	def initList(self):
 		api_provider = 'OTTProvider'
+		api_function = 'getOTTProviders'
 		prefix = 'Plugins.Extensions.IPtvDream.api'
 		api_path = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream/api')
 
@@ -225,22 +260,30 @@ class Manager(object):
 			seen.add(f)
 
 			try:
+				def process(provider):
+					name = provider.NAME
+					if self.isIgnored(name):
+						trace("Ignore", name)
+						return
+					self.apiDict[name] = provider
+					self.config[name] = ConfigSubsection()
+					self.config[name].login = ConfigNumberText()
+					self.config[name].password = ConfigNumberText()
+					self.config[name].parental_code = ConfigNumberText()
+					self.config[name].in_menu = ConfigYesNo(default=False)
+					self.config[name].in_extensions = ConfigYesNo(default=False)
+					self.config[name].playerid = ConfigSelection(PLAYERS, default='4097')
+					self.config[name].last_played = ConfigText()
+
 				trace("Loading module", f)
 				module = my_import('%s.%s' % (prefix, f))
-				if not hasattr(module, api_provider):
-					continue
-				provider = getattr(module, api_provider)
-				name = provider.NAME
-				self.apiDict[name] = provider
-				self.config[name] = ConfigSubsection()
-				self.config[name].login = ConfigNumberText()
-				self.config[name].password = ConfigNumberText()
-				self.config[name].parental_code = ConfigNumberText()
-				self.config[name].in_menu = ConfigYesNo(default=False)
-				self.config[name].playerid = ConfigSelection(PLAYERS, default='4097')
-				self.config[name].last_played = ConfigText()
+				if hasattr(module, api_function):
+					for p in getattr(module, api_function)():
+						process(p)
+				elif hasattr(module, api_provider):
+					process(getattr(module, api_provider))
 
-			except Exception:
+			except Exception:  # pylint: disable=broad-except
 				trace("Exception")
 				import traceback
 				traceback.print_exc()
@@ -248,10 +291,20 @@ class Manager(object):
 
 		trace("Config generated for", self.config.keys())
 
+	def isIgnored(self, name):
+		return name.startswith('M3U-Playlist-') and int(name[-1]) > self.max_playlists
+
+	def getNumberChoices(self):
+		return [(str(n), n) for n in range(4)]
+
+	def setPlaylistNumber(self, n):
+		pluginConfig.max_playlists.value = n
+		pluginConfig.max_playlists.save()
+
 	def getList(self):
 		return sorted(
 			({'name': v.NAME, 'title': v.TITLE} for v in self.apiDict.values()),
-			key=lambda item: item['name'])
+			key=lambda item: item['name'].lower())
 
 	def getApi(self, name):
 		return self.apiDict[name]
@@ -307,7 +360,7 @@ class IPtvDreamManager(Screen):
 	def ok(self):
 		entry = self.getSelected()
 		if entry is not None:
-			self.session.open(PluginStarter, entry['name'])
+			self.startPlugin(entry['name'])
 
 	def setup(self):
 		entry = self.getSelected()
@@ -317,21 +370,28 @@ class IPtvDreamManager(Screen):
 	def providerSetup(self):
 		entry = self.getSelected()
 		if entry is not None:
-			self.session.open(PluginStarter, entry['name'], 'provider_settings')
+			self.startPlugin(entry['name'], 'provider_settings')
+
+	def startPlugin(self, name, task=None):
+		if manager.getApi(name).AUTH_TYPE == 'Token':
+			self.session.open(TokenPluginStarter, name, task)
+		else:
+			self.session.open(PluginStarter, name, task)
 
 	def cancel(self):
 		self.close()
 
 	def showMenu(self):
-		
+
 		def cb(entry=None):
 			if entry is not None:
 				func = entry[1]
 				func()
-		
+
 		actions = [
 			(_("Choose keymap"), self.selectKeymap),
 			(_("Choose skin"), self.selectSkin),
+			(_("Additional playlists number"), self.selectPlaylistNumber),
 		]
 		self.session.openWithCallback(cb, ChoiceBox, _("Context menu"), actions)
 
@@ -369,11 +429,21 @@ class IPtvDreamManager(Screen):
 	def selectSkin(self):
 		def cb(selected):
 			if selected is not None:
-				skinManager.setSkin(selected[0])
+				skinManager.setSkin(selected[1])
 				self.session.openWithCallback(
-					self.restart, MessageBox, _("Restart enigma2 to apply keymap changes?"), MessageBox.TYPE_YESNO)
+					self.restart, MessageBox, _("Restart enigma2 to apply skin changes?"), MessageBox.TYPE_YESNO)
 
 		self.session.openWithCallback(cb, ChoiceBox, title=_("Select skin"), list=[(s, s) for s in skinManager.skins])
+
+	def selectPlaylistNumber(self):
+		def cb(selected):
+			if selected is not None:
+				manager.setPlaylistNumber(selected[1])
+				self.session.openWithCallback(
+					self.restart, MessageBox, _("Restart enigma2 to apply changes?"), MessageBox.TYPE_YESNO)
+
+		self.session.openWithCallback(
+			cb, ChoiceBox, title=_("Select playlist number"), list=manager.getNumberChoices())
 
 	def restart(self, ret):
 		if ret:

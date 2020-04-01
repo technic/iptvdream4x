@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-09 10:06+0000\n"
-"PO-Revision-Date: 2015-06-25 00:40+0200\n"
+"POT-Creation-Date: 2020-03-31 16:30+0200\n"
+"PO-Revision-Date: 2020-03-31 17:10+0200\n"
 "Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
 "Language-Team: Russian / enigma(c) Ukraine, Kiev>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: iso-8859-15\n"
-"X-Generator: Poedit 1.8.1\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid "Add"
 msgstr "Добавить"
@@ -24,6 +24,9 @@ msgstr "Добавить"
 #, python-format
 msgid "Add \"%s\" to favourites"
 msgstr "Добавить \"%s\" в избранное"
+
+msgid "Additional playlists number"
+msgstr "Количество дополнительных плейлистов"
 
 msgid "All"
 msgstr "Все"
@@ -34,8 +37,20 @@ msgstr "Все каналы"
 msgid "Archive"
 msgstr "Архив"
 
+msgid "Archive url type"
+msgstr "Тип архива"
+
+msgid "Audio"
+msgstr "Аудио"
+
 msgid "Authorization error"
 msgstr "Ошибка авторизации"
+
+msgid "Bitrate"
+msgstr "Битрейт"
+
+msgid "Can not load EPG:"
+msgstr "Не удалось загрузить EPG"
 
 msgid "Cancel"
 msgstr "Отменить"
@@ -43,11 +58,20 @@ msgstr "Отменить"
 msgid "Channel Locked"
 msgstr "Канал закрыт"
 
+msgid "Channel:"
+msgstr "Канал:"
+
 msgid "Checking depends"
 msgstr "Проверка зависимостей"
 
 msgid "Checking updates"
 msgstr "Проверка обновлений"
+
+msgid "Choose keymap"
+msgstr "Выбрать keymap"
+
+msgid "Choose skin"
+msgstr "Выбрать skin"
 
 msgid "Clear login data and exit"
 msgstr "Удалить данные авторизации и выйти"
@@ -61,6 +85,12 @@ msgstr "Контекстное меню"
 
 msgid "Details"
 msgstr "Детали"
+
+msgid "EPG-json url"
+msgstr "Ссылка на EPG-json"
+
+msgid "Enable archive"
+msgstr "Наличие архива"
 
 msgid "Enter edit mode"
 msgstr "Войти в режим сортировки"
@@ -83,6 +113,12 @@ msgstr "Выйти из плагина?"
 msgid "Exiting edit mode"
 msgstr "Выход из режима редактирования"
 
+msgid "Extensions"
+msgstr "Расширения"
+
+msgid "Failed to authentificate your device"
+msgstr "Ошибка при авторизации вашего устройства"
+
 #, python-format
 msgid "Failed to install %s!"
 msgstr "Не удалось установить %s!"
@@ -100,7 +136,10 @@ msgid "Favourites"
 msgstr "Избранное"
 
 msgid "Finished!"
-msgstr ""
+msgstr "Завершено!"
+
+msgid "Get playlist"
+msgstr "Брать плейлист"
 
 msgid "Groups"
 msgstr "Группы"
@@ -133,6 +172,9 @@ msgstr ""
 "- Нажмите EXIT для завершения.\n"
 "Войти в режим редактирования?"
 
+msgid "Input pin"
+msgstr "Введите код"
+
 #, python-format
 msgid "Installing %s"
 msgstr "Установка %s"
@@ -140,11 +182,11 @@ msgstr "Установка %s"
 msgid "Installing update, please wait"
 msgstr "Установка обновления, пожалуйста ожидайте"
 
+msgid "Key"
+msgstr "Ключ"
+
 msgid "Keyboard"
 msgstr "Клавиатура"
-
-msgid "Keymap"
-msgstr ""
 
 msgid "Login"
 msgstr "Логин"
@@ -155,17 +197,27 @@ msgstr "Низкое"
 msgid "Media server"
 msgstr "Медиа сервер"
 
+msgid "Menu"
+msgstr "Меню"
+
 msgid "No detailed information"
 msgstr "Нет подробной информации"
 
 msgid "OK"
 msgstr "ОК"
 
+#, python-format
+msgid "Open archive for \"%s\""
+msgstr "Открыть архив для \"%s\""
+
 msgid "Open plugin settings"
 msgstr "Открыть настройки плагина"
 
 msgid "Open provider settings"
 msgstr "Открыть настройки провайдера"
+
+msgid "Options"
+msgstr "Опции"
 
 msgid "Password"
 msgstr "Пароль"
@@ -179,6 +231,13 @@ msgstr ""
 msgid "Playlist"
 msgstr "Плейлист"
 
+msgid "Playlist url"
+msgstr "Ссылка на плейлист"
+
+#, python-format
+msgid "Please go to %s and generate pin code"
+msgstr "Откройте %s и сгенерируйте пин-код"
+
 msgid "Quality"
 msgstr "Качество"
 
@@ -189,17 +248,32 @@ msgstr "Удалить"
 msgid "Remove \"%s\" from favourites"
 msgstr "Удалить \"%s\" из избранного"
 
+msgid "Restart enigma2 to apply changes?"
+msgstr "Перезапустить enigma2 для применения изменений?"
+
 msgid "Restart enigma2 to apply keymap changes?"
+msgstr "Перезапустить enigma2 для применения изменений?"
+
+msgid "Restart enigma2 to apply skin changes?"
 msgstr "Перезапустить enigma2 для применения изменений?"
 
 msgid "Restarting enigma2 after IPtvDream update..."
 msgstr "Перезагрузка enigma2 после обновления IPtvDream..."
 
 msgid "Select keymap style"
-msgstr ""
+msgstr "Выберите тип keymap"
+
+msgid "Select playlist number"
+msgstr "Выберите количество плейлистов"
+
+msgid "Select skin"
+msgstr "Выберите skin"
 
 msgid "Server"
 msgstr "Сервер"
+
+msgid "Settings"
+msgstr "Настройки"
 
 msgid "Setup"
 msgstr "Настройка"
@@ -214,6 +288,9 @@ msgstr "Настройка завершена без ошибок."
 msgid "Show all iptv providers"
 msgstr "Cписок провайдеров iptv"
 
+msgid "Show in extensions list"
+msgstr "Отображать в списке расширений"
+
 msgid "Show in main menu"
 msgstr "Отображать в главном меню"
 
@@ -227,6 +304,12 @@ msgstr "Отсортировать по номеру"
 msgid "Start of %s failed"
 msgstr "Не удалось запустить %s"
 
+msgid "Stream format"
+msgstr "Формат потока"
+
+msgid "Stream server"
+msgstr "Сервер вещания"
+
 msgid "Time shift"
 msgstr "Сдвиг времени"
 
@@ -236,14 +319,26 @@ msgstr "Ошибка при обновлении"
 msgid "Updating package list, please wait ..."
 msgstr "Обновление списка пакетов, пожалуйста ожидайте ..."
 
+msgid "We need to authenticate your device"
+msgstr "Необходима авторизация вашего устройства"
+
+msgid "Wrong number or pin"
+msgstr "Неправильный логин или пин код"
+
 msgid "Wrong pin!"
 msgstr "Не верный код!"
 
 msgid "by name"
-msgstr ""
+msgstr "по имени"
 
 msgid "by number"
-msgstr ""
+msgstr "по номеру"
+
+msgid "from playlist.m3u file"
+msgstr "из файла playlist.m3u"
+
+msgid "from url"
+msgstr "по ссылке"
 
 #~ msgid ""
 #~ "Access denied!\n"

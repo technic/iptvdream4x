@@ -121,10 +121,16 @@ class EPG(object):
 		return tdmSec(self.end - t)
 
 	def percent(self, t, size):
-		return size * self.timePass(t) / self.duration()
+		try:
+			return size * self.timePass(t) / self.duration()
+		except ZeroDivisionError:
+			return size
 
 	def progress(self, t):
-		return float(self.timePass(t)) / float(self.duration())
+		try:
+			return float(self.timePass(t)) / float(self.duration())
+		except ZeroDivisionError:
+			return 1.0
 
 	def isAt(self, t):
 		return self.begin <= t < self.end
@@ -343,8 +349,8 @@ class Channel(EPGDB):
 		:param int cid: channel id
 		:param str name: channel title
 		:param int number: channel number
-		:param has_archive:
-		:param is_protected:
+		:param bool has_archive:
+		:param bool is_protected:
 		"""
 		EPGDB.__init__(self)
 		self.cid = cid

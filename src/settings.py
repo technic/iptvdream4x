@@ -60,8 +60,13 @@ class IPtvDreamConfig(ConfigListScreen, Screen):
 				getConfigListEntry(_("Login"), cfg.login),
 				getConfigListEntry(_("Password"), cfg.password),
 			]
+		elif apiClass.AUTH_TYPE == "Key":
+			cfg_list = [
+				getConfigListEntry(_("Key"), cfg.login),
+			]
 		cfg_list += [
 			getConfigListEntry(_("Show in main menu"), cfg.in_menu),
+			getConfigListEntry(_("Show in extensions list"), cfg.in_extensions),
 			getConfigListEntry(_("Player ID"), cfg.playerid)
 		]
 		ConfigListScreen.__init__(self, cfg_list, session)

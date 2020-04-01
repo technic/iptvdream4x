@@ -126,10 +126,10 @@
     <ePixmap pixmap="IPtvDream/menu/back1.png" position="0,0" size="1280,720" zPosition="-10"/>
     <eLabel backgroundColor="#00ffffff" position="800,120" size="430,244" zPosition="2"/>
     <widget backgroundColor="#ff000000" position="802,122" render="Pig" size="426,240" source="session.VideoPicture" zPosition="3"/>
-    <widget backgroundColor="#001b2c47" font="Regular;26" halign="right" position="799,71" render="Label" size="100,28" source="global.CurrentTime" transparent="1" foregroundColor="snow">
+    <widget backgroundColor="#001b2c47" font="Regular;26" position="837,67" render="Label" size="100,28" source="global.CurrentTime" transparent="1">
       <convert type="ClockToText">Default</convert>
     </widget>
-    <widget backgroundColor="#001b2c47" font="Regular;20" halign="right" position="969,74" render="Label" size="252,25" source="global.CurrentTime" transparent="1" foregroundColor="snow">
+    <widget backgroundColor="#001b2c47" font="Regular;20" position="1122,74" render="Label" size="128,25" source="global.CurrentTime" transparent="1">
       <convert type="ClockToText">Format:%d.%m.%Y</convert>
     </widget>
     <eLabel backgroundColor="#001b2c47" font="Regular;35" halign="center" position="392,23" shadowColor="#000064c7" size="459,43" text="EPG List" transparent="1"/>
@@ -157,11 +157,13 @@
     <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="390,680" size="260,24" transparent="1" zPosition="1"/>
     <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/green.png" position="650,680" size="24,24"/>
     <widget backgroundColor="#00000000" font="Regular;20" name="key_green" position="680,680" size="260,24" transparent="1" zPosition="1"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/calendar.png" size="20,22" position="1097,73"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDream/icons/clock.png" size="25,25" position="807,70"/>
   </screen>
   <screen size="862,552" name="IPtvDreamEpgInfo" position="center,center">
-    <widget size="816,48" name="epgName" position="24,18" font="Regular;28" foregroundColor="gold2" transparent="1"/>
+    <widget size="816,76" name="epgName" position="24,18" font="Regular;28" foregroundColor="gold2" transparent="1"/>
     <widget name="epgProgress" position="164,515" size="127,15" backgroundColor="#0038435a" borderColor="#00bbbbbb" borderWidth="1" transparent="1"/>
-    <widget size="802,419" name="epgDescription" position="31,74" transparent="1" font="Regular;25"/>
+    <widget size="802,390" name="epgDescription" position="31,103" transparent="1" font="Regular;25"/>
     <widget size="130,32" name="epgTime" position="31,505" font="Regular;26"/>
     <widget size="100,32" name="epgDuration" position="304,505" font="Regular;26"/>
     <widget size="121,30" name="epgDate" position="713,511" font="Regular;21" foregroundColor="blue2" halign="right"/>

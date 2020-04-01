@@ -62,16 +62,19 @@ class Korona(JsonSettings, M3UProvider):
 
 		name = ""
 		group = "Unknown"
+		logo = ""
 		archive = False
 		tvg = None
+		cid = None
 
 		import re
 		tvg_regexp = re.compile('#EXTINF:.*tvg-id="([^"]*)"')
 		group_regexp = re.compile('#EXTINF:.*group-title="([^"]*)"')
+		logo_regexp = re.compile('#EXTINF:.*tvg-logo="([^"]*)"')
 		archive_regexp = re.compile('#EXTINF:.*catchup-days="([^"]*)"')
+		cid_regexp = re.compile('#EXTINF:.*CUID="([^"]*)"')
 
 		for line in lines:
-			# print(line)
 			if line.startswith("#EXTINF:"):
 				name = line.strip().split(',')[1]
 				m = tvg_regexp.match(line)
@@ -92,19 +95,29 @@ class Korona(JsonSettings, M3UProvider):
 					group = m.group(1)
 				else:
 					group = "Unknown"
+				m = logo_regexp.match(line)
+				if m:
+					logo = m.group(1)
+				else:
+					logo = ""
 				m = archive_regexp.match(line)
 				if m:
 					archive = True
 				else:
 					archive = False
+				m = cid_regexp.match(line)
+				if m:
+					cid = int(m.group(1))
+				else:
+					cid = None
 			elif line.startswith("#EXTGRP:"):
 				group = line.strip().split(':')[1]
-			elif line.startswith("#EXTM3U"):
+			elif line.startswith("#"):
 				continue
 			elif not line.strip():
 				continue
 			else:
-				url = line.strip().replace("localhost", self._domain).replace("00000000000000", self._key)
+				url = line.strip()
 				assert url.find("://") > 0, "line: " + url
 				try:
 					gid = group_names[group]
@@ -115,12 +128,13 @@ class Korona(JsonSettings, M3UProvider):
 					g = self.groups[gid] = Group(gid, group.decode('utf-8').capitalize().encode('utf-8'), [])
 
 				num += 1
-				cid = num  # TODO: use url_regexp
+				if cid is None:
+					cid = hash(url)
 				c = Channel(cid, name, num, archive)
 				self.channels[cid] = c
 				g.channels.append(c)
-				# TODO: add logo if we have it
-				self.channels_data[cid] = {'tvg': tvg, 'url': url, 'logo': ""}
+
+				self.channels_data[cid] = {'tvg': tvg, 'url': url, 'logo': logo}
 				if tvg is not None:
 					try:
 						self.tvg_ids[tvg].append(cid)

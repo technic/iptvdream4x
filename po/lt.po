@@ -2,39 +2,40 @@
 # Copyright (C) 2005 THE tuxbox-enigma'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the tuxbox-enigma package.
 # Automatically generated, 2005.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-31 16:30+0200\n"
-"PO-Revision-Date: 2011-08-24 17:33+0300\n"
+"PO-Revision-Date: 2020-03-31 11:53+0300\n"
 "Last-Translator: technic <alexeytech@gmail.com>\n"
 "Language-Team: none\n"
-"Language: \n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid "Add"
-msgstr ""
+msgstr "Pridėti"
 
 #, python-format
 msgid "Add \"%s\" to favourites"
-msgstr ""
+msgstr "Pridėti \"%s\" kanalą į paketą"
 
 msgid "Additional playlists number"
 msgstr ""
 
 msgid "All"
-msgstr ""
+msgstr "Visi"
 
 msgid "All channels"
-msgstr ""
+msgstr "Visi kanalai"
 
 msgid "Archive"
-msgstr ""
+msgstr "Archyvas"
 
 msgid "Archive url type"
 msgstr ""
@@ -43,7 +44,7 @@ msgid "Audio"
 msgstr ""
 
 msgid "Authorization error"
-msgstr ""
+msgstr "Autorizacijos klaida"
 
 msgid "Bitrate"
 msgstr ""
@@ -52,19 +53,19 @@ msgid "Can not load EPG:"
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
+msgstr "Atšaukti"
 
 msgid "Channel Locked"
-msgstr ""
+msgstr "Kanalas užrakintas"
 
 msgid "Channel:"
 msgstr ""
 
 msgid "Checking depends"
-msgstr ""
+msgstr "Tikrinamos priklausomybės"
 
 msgid "Checking updates"
-msgstr ""
+msgstr "Tikrinami atnaujinimai"
 
 msgid "Choose keymap"
 msgstr ""
@@ -73,17 +74,17 @@ msgid "Choose skin"
 msgstr ""
 
 msgid "Clear login data and exit"
-msgstr ""
+msgstr "Išvalykite prisijungimo duomenis ir išeikite"
 
 #, python-format
 msgid "Configuration of %s"
-msgstr ""
+msgstr "%s Konfigūracija"
 
 msgid "Context menu"
-msgstr ""
+msgstr "Kontekstinis meniu"
 
 msgid "Details"
-msgstr ""
+msgstr "Išsami informacija"
 
 msgid "EPG-json url"
 msgstr ""
@@ -92,25 +93,25 @@ msgid "Enable archive"
 msgstr ""
 
 msgid "Enter edit mode"
-msgstr ""
+msgstr "Įjunkite redagavimo režimą"
 
 msgid "Enter protect password"
-msgstr ""
+msgstr "Įveskite saugos slaptažodį"
 
 msgid "Error while getting stream url:"
-msgstr ""
+msgstr "Klaida gaunant srauto URL:"
 
 msgid "Exit"
-msgstr ""
+msgstr "Išeiti"
 
 msgid "Exit edit mode"
-msgstr ""
+msgstr "Išeiti iš redagavimo režimo"
 
 msgid "Exit plugin?"
-msgstr ""
+msgstr "Išeiti iš priedo?"
 
 msgid "Exiting edit mode"
-msgstr ""
+msgstr "Išeiti iš redagavimo režimo"
 
 msgid "Extensions"
 msgstr ""
@@ -120,41 +121,41 @@ msgstr ""
 
 #, python-format
 msgid "Failed to install %s!"
-msgstr ""
+msgstr "Nepavyko įdiegti %s!"
 
 msgid "Failed to save favourites list."
-msgstr ""
+msgstr "Nepavyko išsaugoti mėgstamų sąrašo."
 
 msgid "Failed to send settings to server."
-msgstr ""
+msgstr "Nepavyko nusiųsti nustatymų į serverį."
 
 msgid "Failed to update package list!"
-msgstr ""
+msgstr "Nepavyko atnaujinti paketų sąrašo!"
 
 msgid "Favourites"
-msgstr ""
+msgstr "Mėgstami"
 
 msgid "Finished!"
-msgstr ""
+msgstr "Baigta!"
 
 msgid "Get playlist"
 msgstr ""
 
 msgid "Groups"
-msgstr ""
+msgstr "Grupės"
 
 msgid "High"
-msgstr ""
+msgstr "Aukštas"
 
 #, python-format
 msgid "IPtvDream %s. Providers list:"
-msgstr ""
+msgstr "„IPtvDream“ %s. Teikėjų sąrašas:"
 
 msgid "IPtvDream critical error"
-msgstr ""
+msgstr "„IPtvDream“ kritinė klaida"
 
 msgid "IPtvDream plugin is already running!"
-msgstr ""
+msgstr "„IPtvDream“ priedas jau veikia!"
 
 msgid ""
 "In the editing mode you can reorder your favourites list. Quick help:\n"
@@ -164,65 +165,71 @@ msgid ""
 "- Press EXIT when done.\n"
 "Start editing mode?"
 msgstr ""
+"Redagavimo režime galite pertvarkyti savo mėgstamų sąrašą. Greita pagalba:\n"
+"- Pasirinkite kanalą, kurį norite perkelti į naują vietą.\n"
+"- Spauskite OK, jei norite perkelti kanalą rodyklių aukštyn/žemyn mygtukais.\n"
+"- Spauskite OK, kad išsaugotumėte naują kanalo vietą.\n"
+"- Paspauskite EXIT, kai baigsite.\n"
+"- Pradėti redagavimo režimą?"
 
 msgid "Input pin"
 msgstr ""
 
 #, python-format
 msgid "Installing %s"
-msgstr ""
+msgstr "Įdiegiama %s"
 
 msgid "Installing update, please wait"
-msgstr ""
+msgstr "Įdiegiate naujinimą, palaukite"
 
 msgid "Key"
 msgstr ""
 
 msgid "Keyboard"
-msgstr ""
+msgstr "Klaviatūra"
 
 msgid "Login"
-msgstr ""
+msgstr "Prisijungti"
 
 msgid "Low"
-msgstr ""
+msgstr "Žemas"
 
 msgid "Media server"
-msgstr ""
+msgstr "Medijos serveris"
 
 msgid "Menu"
 msgstr ""
 
 msgid "No detailed information"
-msgstr ""
+msgstr "Nėra išsamios informacijos"
 
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #, python-format
 msgid "Open archive for \"%s\""
-msgstr ""
+msgstr "Atidaryti  \"%s\" kanalo archyvą"
 
 msgid "Open plugin settings"
-msgstr ""
+msgstr "Atidarykite priedo nustatymus"
 
 msgid "Open provider settings"
-msgstr ""
+msgstr "Atidarykite teikėjo nustatymus"
 
 msgid "Options"
 msgstr ""
 
 msgid "Password"
-msgstr ""
+msgstr "Slaptažodis"
 
 msgid "Payment expires: "
-msgstr ""
+msgstr "Mokėjimo terminas baigiasi: "
 
 msgid "Player ID"
-msgstr ""
+msgstr "Grotuvo ID"
 
 msgid "Playlist"
-msgstr ""
+msgstr "Grojaraštis"
 
 msgid "Playlist url"
 msgstr ""
@@ -232,29 +239,29 @@ msgid "Please go to %s and generate pin code"
 msgstr ""
 
 msgid "Quality"
-msgstr ""
+msgstr "Kokybė"
 
 msgid "Remove"
-msgstr ""
+msgstr "Šalinti"
 
 #, python-format
 msgid "Remove \"%s\" from favourites"
-msgstr ""
+msgstr "Šalinkite \"%s\" iš mėgstamų"
 
 msgid "Restart enigma2 to apply changes?"
 msgstr ""
 
 msgid "Restart enigma2 to apply keymap changes?"
-msgstr ""
+msgstr "Iš naujo paleiskite enigma2, kad pritaikytumėte klavišų žemėlapio pakeitimus?"
 
 msgid "Restart enigma2 to apply skin changes?"
 msgstr ""
 
 msgid "Restarting enigma2 after IPtvDream update..."
-msgstr ""
+msgstr "Iš naujo paleidžiama enigma2 po „IPtvDream“ naujinimo ..."
 
 msgid "Select keymap style"
-msgstr ""
+msgstr "Pasirinkite klaviatūros stilių"
 
 msgid "Select playlist number"
 msgstr ""
@@ -263,39 +270,39 @@ msgid "Select skin"
 msgstr ""
 
 msgid "Server"
-msgstr ""
+msgstr "Serveris"
 
 msgid "Settings"
 msgstr ""
 
 msgid "Setup"
-msgstr ""
+msgstr "Valdymas"
 
 #, python-format
 msgid "Setup finished with %d errors."
-msgstr ""
+msgstr "Valdymas baigtas su %d klaidomis."
 
 msgid "Setup finished without errors."
-msgstr ""
+msgstr "Valdymas baigtas be klaidų."
 
 msgid "Show all iptv providers"
-msgstr ""
+msgstr "Rodyti visus „iptv“ teikėjus"
 
 msgid "Show in extensions list"
 msgstr ""
 
 msgid "Show in main menu"
-msgstr ""
+msgstr "Rodyti pagrindiniame meniu"
 
 msgid "Sort by name"
-msgstr ""
+msgstr "Rūšiuoti pagal pavadinimą"
 
 msgid "Sort by number"
-msgstr ""
+msgstr "Rūšiuoti pagal numerį"
 
 #, python-format
 msgid "Start of %s failed"
-msgstr ""
+msgstr "%s pradžia nepavyko"
 
 msgid "Stream format"
 msgstr ""
@@ -304,13 +311,13 @@ msgid "Stream server"
 msgstr ""
 
 msgid "Time shift"
-msgstr ""
+msgstr "Laiko poslinkis"
 
 msgid "Update failed"
-msgstr ""
+msgstr "Naujinimas nepavyko"
 
 msgid "Updating package list, please wait ..."
-msgstr ""
+msgstr "Naujinamas paketų sąrašas, palaukite ..."
 
 msgid "We need to authenticate your device"
 msgstr ""
@@ -319,19 +326,22 @@ msgid "Wrong number or pin"
 msgstr ""
 
 msgid "Wrong pin!"
-msgstr ""
+msgstr "Neteisingas PIN kodas!"
 
 msgid "by name"
-msgstr ""
+msgstr "pagal pavadinimą"
 
 msgid "by number"
-msgstr ""
+msgstr "pagal numerį"
 
 msgid "from playlist.m3u file"
 msgstr ""
 
 msgid "from url"
 msgstr ""
+
+#~ msgid "Keymap"
+#~ msgstr "Klavišų žemėlapis"
 
 #~ msgid "text"
 #~ msgstr "search"

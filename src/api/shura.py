@@ -28,7 +28,7 @@ except ImportError:
 
 class OTTProvider(JsonSettings, M3UProvider):
 	NAME = "ShuraTV"
-	AUTH_TYPE = "Login"
+	AUTH_TYPE = "Key"
 	TVG_MAP = False
 
 	def __init__(self, username, password):
