@@ -13,6 +13,6 @@ set -xe
 
 key="$HOME/.ssh/id_rsa"
 if test ! -f "$key"; then
-    ssh-keygen -N "" -f "$HOME/.ssh/id_rsa"
+    ssh-keygen -N "" -f "$key"
 fi
 ssh-copy-id "root@${host}"
