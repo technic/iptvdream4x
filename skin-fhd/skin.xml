@@ -28,7 +28,7 @@
   </colors>
   <screen backgroundColor="#ff000000" flags="wfNoBorder" name="IPtvDreamStreamPlayer" position="center,790" size="1764,262" title="IPTV">
     <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/infobar.png" position="0,center" size="1764,262" zPosition="-5"/>
-    <widget backgroundColor="bg" foregroundColor="red" position="197,32" render="Pixmap" size="43,32" source="inArchive" transparent="1" zPosition="5" pixmap="IPtvDreamFHD/icons/archive.png">
+    <widget position="197,32" render="Pixmap" size="43,32" source="inArchive" alphatest="blend" zPosition="5" pixmap="IPtvDreamFHD/icons/archive.png">
       <convert type="ConditionalShowHide"/>
     </widget>
     <widget backgroundColor="bg" font="Regular;24" halign="right" position="1150,34" render="Label" size="69,33" source="session.CurrentService" transparent="1" zPosition="1" foregroundColor="gray">
