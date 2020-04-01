@@ -106,7 +106,6 @@ class IPtvDreamStreamPlayer(
 
 		self.setTitle(self.db.NAME)
 		self["channelName"] = Label("")
-		self["channelNumber"] = Label("")
 		# Epg widgets
 		self["currentName"] = Label("")
 		self["nextName"] = Label("")
