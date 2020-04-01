@@ -31,11 +31,11 @@
     <widget backgroundColor="bg" foregroundColor="red" position="197,32" render="Pixmap" size="43,32" source="inArchive" transparent="1" zPosition="5" pixmap="IPtvDreamFHD/icons/archive.png">
       <convert type="ConditionalShowHide"/>
     </widget>
-    <widget backgroundColor="bg" font="Regular;24" halign="right" position="1150,29" render="Label" size="69,33" source="session.CurrentService" transparent="1" zPosition="1" foregroundColor="gray">
+    <widget backgroundColor="bg" font="Regular;24" halign="right" position="1150,34" render="Label" size="69,33" source="session.CurrentService" transparent="1" zPosition="1" foregroundColor="gray">
       <convert type="ServiceInfo">VideoWidth</convert>
     </widget>
-    <eLabel backgroundColor="bg" font="Regular;24" halign="center" position="1224,29" shadowOffset="-1,-1" size="15,33" text="x" transparent="1" foregroundColor="gray"/>
-    <widget font="Regular;24" position="1244,29" render="Label" size="69,33" source="session.CurrentService" transparent="1" zPosition="1" foregroundColor="gray" backgroundColor="bg">
+    <eLabel backgroundColor="bg" font="Regular;24" halign="center" position="1224,34" shadowOffset="-1,-1" size="15,33" text="x" transparent="1" foregroundColor="gray"/>
+    <widget font="Regular;24" position="1244,34" render="Label" size="69,33" source="session.CurrentService" transparent="1" zPosition="1" foregroundColor="gray" backgroundColor="bg">
       <convert type="ServiceInfo">VideoHeight</convert>
     </widget>
     <ePixmap position="1569,26" size="32,32" pixmap="IPtvDreamFHD/icons/clock.png" alphatest="blend"/>
@@ -50,7 +50,7 @@
     <widget backgroundColor="bgblack" font="Regular;37" foregroundColor="fg" name="currentTime" position="72,81" size="97,48" transparent="1"/>
     <widget backgroundColor="bgblack" font="Regular;37" foregroundColor="fg" name="currentName" noWrap="1" position="178,81" size="1190,46" transparent="1" zPosition="21"/>
     <widget backgroundColor="bgblack" font="Regular;34" foregroundColor="fg" halign="right" name="currentDuration" position="1384,81" size="146,48" transparent="1" valign="bottom"/>
-    <widget name="progressBar" position="71,133" size="1457,11" transparent="1" zPosition="2" foregroundColor="gold2"/>
+    <widget name="progressBar" position="74,133" size="1453,11" transparent="1" zPosition="2" foregroundColor="gold2"/>
     <widget backgroundColor="bgblack" font="Regular;37" foregroundColor="gray" name="nextTime" position="72,150" size="98,48" transparent="1"/>
     <widget backgroundColor="bgblack" font="Regular;37" foregroundColor="gray" name="nextName" noWrap="1" position="178,150" size="1190,46" transparent="1" zPosition="21"/>
     <widget backgroundColor="bgblack" font="Regular;34" foregroundColor="gray" halign="right" name="nextDuration" position="1384,149" size="146,48" transparent="1" valign="bottom"/>
@@ -75,7 +75,8 @@
     <widget backgroundColor="#00000000" font="Regular;24" name="key_green" position="532,210" size="257,34" transparent="1" zPosition="1" foregroundColor="snow"/>
     <widget backgroundColor="#00000000" font="Regular;24" name="key_yellow" position="884,210" size="257,34" transparent="1" zPosition="1" foregroundColor="snow"/>
     <widget backgroundColor="#00000000" font="Regular;24" name="key_blue" position="1257,210" size="257,34" transparent="1" foregroundColor="snow"/>
-    <widget size="100,40" position="79,26" name="provider" borderWidth="3" borderColor="fgframe"/>
+    <widget size="100,40" position="79,26" name="provider" zPosition="1"/>
+    <ePixmap alphatest="blend" size="105,45" position="76,23" pixmap="IPtvDreamFHD/providerFrame.png"/>
   </screen>
   <screen flags="wfNoBorder" name="IPtvDreamChannels" position="0,0" size="1920,1080" title="Channel Selection">
     <ePixmap pixmap="IPtvDreamFHD/back1.png" position="1,center" size="1920,1080" zPosition="-10" alphatest="blend"/>
