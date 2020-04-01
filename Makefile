@@ -124,7 +124,6 @@ endif
 update-po:
 	$(MAKE) UPDATE_PO=y $(langs_po)
 
-$(info AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $(skininstall))
 
 #install: $(build)/etc/iptvdream/iptvdream.epgmap
 install: $(pycinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(moinstall)
