@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-03-31 16:30+0200\n"
-"PO-Revision-Date: 2015-06-25 00:40+0200\n"
+"PO-Revision-Date: 2020-04-02 11:33+0200\n"
 "Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
 "Language-Team: Russian / enigma(c) Ukraine, Kiev>\n"
 "Language: uk\n"
@@ -12,17 +12,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: iso-8859-15\n"
-"X-Generator: Poedit 1.8.1\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid "Add"
 msgstr "Додати"
 
-#, python-format
 msgid "Add \"%s\" to favourites"
 msgstr "Додати \"%s\" в обрані"
 
 msgid "Additional playlists number"
-msgstr ""
+msgstr "Кількість додаткових плейлистів"
 
 msgid "All"
 msgstr "Всі"
@@ -34,19 +33,19 @@ msgid "Archive"
 msgstr "Архів"
 
 msgid "Archive url type"
-msgstr ""
+msgstr "Тип архіву"
 
 msgid "Audio"
-msgstr ""
+msgstr "Аудіо"
 
 msgid "Authorization error"
 msgstr "Помилка авторизації"
 
 msgid "Bitrate"
-msgstr ""
+msgstr "Бітрейт"
 
 msgid "Can not load EPG:"
-msgstr ""
+msgstr "Не вдалося завантажити EPG:"
 
 msgid "Cancel"
 msgstr "Скасувати"
@@ -55,7 +54,7 @@ msgid "Channel Locked"
 msgstr "Канал закритий"
 
 msgid "Channel:"
-msgstr ""
+msgstr "Канал:"
 
 msgid "Checking depends"
 msgstr "Перевірка залежностей"
@@ -64,15 +63,14 @@ msgid "Checking updates"
 msgstr "Перевірка оновлення"
 
 msgid "Choose keymap"
-msgstr ""
+msgstr "Вибрати keymap"
 
 msgid "Choose skin"
-msgstr ""
+msgstr "Вибрати skin"
 
 msgid "Clear login data and exit"
-msgstr "Видалити дані авторизації і вийти"
+msgstr "Видалити дані авторизації та вийти"
 
-#, python-format
 msgid "Configuration of %s"
 msgstr "Налаштування %s"
 
@@ -83,13 +81,13 @@ msgid "Details"
 msgstr "Деталі"
 
 msgid "EPG-json url"
-msgstr ""
+msgstr "Посилання на EPG-json"
 
 msgid "Enable archive"
-msgstr ""
+msgstr "Наявність архіву"
 
 msgid "Enter edit mode"
-msgstr "Ввійти в режим сортування"
+msgstr "Увійти в режим сортування"
 
 msgid "Enter protect password"
 msgstr "Введіть захисний код"
@@ -107,35 +105,34 @@ msgid "Exit plugin?"
 msgstr "Вийти з плагіна?"
 
 msgid "Exiting edit mode"
-msgstr "Вихід з режиму редактування"
+msgstr "Вихід з режиму редагування"
 
 msgid "Extensions"
-msgstr ""
+msgstr "Разширення"
 
 msgid "Failed to authentificate your device"
-msgstr ""
+msgstr "Помилка при авторизації вашого пристрою"
 
-#, python-format
 msgid "Failed to install %s!"
 msgstr "Не вдалося встановити %s!"
 
 msgid "Failed to save favourites list."
-msgstr "Не вдалося зберегти список обраних."
+msgstr "Не вдалося зберегти список обраного."
 
 msgid "Failed to send settings to server."
 msgstr "Не вдалося зберегти налаштування на сервері."
 
 msgid "Failed to update package list!"
-msgstr "Не вдалося оновити списик пакетів!"
+msgstr "Не вдалося обновити список пакетів!"
 
 msgid "Favourites"
 msgstr "Обрані"
 
 msgid "Finished!"
-msgstr ""
+msgstr "Завершено!"
 
 msgid "Get playlist"
-msgstr ""
+msgstr "Отримати список відтворення"
 
 msgid "Groups"
 msgstr "Групи"
@@ -143,12 +140,11 @@ msgstr "Групи"
 msgid "High"
 msgstr "Високе"
 
-#, python-format
 msgid "IPtvDream %s. Providers list:"
 msgstr "IPtvDream %s. Список провайдерів:"
 
 msgid "IPtvDream critical error"
-msgstr "IPtvDream кретична помилка"
+msgstr "IPtvDream критична помилка"
 
 msgid "IPtvDream plugin is already running!"
 msgstr "IPtvDream плагін вже запущений!"
@@ -161,17 +157,16 @@ msgid ""
 "- Press EXIT when done.\n"
 "Start editing mode?"
 msgstr ""
-"В режимі редактування Ви можете упорядкувати список обрані. Довідка:\n"
-"- Виберіть канал, який Ви хочете перемістити на нову позицію.\n"
-"- Натисніть OK та почніть переміщувати канал стрілками вверх або вниз.\n"
+"У режимі редагування Ви можете впорядкувати список обране. Довідка:\n"
+"- Виберіть канал, який ви хочете перемістити на нову позицію.\n"
+"- Натисніть OK і почніть переміщати канал стрілками вгору або вниз.\n"
 "- Натисніть OK знову щоб зафіксувати нове положення каналу.\n"
 "- Натисніть EXIT для завершення.\n"
-"Ввійти в режим редактування?"
+"Увійти в режим редагування?"
 
 msgid "Input pin"
-msgstr ""
+msgstr "Введіть код"
 
-#, python-format
 msgid "Installing %s"
 msgstr "Встановлення %s"
 
@@ -179,7 +174,7 @@ msgid "Installing update, please wait"
 msgstr "Встановлення оновлення, будь ласка зачекайте"
 
 msgid "Key"
-msgstr ""
+msgstr "Ключ"
 
 msgid "Keyboard"
 msgstr "Клавіатура"
@@ -194,7 +189,7 @@ msgid "Media server"
 msgstr "Медіа сервер"
 
 msgid "Menu"
-msgstr ""
+msgstr "Меню"
 
 msgid "No detailed information"
 msgstr "Немає докладної інформації"
@@ -202,18 +197,17 @@ msgstr "Немає докладної інформації"
 msgid "OK"
 msgstr "ОК"
 
-#, python-format
 msgid "Open archive for \"%s\""
-msgstr ""
+msgstr "Відкрити архів для \"%s\""
 
 msgid "Open plugin settings"
 msgstr "Відкрити налаштування плагіна"
 
 msgid "Open provider settings"
-msgstr "Відкрити параметри провайдера"
+msgstr "Відкрити налаштування провайдера"
 
 msgid "Options"
-msgstr ""
+msgstr "Опції"
 
 msgid "Password"
 msgstr "Пароль"
@@ -221,18 +215,14 @@ msgstr "Пароль"
 msgid "Payment expires: "
 msgstr "Підписка закінчується: "
 
-msgid "Player ID"
-msgstr ""
-
 msgid "Playlist"
 msgstr "Плейлист"
 
 msgid "Playlist url"
-msgstr ""
+msgstr "Посилання на плейлист"
 
-#, python-format
 msgid "Please go to %s and generate pin code"
-msgstr ""
+msgstr "Відкрийте %s і згенеруйте пін-код"
 
 msgid "Quality"
 msgstr "Якість"
@@ -240,41 +230,39 @@ msgstr "Якість"
 msgid "Remove"
 msgstr "Видалити"
 
-#, python-format
 msgid "Remove \"%s\" from favourites"
 msgstr "Видалити \"%s\" з обраного"
 
 msgid "Restart enigma2 to apply changes?"
-msgstr ""
+msgstr "Перезапустити enigma2 для застосування змін?"
 
 msgid "Restart enigma2 to apply keymap changes?"
-msgstr "Перезапустіть enigma2 для застосування змін?"
+msgstr "Перезапустіть enigma2, щоб застосувати зміни клавіатури?"
 
 msgid "Restart enigma2 to apply skin changes?"
-msgstr ""
+msgstr "Перезапустіть enigma2, щоб застосувати зміни скіна?"
 
 msgid "Restarting enigma2 after IPtvDream update..."
-msgstr "Перезавантаження enigma2 після оновлення IPtvDream..."
+msgstr "Перезагрузка enigma2 після оновлення IPtvDream..."
 
 msgid "Select keymap style"
-msgstr ""
+msgstr "Виберіть тип keymap"
 
 msgid "Select playlist number"
-msgstr ""
+msgstr "Виберіть кількість плейлистів"
 
 msgid "Select skin"
-msgstr ""
+msgstr "Виберіть skin"
 
 msgid "Server"
 msgstr "Сервер"
 
 msgid "Settings"
-msgstr ""
+msgstr "Налаштування"
 
 msgid "Setup"
 msgstr "Налаштування"
 
-#, python-format
 msgid "Setup finished with %d errors."
 msgstr "Налаштування завершено помилок %d."
 
@@ -282,10 +270,10 @@ msgid "Setup finished without errors."
 msgstr "Налаштування завершено без помилок."
 
 msgid "Show all iptv providers"
-msgstr "Cписок провайдерів iptv"
+msgstr "Список провайдерів iptv"
 
 msgid "Show in extensions list"
-msgstr ""
+msgstr "Відображати в списку розширень"
 
 msgid "Show in main menu"
 msgstr "Відображати в головному меню"
@@ -296,15 +284,14 @@ msgstr "Відсортувати по імені"
 msgid "Sort by number"
 msgstr "Відсортувати по номеру"
 
-#, python-format
 msgid "Start of %s failed"
 msgstr "Не вдалося запустити %s"
 
 msgid "Stream format"
-msgstr ""
+msgstr "Формат потоку"
 
 msgid "Stream server"
-msgstr ""
+msgstr "Сервер мовлення"
 
 msgid "Time shift"
 msgstr "Зсув часу"
@@ -316,22 +303,22 @@ msgid "Updating package list, please wait ..."
 msgstr "Оновлення списку пакетів, будь ласка зачекайте ..."
 
 msgid "We need to authenticate your device"
-msgstr ""
+msgstr "Необхідна авторизація вашого пристрою"
 
 msgid "Wrong number or pin"
-msgstr ""
+msgstr "Неправильний логін або пін код"
 
 msgid "Wrong pin!"
-msgstr "Не вірний код!"
+msgstr "Невірний код!"
 
 msgid "by name"
-msgstr ""
+msgstr "по імені"
 
 msgid "by number"
-msgstr ""
+msgstr "по номеру"
 
 msgid "from playlist.m3u file"
-msgstr ""
+msgstr "з файла playlist.m3u"
 
 msgid "from url"
-msgstr ""
+msgstr "по URL-адресу"
