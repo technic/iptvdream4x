@@ -27,7 +27,6 @@ from Components.config import config, configfile
 from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 from Components.Slider import Slider
-from Components.Button import Button
 from Components.ServiceEventTracker import InfoBarBase
 from Components.Input import Input
 from Components.MenuList import MenuList
@@ -115,10 +114,10 @@ class IPtvDreamStreamPlayer(
 		self["nextDuration"] = Label("")
 		self["progressBar"] = Slider(0, PROGRESS_SIZE)
 		# Buttons
-		self["key_red"] = Button(_("Archive"))
-		self["key_green"] = Button(_("Settings"))
-		self["key_yellow"] = Button(_("Audio"))
-		self["key_blue"] = Button(_("Extensions"))
+		self["key_red"] = Label(_("Archive"))
+		self["key_green"] = Label(_("Settings"))
+		self["key_yellow"] = Label(_("Audio"))
+		self["key_blue"] = Label(_("Extensions"))
 
 		# TODO: think more
 		self["archiveDate"] = Label("")
@@ -802,10 +801,10 @@ class IPtvDreamChannels(Screen):
 		from manager import manager
 		self.cfg = manager.getConfig(self.db.NAME)
 
-		self["key_red"] = Button(_("All"))
-		self["key_green"] = Button(_("Groups"))
-		self["key_yellow"] = Button(_("Add"))
-		self["key_blue"] = Button(_("Favourites"))
+		self["key_red"] = Label(_("All"))
+		self["key_green"] = Label(_("Groups"))
+		self["key_yellow"] = Label(_("Add"))
+		self["key_blue"] = Label(_("Favourites"))
 
 		self.list = self["list"] = ChannelList()
 
@@ -1255,8 +1254,8 @@ class IPtvDreamEpg(Screen):
 		Screen.__init__(self, session)
 
 		self["btn_red"] = Pixmap()
-		self["key_red"] = Button(_("Archive"))
-		self["key_green"] = Button(_("Details"))
+		self["key_red"] = Label(_("Archive"))
+		self["key_green"] = Label(_("Details"))
 		self["list"] = self.list = ListSource()
 
 		self["epgName"] = Label()
@@ -1426,7 +1425,7 @@ class IPtvDreamEpgInfo(Screen):
 		self.onLayoutFinish.append(self.initGui)
 
 		self["btn_red"] = Pixmap()
-		self["key_red"] = Button(_("Archive"))
+		self["key_red"] = Label(_("Archive"))
 
 		if not self.hasArchive():
 			self["btn_red"].hide()
