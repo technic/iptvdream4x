@@ -148,9 +148,9 @@
     <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/icons/clock.png" size="32,32" position="1212,107"/>
   </screen>
   <screen size="1293,828" name="IPtvDreamEpgInfo" position="center,center">
-    <widget size="1224,72" name="epgName" position="36,27" font="Regular;42" foregroundColor="fgactive" transparent="1"/>
+    <widget size="1224,114" name="epgName" position="36,27" font="Regular;42" foregroundColor="fgactive" transparent="1"/>
     <widget name="epgProgress" position="246,773" size="191,23" borderColor="#00bbbbbb" borderWidth="1" transparent="1" foregroundColor="gold2"/>
-    <widget size="1203,629" name="epgDescription" position="47,111" transparent="1" font="Regular;38" foregroundColor="fg"/>
+    <widget size="1203,585" name="epgDescription" position="47,155" transparent="1" font="Regular;38" foregroundColor="fg"/>
     <widget size="195,48" name="epgTime" position="47,758" font="Regular;39" foregroundColor="fg"/>
     <widget size="150,48" name="epgDuration" position="456,758" font="Regular;39" foregroundColor="fg"/>
     <widget size="182,45" name="epgDate" position="1070,767" font="Regular;32" foregroundColor="blue2" halign="right"/>
