@@ -22,7 +22,6 @@ from Components.Label import Label
 from Components.ServiceEventTracker import ServiceEventTracker
 from Screens.Screen import Screen
 from enigma import iPlayableService
-from skin import colorNames, SkinError
 
 from layer import eTimer
 from utils import trace
