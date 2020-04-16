@@ -35,9 +35,10 @@ class OTTProvider(JsonSettings, M3UProvider):
 		super(OTTProvider, self).__init__(username, password)
 		self.site = "http://technic.cf/epg-iptvxone/"
 		s = self.getSettings()
+		self._format = s['format'].value
 		self.playlist_url = "http://pl.ottg.tv/get.php?" + urlencode({
 			'username': self.username, 'password': self.password,
-			'type': 'm3u', 'output': 'm3u8', 'censored': s['censored'].value,
+			'type': 'm3u', 'output': self._format, 'censored': s['censored'].value,
 		})
 		self._url_regexp = re.compile(r"ch_id=(\d+)")
 
@@ -51,11 +52,11 @@ class OTTProvider(JsonSettings, M3UProvider):
 		else:
 			cid = hash(url)
 			self.trace("Failed to get cid from url", url)
-		# TODO: archive not on all channels - use catchup-days
 		return Channel(cid, name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
 
 	def getSettings(self):
 		return self._safeLoadSettings({
+			'format': ConfSelection(_("Stream format"), 'ts', [('ts', "MPEG-TS"), ('hls', "HLS")]),
 			'censored': ConfSelection(_("Playlist"), '0', [('0', "Lite"), ('1', "Full")]),
 		})
 
@@ -63,4 +64,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 		url = self.channels_data[cid]['url']
 		if time is None:
 			return url
-		return url.replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
+		if self._format == "hls":
+			return url.replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
+		else:
+			return url.replace('mpegts', 'timeshift_abs/%s' % time.strftime('%s'))
