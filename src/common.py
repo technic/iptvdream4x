@@ -68,15 +68,6 @@ class ConfigNumberText(ConfigText):
 		return super(ConfigNumberText, self).handleKey(key)
 
 
-def parseColor(s):  # FIXME: copy-paste form skin source
-	if s[0] != '#':
-		try:
-			return colorNames[s]
-		except:
-			raise SkinError("color '%s' must be #aarrggbb or valid named color" % (s))
-	return int(s[1:], 0x10)
-
-
 class StaticTextService(StaticText):
 	service = property(StaticText.getText, StaticText.setText)
 

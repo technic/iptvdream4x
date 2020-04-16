@@ -46,7 +46,7 @@ from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN, SCOPE_SKIN, S
 from enigma import eListboxPythonMultiContent, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, \
 	eLabel, eSize, ePoint
 from enigma import eServiceReference
-from skin import parseFont
+from skin import parseFont, parseColor
 
 # plugin imports
 from layer import eTimer
@@ -54,7 +54,7 @@ from common import NumberEnter
 from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG
 from api.abstract_api import AbstractStream
 from loc import translate as _
-from common import parseColor, ShowHideScreen, AutoAudioSelection, MainMenuScreen
+from common import ShowHideScreen, AutoAudioSelection, MainMenuScreen
 from standby import standbyNotifier
 from cache import LiveEpgWorker
 from lib.epg import EpgProgress
@@ -541,21 +541,21 @@ class ChannelList(MenuList):
 		if self.skinAttributes is not None:
 			for (attrib, value) in self.skinAttributes:
 				if attrib == "colorEventProgressbar":
-					self.col[attrib] = parseColor(value)
+					self.col[attrib] = parseColor(value).argb()
 				elif attrib == "colorEventProgressbarSelected":
-					self.col[attrib] = parseColor(value)
+					self.col[attrib] = parseColor(value).argb()
 				elif attrib == "colorEventProgressbarBorder":
-					self.col[attrib] = parseColor(value)
+					self.col[attrib] = parseColor(value).argb()
 				elif attrib == "colorEventProgressbarBorderSelected":
-					self.col[attrib] = parseColor(value)
+					self.col[attrib] = parseColor(value).argb()
 				elif attrib == "colorServiceDescription":
-					self.col[attrib] = parseColor(value)
+					self.col[attrib] = parseColor(value).argb()
 				elif attrib == "colorServiceDescriptionSelected":
-					self.col[attrib] = parseColor(value)
+					self.col[attrib] = parseColor(value).argb()
 				elif attrib == "colorServicePlaying":
-					self.col[attrib] = parseColor(value)
+					self.col[attrib] = parseColor(value).argb()
 				elif attrib == "colorServicePlayingSelected":
-					self.col[attrib] = parseColor(value)
+					self.col[attrib] = parseColor(value).argb()
 				elif attrib == "picServiceEventProgressbar":
 					pic = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, value))
 					if pic:
