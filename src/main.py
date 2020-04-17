@@ -330,7 +330,7 @@ class IPtvDreamStreamPlayer(
 			t46 = 60
 			t79 = 300
 
-		t = {1: -t13, 3: t13, 4: -t46, 6: -t46, 7: -t79, 9: t79}[n]
+		t = {1: -t13, 3: t13, 4: -t46, 6: t46, 7: -t79, 9: t79}[n]
 		if t < 0:
 			self.rwdJump(abs(t))
 		else:
