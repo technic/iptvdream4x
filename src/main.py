@@ -1275,7 +1275,6 @@ class IPtvDreamEpg(Screen):
 		self.cid = cid
 		self.shift = shift
 		self.day = 0
-		self.single = False
 		self.list.onSelectionChanged.append(self.updateLabels)
 		self.onShown.append(self.start)
 
