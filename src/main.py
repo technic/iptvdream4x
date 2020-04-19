@@ -1294,8 +1294,8 @@ class IPtvDreamEpg(Screen):
 		if self.cid is None:
 			return
 
-		time = syncTime()
-		d = time + secTd(self.shift) + timedelta(self.day)
+		time = syncTime() + secTd(self.shift)
+		d = time + timedelta(self.day)
 
 		epg_list = []
 		try:
