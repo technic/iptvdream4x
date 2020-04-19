@@ -540,21 +540,11 @@ class ChannelList(MenuList):
 		attribs = []
 		if self.skinAttributes is not None:
 			for (attrib, value) in self.skinAttributes:
-				if attrib == "colorEventProgressbar":
-					self.col[attrib] = parseColor(value).argb()
-				elif attrib == "colorEventProgressbarSelected":
-					self.col[attrib] = parseColor(value).argb()
-				elif attrib == "colorEventProgressbarBorder":
-					self.col[attrib] = parseColor(value).argb()
-				elif attrib == "colorEventProgressbarBorderSelected":
-					self.col[attrib] = parseColor(value).argb()
-				elif attrib == "colorServiceDescription":
-					self.col[attrib] = parseColor(value).argb()
-				elif attrib == "colorServiceDescriptionSelected":
-					self.col[attrib] = parseColor(value).argb()
-				elif attrib == "colorServicePlaying":
-					self.col[attrib] = parseColor(value).argb()
-				elif attrib == "colorServicePlayingSelected":
+				if attrib in (
+						"colorEventProgressbar", "colorEventProgressbarSelected",
+						"colorEventProgressbarBorder", "colorEventProgressbarBorderSelected",
+						"colorServiceDescription", "colorServiceDescriptionSelected",
+						"colorServicePlaying", "colorServicePlayingSelected"):
 					self.col[attrib] = parseColor(value).argb()
 				elif attrib == "picServiceEventProgressbar":
 					pic = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, value))
