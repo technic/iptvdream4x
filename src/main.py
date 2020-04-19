@@ -1259,7 +1259,7 @@ class IPtvDreamEpg(Screen):
 
 		self["actions"] = ActionMap(
 			["OkCancelActions", "IPtvDreamEpgListActions", "ColorActions"], {
-				"cancel": self.exit,
+				"cancel": self.close,
 				"ok": self.archive,
 				"up": self.up,
 				"down": self.down,
@@ -1349,9 +1349,6 @@ class IPtvDreamEpg(Screen):
 	def infoClosed(self, time=None):
 		if time is not None:
 			self.close(self.cid, time)
-
-	def exit(self):
-		self.close()
 
 	def up(self):
 		idx = self.list.getIndex()
