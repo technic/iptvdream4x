@@ -131,9 +131,9 @@ references:
     filters:
       branches:
         only:
-          - /^wow-.*/
+          - /^WowTv-.*/
       tags:
-        only: /^wow\/.*/
+        only: /^WowTv\/.*/
 
 workflows:
   task-all:
@@ -171,4 +171,4 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /wow\/v\/(\d)+(\.(\d)+)+$/
+              only: /WowTv\/v\/(\d)+(\.(\d)+)+$/
