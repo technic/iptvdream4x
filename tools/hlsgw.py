@@ -19,6 +19,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import print_function
+
 import socket
 import urlparse
 import urllib
@@ -30,8 +32,8 @@ from SocketServer import ThreadingMixIn
 
 
 SUPPORTED_VERSION = 3
-
-UA = 'hlsgw/0.1'
+USER_AGENT = "hlsgw/0.1"
+PORT_NUMBER = 7001
 
 
 def getBestBitrate(variants, bitrate=0):
@@ -41,7 +43,7 @@ def getBestBitrate(variants, bitrate=0):
 
 
 def readM3U8Chunks(URL, duration=30, chunk_size=1024*4):
-	req = urllib2.Request(url=URL, headers={'User-Agent': UA})
+	req = urllib2.Request(url=URL, headers={'User-Agent': USER_AGENT})
 	conn = urllib2.urlopen(url=req, timeout=60)
 	while True:
 		data = conn.read(chunk_size)
@@ -72,7 +74,7 @@ def isM3U8Valid(conn):
 
 
 def getM3U8Lines_iterator(url):
-	req = urllib2.Request(url=url, headers={'User-Agent': UA})
+	req = urllib2.Request(url=url, headers={'User-Agent': USER_AGENT})
 	con = urllib2.urlopen(url=req, timeout=10)
 	enc = isM3U8Valid(con)
 	for l in con:
@@ -130,8 +132,8 @@ def getM3U8MediaList(url):
 			elif tag == '#EXT-X-VERSION':
 				assert len(attribs) == 1
 				if int(attribs[0]) > SUPPORTED_VERSION:
-					print "[warn] file version %s exceeds supported version %d; some things might be broken" \
-						% (attribs[0], SUPPORTED_VERSION)
+					print("[warn] file version %s exceeds supported version %d; some things might be broken"
+											% (attribs[0], SUPPORTED_VERSION))
 			else:
 				pass
 		else:
@@ -168,7 +170,6 @@ def serveHLS(url, write_cb, bitrate=0):
 			media_bytes_total = 0
 			data = ''
 			for media in list(getM3U8MediaList(url)):
-				print media
 				if media is None:
 					continue
 				seq, duration, targetduration, media_url = media
@@ -206,11 +207,8 @@ def serveHLS(url, write_cb, bitrate=0):
 				time.sleep(targetduration*3.0)
 			changed -= 1
 	except Exception as e:
-		print 'exception:', str(e)
+		print('exception:', str(e))
 		raise
-
-
-PORT_NUMBER = 7001
 
 
 class HlsHandler(BaseHTTPRequestHandler):
@@ -220,12 +218,11 @@ class HlsHandler(BaseHTTPRequestHandler):
 		"""Handler for the GET requests"""
 		try:
 			url = urllib.unquote(self.path)
-			print url
 			n = url.find('url=')
 			if n == -1 or not len(url[n+4:]):
 				self.send_response(404)
 				self.end_headers()
-				print "No hls url found"
+				print("No hls url found")
 				return
 
 			url = url[n+4:]
@@ -233,11 +230,11 @@ class HlsHandler(BaseHTTPRequestHandler):
 			self.send_header('Content-type', "video/mp2t")
 			self.end_headers()
 
-			print "Serving HLS url %s" % url
+			print("Serving HLS url %s" % url)
 			serveHLS(url, self.wfile.write)
-			print "Serving HLS ended"
+			print("Serving HLS ended")
 		except Exception as e:
-			print "Serving HLS ended with exception: %s" % e
+			print("Serving HLS ended with exception: %s" % e)
 
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
@@ -248,13 +245,13 @@ def serve():
 	try:
 		socket.setdefaulttimeout(30)
 		server = HTTPServer(('127.0.0.1', PORT_NUMBER), HlsHandler)
-		print 'Started hls gateway on port ', PORT_NUMBER
+		print('Started hls gateway on port', PORT_NUMBER)
 
 		# Wait forever for incoming http requests
 		server.serve_forever(poll_interval=3)
 
 	except KeyboardInterrupt:
-		print '^C received, shutting down hls gateway'
+		print('^C received, shutting down hls gateway')
 		server.socket.close()
 
 
