@@ -126,6 +126,15 @@ references:
       tags:
         only: /^cbilling.*/
 
+  config-wow: &config-wow
+    provider: WowTv
+    filters:
+      branches:
+        only:
+          - /^wow-.*/
+      tags:
+        only: /^wow\/.*/
+
 workflows:
   task-all:
     jobs:
@@ -149,3 +158,17 @@ workflows:
               ignore: /.*/
             tags:
               only: /cbilling\/v\/(\d)+(\.(\d)+)+$/
+
+  task-wow:
+    jobs:
+      - test: *config-wow
+      - build: *config-wow
+      - deploy:
+          requires:
+            - test
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /wow\/v\/(\d)+(\.(\d)+)+$/
