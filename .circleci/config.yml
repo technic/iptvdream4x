@@ -127,13 +127,13 @@ references:
         only: /^cbilling.*/
 
   config-wow: &config-wow
-    provider: WowTv
+    provider: WowTV
     filters:
       branches:
         only:
-          - /^WowTv-.*/
+          - /^WowTV-.*/
       tags:
-        only: /^WowTv\/.*/
+        only: /^WowTV\/.*/
 
 workflows:
   task-all:
@@ -171,4 +171,4 @@ workflows:
             branches:
               ignore: /.*/
             tags:
-              only: /WowTv\/v\/(\d)+(\.(\d)+)+$/
+              only: /WowTV\/v\/(\d)+(\.(\d)+)+$/

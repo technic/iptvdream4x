@@ -48,7 +48,7 @@ ifeq ($(PROVIDER),WowTV)
 pyfiles += src/api/m3u.py src/api/wow.py
 datafiles += src/logo/$(PROVIDER).png
 else
-pyfiles := $(error Unknown provider $(PROVIDER))
+$(error Unknown provider $(PROVIDER))
 endif
 
 pyext := pyo
