@@ -16,6 +16,7 @@ from m3u import M3UProvider
 
 class OTTProvider(M3UProvider):
 	NAME = "WowTV"
+	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
