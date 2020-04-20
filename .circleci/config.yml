@@ -114,6 +114,7 @@ references:
       branches:
         ignore:
           - /^cbilling.*/
+          - /^WowTV.*/
       tags:
         only: /^v.*/
 
@@ -131,7 +132,7 @@ references:
     filters:
       branches:
         only:
-          - /^WowTV-.*/
+          - /^WowTV.*/
       tags:
         only: /^WowTV\/.*/
 
