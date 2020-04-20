@@ -1,715 +1,518 @@
-# German translations for tuxbox-enigma package.
 # Copyright (C) 2005 THE tuxbox-enigma'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the tuxbox-enigma package.
 # Automatically generated, 2005.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tuxbox-enigma 0.0.1\n"
+"Project-Id-Version: IPtvDream 4X\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-08 02:42+0300\n"
-"PO-Revision-Date: 2010-11-05 22:11+0300\n"
-"Last-Translator: technic <alexeytech@gmail.com>\n"
-"Language-Team: none\n"
-"Language: \n"
+"POT-Creation-Date: 2020-03-31 16:30+0200\n"
+"PO-Revision-Date: 2019-08-21 20:27+0200\n"
+"Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
+"Language-Team: Open Source contribution\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Language: German\n"
-"X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: iso-8859-15\n"
-
-msgid ""
-"Access denied!\n"
-"Try again?"
-msgstr ""
+"X-Generator: Poedit 2.2.3\n"
 
 msgid "Add"
-msgstr "Hinzufügen"
+msgstr "Zufügen"
+
+#, python-format
+msgid "Add \"%s\" to favourites"
+msgstr "Zufügen \"%s\" zu favoriten"
+
+msgid "Additional playlists number"
+msgstr ""
 
 msgid "All"
 msgstr "Alle"
 
-msgid "Apr"
-msgstr "April"
+msgid "All channels"
+msgstr "Alle Sender"
 
 msgid "Archive"
 msgstr "Archiv"
 
-msgid "Aug"
-msgstr "August"
-
-msgid "Auto send parental code"
+msgid "Archive url type"
 msgstr ""
 
-msgid "By group"
-msgstr "von Gruppe"
+msgid "Audio"
+msgstr ""
+
+msgid "Authorization error"
+msgstr "Fehler Autorisation"
+
+msgid "Bitrate"
+msgstr ""
+
+msgid "Can not load EPG:"
+msgstr ""
 
 msgid "Cancel"
 msgstr "Abbrechen"
 
-msgid "Change pin code"
-msgstr ""
-
 msgid "Channel Locked"
+msgstr "Sender Gespert"
+
+msgid "Channel:"
 msgstr ""
 
-msgid "Configuration of "
+msgid "Checking depends"
+msgstr "Überprüfung der abhängigkeit"
+
+msgid "Checking updates"
+msgstr "Update Überprüfung"
+
+msgid "Choose keymap"
 msgstr ""
+
+msgid "Choose skin"
+msgstr ""
+
+msgid "Clear login data and exit"
+msgstr "Persöhnliche daten löschen und beenden"
+
+#, python-format
+msgid "Configuration of %s"
+msgstr "Einstellungen %s"
 
 msgid "Context menu"
-msgstr "Kontextmenü"
+msgstr "Kontexmenü"
 
-msgid "Delete"
-msgstr "Löschen"
+msgid "Details"
+msgstr "Einzelheiten"
+
+msgid "EPG-json url"
+msgstr ""
+
+msgid "Enable archive"
+msgstr ""
 
 msgid "Enter edit mode"
-msgstr ""
+msgstr "zum Sender bearbeiten"
 
 msgid "Enter protect password"
-msgstr ""
-
-msgid "Enter the service pin"
-msgstr ""
+msgstr "Geben sie Passwort ein"
 
 msgid "Error while getting stream url:"
-msgstr ""
+msgstr "Fehler beim Abrufen der Stream Url:"
+
+msgid "Exit"
+msgstr "Beenden"
 
 msgid "Exit edit mode"
+msgstr "Sortieren Beenden"
+
+msgid "Exit plugin?"
+msgstr "Plugin Beenden?"
+
+msgid "Exiting edit mode"
+msgstr "Bearbeitungsmodus verlassen"
+
+msgid "Extensions"
 msgstr ""
 
-msgid "Expire: "
+msgid "Failed to authentificate your device"
 msgstr ""
 
-msgid "Failed to save settings"
-msgstr ""
+#, python-format
+msgid "Failed to install %s!"
+msgstr "Instalation fehlgeschlagen %s!"
+
+msgid "Failed to save favourites list."
+msgstr "Fehler beim Speichern der Favoritenliste."
+
+msgid "Failed to send settings to server."
+msgstr "Fehler beim Speichern der Einstellungen auf dem Server."
+
+msgid "Failed to update package list!"
+msgstr "Fehler beim Aktualisieren der Pakete!"
 
 msgid "Favourites"
 msgstr "Favoriten"
 
-msgid "Feb"
-msgstr "Februar"
+msgid "Finished!"
+msgstr "Fertig!"
 
-msgid "Force kill opkg? Are you sure?"
-msgstr ""
-
-msgid "Fully"
-msgstr "Voll"
-
-msgid "Go to page"
-msgstr ""
-
-msgid "Go to page..."
+msgid "Get playlist"
 msgstr ""
 
 msgid "Groups"
 msgstr "Gruppen"
 
-msgid "IPtvDream plugin already running"
+msgid "High"
+msgstr "Hoch"
+
+#, python-format
+msgid "IPtvDream %s. Providers list:"
+msgstr "IPtvDream %s. Provider liste:"
+
+msgid "IPtvDream critical error"
+msgstr "IPtvDream Kritischer Fehler"
+
+msgid "IPtvDream plugin is already running!"
+msgstr "IPtvDream Das Plugin läuft bereits!"
+
+msgid ""
+"In the editing mode you can reorder your favourites list. Quick help:\n"
+"- Select channel that you want to put to a new position.\n"
+"- Press OK to start moving the channel around with arrow buttons.\n"
+"- Press OK again to fix the position of the channel.\n"
+"- Press EXIT when done.\n"
+"Start editing mode?"
+msgstr ""
+"Im Bearbeitungsmodus können Sie Ihre Favoritenliste sortieren. Hilfe:\n"
+"- Wählen Sie den Kanal aus, den Sie an eine neue Position verschieben möchten.\n"
+"- Klicken Sie auf OK und bewegen Sie den Kanal mit den Aufwärts- oder Abwärtspfeilen.\n"
+"- Drücken Sie erneut OK, um die neue Kanalposition festzulegen.\n"
+"- Drücken Sie EXIT, um den Vorgang abzuschließen.\n"
+"Aktivieren Sie den Bearbeitungsmodus?"
+
+msgid "Input pin"
 msgstr ""
 
-msgid "Install"
+#, python-format
+msgid "Installing %s"
+msgstr "Instalation %s"
+
+msgid "Installing update, please wait"
+msgstr "Update Instaliert bitte warten"
+
+msgid "Key"
 msgstr ""
-
-msgid "Jan"
-msgstr "Januar"
-
-msgid "Jul"
-msgstr "Juli"
-
-msgid "Jump"
-msgstr ""
-
-msgid "Jun"
-msgstr "Juni"
 
 msgid "Keyboard"
-msgstr ""
+msgstr "Tastatur"
 
-msgid "Mar"
-msgstr "März"
+msgid "Login"
+msgstr "Login"
 
-msgid "May"
-msgstr "Mai"
+msgid "Low"
+msgstr "Niedrig"
+
+msgid "Media server"
+msgstr "Media Server"
 
 msgid "Menu"
 msgstr ""
 
-msgid "Not implemented yet"
-msgstr ""
-
-msgid "Nov"
-msgstr "November"
+msgid "No detailed information"
+msgstr "Keine genaue information"
 
 msgid "OK"
-msgstr "OK"
+msgstr "ОК"
 
-msgid "Oct"
-msgstr "Oktober"
-
-msgid ""
-"Only IPtvDream manager available.\n"
-"Main plugin failed due to error: "
+#, python-format
+msgid "Open archive for \"%s\""
 msgstr ""
 
-msgid "Opkg ERROR! Log:"
+msgid "Open plugin settings"
+msgstr "Plugin Einstellungen Öffnen"
+
+msgid "Open provider settings"
+msgstr "Provider Einstellungen Öffnen"
+
+msgid "Options"
 msgstr ""
 
-msgid "Opkg OK! Log:"
+msgid "Password"
+msgstr "Passwort"
+
+msgid "Payment expires: "
+msgstr "Abonnement läuft ab: "
+
+msgid "Player ID"
 msgstr ""
 
-msgid "Opkg running, please wait..."
+msgid "Playlist"
+msgstr "Playlist"
+
+msgid "Playlist url"
 msgstr ""
 
-msgid "Remote config error: "
+#, python-format
+msgid "Please go to %s and generate pin code"
 msgstr ""
+
+msgid "Quality"
+msgstr "Qalität"
 
 msgid "Remove"
+msgstr "Löschen"
+
+#, python-format
+msgid "Remove \"%s\" from favourites"
+msgstr "Löschen \"%s\" aus Favoriten"
+
+msgid "Restart enigma2 to apply changes?"
 msgstr ""
 
-msgid "Resume movie"
+msgid "Restart enigma2 to apply keymap changes?"
+msgstr "Starten Sie enigma2 neu, um die Änderungen zu übernehmen?"
+
+msgid "Restart enigma2 to apply skin changes?"
 msgstr ""
 
-msgid "Search by name (beta)"
+msgid "Restarting enigma2 after IPtvDream update..."
+msgstr "Starten Sie enigma2 nach dem Update von IPtvDream neu..."
+
+msgid "Select keymap style"
 msgstr ""
 
-msgid "See error log in"
+msgid "Select playlist number"
 msgstr ""
 
-msgid "Sep"
-msgstr "September"
-
-msgid "Service (player) id"
+msgid "Select skin"
 msgstr ""
 
-msgid "Show in bouquets"
+msgid "Server"
+msgstr "Server"
+
+msgid "Settings"
 msgstr ""
 
-msgid "Show in mainmenu"
+msgid "Setup"
+msgstr "Einstellungen"
+
+#, python-format
+msgid "Setup finished with %d errors."
+msgstr "Einstellungen beendet Fehler %d."
+
+msgid "Setup finished without errors."
+msgstr "Einstellungen efolgreich beendet."
+
+msgid "Show all iptv providers"
+msgstr "Alle IPTV-Anbieter anzeigen"
+
+msgid "Show in extensions list"
 msgstr ""
 
-msgid "Sort by default"
-msgstr "Sortieren nach Standard"
+msgid "Show in main menu"
+msgstr "Im Hauptmenü anzeigen"
 
 msgid "Sort by name"
-msgstr "Nach Namen sortieren"
+msgstr "Nach Name sortieren"
 
-msgid ""
-"Start failed!\n"
-"Edit options?\n"
+msgid "Sort by number"
+msgstr "Nach Nummer sortieren"
+
+#, python-format
+msgid "Start of %s failed"
+msgstr "Starten Fehlgeschlagen %s"
+
+msgid "Stream format"
 msgstr ""
 
-msgid "Stop movie?"
+msgid "Stream server"
 msgstr ""
 
-msgid "The pin code you entered is wrong."
+msgid "Time shift"
+msgstr "Zeitversätzen"
+
+msgid "Update failed"
+msgstr "Update Fehlgeschlagen"
+
+msgid "Updating package list, please wait ..."
+msgstr "Aktualisierung der Paketliste bitte warten sie ..."
+
+msgid "We need to authenticate your device"
 msgstr ""
 
-msgid "Up to date"
+msgid "Wrong number or pin"
 msgstr ""
 
-msgid "Update"
+msgid "Wrong pin!"
+msgstr "Falsches Passwort!"
+
+msgid "by name"
 msgstr ""
 
-msgid "add to parental protection"
+msgid "by number"
 msgstr ""
 
-msgid "all"
-msgstr "Alle"
-
-msgid "best"
+msgid "from playlist.m3u file"
 msgstr ""
 
-msgid "favourites"
-msgstr "Favoriten"
-
-msgid "last"
+msgid "from url"
 msgstr ""
 
-msgid "login"
-msgstr "Login"
+#~ msgid ""
+#~ "Access denied!\n"
+#~ "Try again?"
+#~ msgstr "Kein Zugang! Noch mal versuchen?"
 
-msgid "min"
-msgstr ""
+#~ msgid "Apr"
+#~ msgstr "April"
 
-msgid "password"
-msgstr "Kennwort"
+#~ msgid "Aug"
+#~ msgstr "Аugust"
 
-msgid "remove from parental protection"
-msgstr ""
+#~ msgid "Auto send parental code"
+#~ msgstr "Kindersicherungscode automatisch senden"
 
-msgid "text"
-msgstr ""
-
-#~ msgid " Results"
-#~ msgstr " Ergebnisse"
-
-#~ msgid "Added: "
-#~ msgstr "Hinzugefügt: "
-
-#~ msgid "An error occured."
-#~ msgstr "Es ist ein Fehler aufgetreten."
-
-#~ msgid "Ascending"
-#~ msgstr "aufsteigend"
-
-#~ msgid "Ask user"
-#~ msgstr "Nutzer fragen"
-
-#~ msgid "Australia"
-#~ msgstr "Australien"
-
-#~ msgid "Author: "
-#~ msgstr "Author: "
-
-#~ msgid "Autos & Vehicles"
-#~ msgstr "Autos und Fahrzeuge"
-
-#~ msgid "Brazil"
-#~ msgstr "Brasilien"
+#~ msgid "Best"
+#~ msgstr "Beliebteste"
 
 #~ msgid "Buffer size, KB"
-#~ msgstr "Puffer, Große, KB"
+#~ msgstr "Puffer grösse, КБ"
 
-#~ msgid "Canada"
-#~ msgstr "Kanada"
+#~ msgid "Buffering time, milliseconds"
+#~ msgstr "Pufferzeit, Millisekunden"
+
+#~ msgid "By group"
+#~ msgstr "Gruppen"
 
 #~ msgid "Channel"
 #~ msgstr "Sender"
 
 #~ msgid "Channel Selection"
-#~ msgstr "Kanalauswahl"
+#~ msgstr "Sender Auswahl"
 
-#~ msgid "Choose target folder"
-#~ msgstr "Wähle Zielverzeichnis"
-
-#~ msgid "Clear history on Exit:"
-#~ msgstr "Verlauf beim Verlassen löschen:"
-
-#~ msgid "Close"
-#~ msgstr "Schließen"
-
-#~ msgid "Comedy"
-#~ msgstr "Komödien"
-
-#~ msgid "Czech Republic"
-#~ msgstr "Tschechien"
-
-#~ msgid "Descending"
-#~ msgstr "absteigend"
-
-#~ msgid "Details"
-#~ msgstr "Details"
-
-#~ msgid "Display search results by:"
-#~ msgstr "Suchergebnisse anzeigen:"
-
-#~ msgid "Do you want to see more entries?"
-#~ msgstr "Weitere Videos?"
-
-#~ msgid "Download Video"
-#~ msgstr "Video runterladen"
-
-#~ msgid "Download location"
-#~ msgstr "Download Verzeichnis:"
-
-#~ msgid "Downloading screenshots. Please wait..."
-#~ msgstr "Bilder werden geladen. Bitte warten..."
-
-#~ msgid "Duration: "
-#~ msgstr "Dauer: "
+#~ msgid "Delete"
+#~ msgstr "Entfernen"
 
 #~ msgid "EPG"
 #~ msgstr "EPG"
 
-#~ msgid "Education"
-#~ msgstr "Bildung"
-
-#~ msgid "Enter your search term(s)"
-#~ msgstr "Suchbegriff eingeben"
-
-#~ msgid "Entertainment"
-#~ msgstr "Unterhaltung"
-
 #~ msgid "Error while getting stream uri"
-#~ msgstr "Fehler beim Abrufen stream url "
+#~ msgstr "Fehler beim abfrufen der stream url"
 
-#~ msgid "Fetching feed entries"
-#~ msgstr "Lade feeds"
+#~ msgid "Error while getting video uri"
+#~ msgstr "Fehler beim Abrufen der video url"
 
-#~ msgid "Fetching search entries"
-#~ msgstr "Lade Suchergebnisse"
+#~ msgid "Expire on"
+#~ msgstr "Endet am"
 
-#~ msgid "Film & Animation"
-#~ msgstr "Film & Animation"
+#~ msgid "Feb"
+#~ msgstr "Februar"
 
-#~ msgid "France"
-#~ msgstr "Frankreich"
+#~ msgid "Fully"
+#~ msgstr "Ausführlich"
 
-#~ msgid "Gaming"
-#~ msgstr "Spiele"
+#~ msgid "Generes"
+#~ msgstr "Ganren"
 
-#~ msgid "Germany"
-#~ msgstr "Deutschland"
+#~ msgid "Genres"
+#~ msgstr "Ganren"
 
-#~ msgid "Great Britain"
-#~ msgstr "England"
+#~ msgid "Genres: "
+#~ msgstr "Ganren:"
 
-#~ msgid "HD videos"
-#~ msgstr "HD Videos"
+#~ msgid "IPtvDream plugin already running"
+#~ msgstr "Das IPtvDream-Plugin wird bereits ausgeführt!"
 
-#~ msgid "Help"
-#~ msgstr "Hilfe"
+#~ msgid "Install"
+#~ msgstr "Instalieren"
 
-#~ msgid "History"
-#~ msgstr "Verlauf"
+#~ msgid "Jan"
+#~ msgstr "Januar"
 
-#~ msgid "Holland"
-#~ msgstr "Holland"
+#~ msgid "Jul"
+#~ msgstr "Juli"
 
-#~ msgid "Hong Kong"
-#~ msgstr "Hong Kong"
+#~ msgid "Jun"
+#~ msgstr "Juni"
 
-#~ msgid "Howto & Style"
-#~ msgstr "Tipps & Tricks"
+#~ msgid "Kartina.TV"
+#~ msgstr "Kartina.TV"
 
-#~ msgid "India"
-#~ msgstr "Indien"
+#~ msgid "Kartina.TV Configuration"
+#~ msgstr "Einstellungen Kartina.TV"
 
-#~ msgid "Ireland"
-#~ msgstr "Irland"
+#~ msgid "Last"
+#~ msgstr "Letztes"
 
-#~ msgid "Israel"
-#~ msgstr "Israel"
-
-#~ msgid "Italy"
-#~ msgstr "Italien"
-
-#~ msgid "Japan"
-#~ msgstr "Japan"
-
-#~ msgid "Load feed on startup:"
-#~ msgstr "Feed beim Starten laden:"
+#~ msgid "Login failed! Edit options?"
+#~ msgstr "Login fehlgeschlagen! Einstellungen ändern?"
 
 #~ msgid ""
 #~ "Login or initialization failed!\n"
 #~ "Edit options?"
 #~ msgstr ""
-#~ "Anmelden oder Initialisierung fehlgeschlagen!\n"
-#~ "Optionen editieren?"
+#~ "Login fehlgeschlagen\n"
+#~ "Einstellungen bearbeiten?"
 
-#~ msgid "Mexico"
-#~ msgstr "Mexiko"
+#~ msgid "Mar"
+#~ msgstr "März"
 
-#~ msgid "More video entries."
-#~ msgstr "Weitere Video Einträge."
+#~ msgid "May"
+#~ msgstr "Mai"
 
-#~ msgid "Most discussed"
-#~ msgstr "Heiß diskutiert"
+#~ msgid "Nov"
+#~ msgstr "November"
 
-#~ msgid "Most linked"
-#~ msgstr "Am meisten verlinkt"
+#~ msgid "Oct"
+#~ msgstr "Oktober"
 
-#~ msgid "Most popular"
-#~ msgstr "Beliebteste Videos"
+#~ msgid "Search"
+#~ msgstr "Suche"
 
-#~ msgid "Most recent"
-#~ msgstr "Neueste Videos"
+#~ msgid "Search films"
+#~ msgstr "Film suchen"
 
-#~ msgid "Most responded"
-#~ msgstr "Meiste Antworten"
+#~ msgid "Select channel"
+#~ msgstr "Sender Auswählen"
 
-#~ msgid "Most viewed"
-#~ msgstr "Meistgesehen"
+#~ msgid "Sep"
+#~ msgstr "September"
 
-#~ msgid "Music"
-#~ msgstr "Musik"
+#~ msgid "Show in bouquets"
+#~ msgstr "In bouquets anzeigen"
 
-#~ msgid "My TubePlayer"
-#~ msgstr "MyTube Player"
+#~ msgid "Show in mainmenu"
+#~ msgstr "Im Hauptmenü anzeigen"
 
-#~ msgid "MyTube Settings"
-#~ msgstr "MyTube Einstellungen"
+#~ msgid "Sort by default"
+#~ msgstr "Standardmäßig sortieren"
 
-#~ msgid "MyTubePlayer"
-#~ msgstr "MyTube Player"
-
-#~ msgid "MyTubePlayer Help"
-#~ msgstr "MyTube Player Hilfe"
-
-#~ msgid "MyTubePlayer active video downloads"
-#~ msgstr "aktive Video downloads"
-
-#~ msgid "MyTubePlayer settings"
-#~ msgstr "MyTube Player Einstellungen"
-
-#~ msgid "MyTubeVideoInfoScreen"
-#~ msgstr "MyTubeVideoInfoScreen"
-
-#~ msgid "MyTubeVideohelpScreen"
-#~ msgstr "MyTubeVideohelpScreen"
-
-#~ msgid "New Zealand"
-#~ msgstr "Neu Seeland"
-
-#~ msgid "News & Politics"
-#~ msgstr "Nachrichten & Politik"
-
-#~ msgid "No"
-#~ msgstr "Nein"
-
-#~ msgid "No playable video found! Stop playing this movie?"
-#~ msgstr "Kein abspielbares Video gefunden! Wiedergabe beenden?"
-
-#~ msgid "No videos to display"
-#~ msgstr "Keine Videos zum anzeigen"
-
-#~ msgid "No, but play video again"
-#~ msgstr "Nein, aber Video noch mal abspielen"
-
-#~ msgid "No, but switch to video entries."
-#~ msgstr "Nein, aber zu den Videos zurück."
-
-#~ msgid "No, but switch to video search."
-#~ msgstr "Nein, aber zur Videosuche zurück"
-
-#~ msgid "Nonprofits & Activism"
-#~ msgstr "Non-Profit"
-
-#~ msgid "Not fetching feed entries"
-#~ msgstr "Lade keine feed Einträge"
-
-#~ msgid "People & Blogs"
-#~ msgstr "Leute & Blogs"
-
-#~ msgid "Pets & Animals"
-#~ msgstr "Tiere"
-
-#~ msgid "Play YouTube movies"
-#~ msgstr "YouTube Videos abspielen"
-
-#~ msgid "Play next video"
-#~ msgstr "nächstes Video"
-
-#~ msgid "Play video again"
-#~ msgstr "Video noch mal abspielen"
-
-#~ msgid "Please enter your search term."
-#~ msgstr "Bitte geben Sie einen Suchbegriff ein."
-
-#~ msgid "Please select a standard feed or try searching for videos."
-#~ msgstr "Wählen Sie einen Standard Feed oder suchen Sie nach Videos."
-
-#~ msgid "Poland"
-#~ msgstr "Polen"
-
-#~ msgid "Published"
-#~ msgstr "Veröffentlicht"
-
-#~ msgid "Rating"
-#~ msgstr "Bewertung"
-
-#~ msgid "Ratings: "
-#~ msgstr "Bewertungen: "
-
-#~ msgid "Really quit MyTube Player?"
-#~ msgstr "MyTube Player wirklich beenden?"
-
-#~ msgid "Recently featured"
-#~ msgstr "Kürzlich featured"
-
-#~ msgid "Related video entries."
-#~ msgstr "Ähnliche Videos"
-
-#~ msgid "Relevance"
-#~ msgstr "Relevanz"
-
-#~ msgid "Response video entries."
-#~ msgstr "Video Antworten"
-
-#~ msgid "Return to movie list"
-#~ msgstr "Zurück zur Videoliste"
-
-#~ msgid "Russia"
-#~ msgstr "Russland"
-
-#~ msgid "Save"
-#~ msgstr "Speichern"
-
-#~ msgid "Science & Technology"
-#~ msgstr "Wissenschaft & Technik"
-
-#~ msgid "Search Term(s)"
-#~ msgstr "Suchwort(e)"
-
-#~ msgid "Search category:"
-#~ msgstr "Such-Kategorie:"
-
-#~ msgid "Search region:"
-#~ msgstr "Such-Region:"
-
-#~ msgid "Search restricted content:"
-#~ msgstr "Suche ohne Altersbeschränkung:"
-
-#~ msgid "Select new feed to view."
-#~ msgstr "Neuen feed auswählen"
-
-#~ msgid "Select your choice."
-#~ msgstr "Treffen Sie Ihre Wahl."
-
-#~ msgid "Short Movies"
-#~ msgstr "Kurzvideos"
-
-#~ msgid "Sorry, video is not available!"
-#~ msgstr "Video nicht verfügbar!"
-
-#~ msgid "South Korea"
-#~ msgstr "Süd Korea"
-
-#~ msgid "Spain"
-#~ msgstr "Spanien"
-
-#~ msgid "Sports"
-#~ msgstr "Sport"
-
-#~ msgid "Start with following feed:"
-#~ msgstr "Beginne mit folgendem feed:"
-
-#~ msgid "Std. Feeds"
-#~ msgstr "Std. Feeds"
-
-#~ msgid "Stop playing this movie?"
-#~ msgstr "Wiedergabe beenden?"
-
-#~ msgid "Sweden"
-#~ msgstr "Schweden"
-
-#~ msgid "Tags: "
-#~ msgstr "Tags: "
-
-#~ msgid "Taiwan"
-#~ msgstr "Taiwan"
-
-#~ msgid "There was an error getting the feed entries. Please try again."
-#~ msgstr "Fehler beim Laden der Suchergebnisse. Noch mal probieren."
-
-#~ msgid "This Month"
-#~ msgstr "Diesen Monat"
-
-#~ msgid "This Week"
-#~ msgstr "Diese Woche"
+#~ msgid "Style clock of infobar"
+#~ msgstr "Uhr-Stil auf dem Info-Panel"
 
 #~ msgid "Timeshift"
-#~ msgstr "Timeshift"
+#~ msgstr "Zeitversetztes schauen (std)"
 
-#~ msgid "Today"
-#~ msgstr "Heute"
+#~ msgid "Update"
+#~ msgstr "Updaten"
 
-#~ msgid "Top favorites"
-#~ msgstr "Top-Favoriten"
-
-#~ msgid "Top rated"
-#~ msgstr "Beste Bewertung"
-
-#~ msgid "Travel & Events"
-#~ msgstr "Reisen & Events"
-
-#~ msgid "Trying to download the Youtube feed entries. Please wait..."
-#~ msgstr "YouTube feeds werden geladen, bitte warten..."
-
-#~ msgid "Trying to download the Youtube search results. Please wait..."
-#~ msgstr "YouTube Suchergebnisse werden geladen, bitte warten..."
-
-#~ msgid "United States"
-#~ msgstr "USA"
+#~ msgid "Use sericets instead of Gstreamer"
+#~ msgstr "Verwenden sie sericets anstelle Gstreamer"
 
 #~ msgid "Use servicets instead of Gstreamer"
-#~ msgstr "Verwenden Sie stattdessen services von GStreamer"
-
-#~ msgid "Videobrowser exit behavior:"
-#~ msgstr "Verhalten nach Verlassen der Videoliste:"
-
-#~ msgid "Videoplayer stop/exit behavior:"
-#~ msgstr "Verhalten beim Drücken der STOPP/EXIT-Taste:"
-
-#~ msgid "View Count"
-#~ msgstr "Aufrufe"
-
-#~ msgid "View Downloads"
-#~ msgstr "Downloads anzeigen"
-
-#~ msgid "View active downloads"
-#~ msgstr "Aktive Downloads anzeigen"
-
-#~ msgid "View related videos"
-#~ msgstr "Ähnliche Videos"
-
-#~ msgid "View response videos"
-#~ msgstr "Video Antworten"
-
-#~ msgid "Views: "
-#~ msgstr "Aufrufe: "
-
-#~ msgid ""
-#~ "Welcome to the MyTube Youtube Player.\n"
-#~ "\n"
-#~ "Use the Bouqet+ button to navigate to the search field and the Bouqet- to "
-#~ "navigate to the video entries.\n"
-#~ "\n"
-#~ "To play a movie just press OK on your remote control.\n"
-#~ "\n"
-#~ "Press info to see the movie description.\n"
-#~ "\n"
-#~ "Press the Menu button for additional options.\n"
-#~ "\n"
-#~ "The Help button shows this help again."
-#~ msgstr ""
-#~ "Herzlich Willkommen beim MyTube YouTube Player.\n"
-#~ "\n"
-#~ "Nutzen Sie die Bouqet+ Taste um zur Sucheingabe zu gelangen und die "
-#~ "Bouqet- Taste für die Video Einträge.\n"
-#~ "\n"
-#~ "Um ein Video abzuspielen drücken Sie die OK-Taste auf Ihrer "
-#~ "Fernbedienung.\n"
-#~ "\n"
-#~ "Mit der Info-Taste erhalten Sie die erweiterte Beschreibung zu einem "
-#~ "Video.\n"
-#~ "\n"
-#~ "Für weitere Einstellungen drücken Sie die Menü-Taste.\n"
-#~ "\n"
-#~ "Um diese Hilfe erneut anzuzeigen, drücken Sie die Hilfe-Taste."
-
-#~ msgid ""
-#~ "Welcome to the MyTube Youtube Player.\n"
-#~ "\n"
-#~ "While entering your search term(s) you will get suggestions displayed "
-#~ "matching your search term.\n"
-#~ "\n"
-#~ "To select a suggestion press DOWN on your remote, select the desired "
-#~ "result and press OK on your remote to start the search.\n"
-#~ "\n"
-#~ "Press exit to get back to the input field."
-#~ msgstr ""
-#~ "Herzlich Willkommen beim MyTube YouTube Player.\n"
-#~ "\n"
-#~ "Während der Eingabe Ihres Suchwortes erhalten Sie passende Vorschläge zu "
-#~ "Ihrer Sucheingabe.\n"
-#~ "\n"
-#~ "Um einen Vorschlag auszuwählen drücken Sie die NACH UNTEN-Taste, wählen "
-#~ "den entsprechenden Eintrag aus und drücken die OK-Taste um die Suche zu "
-#~ "starten.\n"
-#~ "\n"
-#~ "Um zur Such-Eingabemaske zurück zu gelangen drücken Sie die EXIT-Taste."
-
-#~ msgid "Yes"
-#~ msgstr "Ja"
-
-#~ msgid "Yes, but play next video"
-#~ msgstr "Ja, aber nächstes Video abspielen"
-
-#~ msgid "Yes, but play previous video"
-#~ msgstr "Ja, aber vorheriges Video abspielen"
+#~ msgstr "Verwenden sie servicets anstelle Gstreamer"
 
 #~ msgid "You can't run this plugin in KartinaTV mode"
-#~ msgstr "Diese Erweiterung kann nicht in KartinaTV Modus ausgeführt werden"
+#~ msgstr "Sie können dieses Plugin nicht im KartinaTV modus ausführen"
+
+#~ msgid "all"
+#~ msgstr "Alle"
+
+#~ msgid "analog"
+#~ msgstr "analog"
+
+#~ msgid "best"
+#~ msgstr "Beliebteste"
+
+#~ msgid "by group"
+#~ msgstr "Gruppen"
+
+#~ msgid "digital"
+#~ msgstr "digital"
+
+#~ msgid "favourites"
+#~ msgstr "Favoriten"
+
+#~ msgid "last"
+#~ msgstr "letzte"
+
+#~ msgid "login"
+#~ msgstr "login"
+
+#~ msgid "password"
+#~ msgstr "Passwort"
+
+#~ msgid "text"
+#~ msgstr "suche"

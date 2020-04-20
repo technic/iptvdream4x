@@ -1,3 +1,3 @@
 NAME = "WowTV"
 TITLE = "WowTV"
-VERSION = "4.18"
+VERSION = "4.74"

@@ -1,0 +1,124 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Copy keymap",
+            "type": "shell",
+            "command": "cp",
+            "args": ["${workspaceRoot}/src/keymap_enigma.xml", "${workspaceRoot}/src/keymap.xml"],
+            "group": "build",
+        },
+        {
+            "label": "Skin post",
+            "type": "process",
+            "command": "${config:python.pythonPath}",
+            "args": [
+                "./skin-post.py",
+                "skin/skin.xml",
+                "skin/iptvdream.xml"
+            ],
+            "group": "build",
+        },
+        {
+            "label": "Skin-fhd post",
+            "type": "process",
+            "command": "${config:python.pythonPath}",
+            "args": [
+                "./skin-post.py",
+                "skin-fhd/skin.xml",
+                "skin-fhd/iptvdream.xml"
+            ],
+            "group": "build",
+        },
+        {
+            "label": "Docker kill enigma2",
+            "type": "process",
+            "command": "docker",
+            "args": [
+                "exec",
+                "enigma2",
+                "killall",
+                "-9",
+                "/usr/bin/enigma2"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker start enigma2",
+            "type": "process",
+            "presentation": {
+                "reveal": "always"
+            },
+            "isBackground": true,
+            "command": "docker",
+            "args": [
+                "exec",
+                "-it",
+                "-e",
+                "ENIGMA_DEBUG_LVL=5",
+                "enigma2",
+                "/usr/bin/enigma2",
+                "/opt/mytest-ptvsd.py"
+            ],
+            "problemMatcher": {
+                "severity": "info",
+                "background": {
+                    "beginsPattern": {
+                        "regexp": "^mytest-ptvsd: Enable debugger"
+                    },
+                    "endsPattern": {
+                        "regexp": "^mytest-ptvsd: Waiting debugger..."
+                    }
+                },
+                "pattern": [
+                    {
+                        "regexp": "^$",
+                        "file": 1,
+                        "location": 2,
+                        "message": 3
+                    }
+                ]
+            },
+            "dependsOn": [
+                "Skin post", "Skin-fhd post", "Copy keymap"
+            ]
+        },
+        {
+            "label": "Copy ssh key to device",
+            "type": "shell",
+            "command": "${config:python.pythonPath}",
+            "args": ["scripts/box-copy-key.py"],
+            "problemMatcher": [],
+        },
+        {
+            "label": "Upload package to device",
+            "type": "shell",
+            "command": "${config:python.pythonPath}",
+            "args": ["scripts/box-upload.py"],
+            "problemMatcher": [],
+            "group": "build",
+        },
+        {
+            "label": "Start enigma2 on device",
+            "type": "shell",
+            "command": "${config:python.pythonPath}",
+            "args": ["scripts/box-run.py"],
+            "problemMatcher": [],
+            "dependsOn": "Upload package to device",
+        },
+        {
+            "label": "Update po files",
+            "type": "process",
+            "command": "docker",
+            "args": [
+                "exec",
+                "enigma2",
+                "make",
+                "update-po",
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

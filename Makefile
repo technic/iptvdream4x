@@ -9,6 +9,7 @@ PROVIDER ?= all
 plugin_name := IPtvDream
 plugin_path := /usr/lib/enigma2/python/Plugins/Extensions/$(plugin_name)
 skin_path := /usr/share/enigma2/$(plugin_name)
+skin-fhd_path := /usr/share/enigma2/$(plugin_name)FHD
 
 ifeq ($(DEB),y)
 pkgext := deb
@@ -19,21 +20,27 @@ architecture := $(ARCH)
 
 build := $(DESTDIR)
 plugindir = $(build)$(plugin_path)
-skindir = $(build)$(skin_path)
 
 all: package
 
 pyfiles := src/__init__.py src/common.py src/dist.py src/plugin.py src/updater.py \
+	src/cache.py \
 	src/layer.py src/loc.py src/utils.py src/manager.py src/main.py src/settings.py \
-	src/standby.py src/virtualkb.py src/server.py \
+	src/standby.py src/virtualkb.py src/server.py src/provision.py \
+	src/lib/__init__.py src/lib/epg.py src/lib/tv.py \
 	src/api/__init__.py src/api/abstract_api.py
 datafiles := src/keymap_enigma.xml src/keymap_neutrino.xml src/IPtvDream.png
 
 ifeq ($(PROVIDER),all)
 pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py src/api/amigo.py src/api/emigranttv.py \
-	src/api/pure.py \
-	src/api/m3u.py src/api/edem_soveni.py src/api/edem_yahan.py src/api/ottclub.py src/api/shura.py \
-	src/api/iptv-e2_soveni.py \
+	src/api/pure.py src/api/kinoboom.py \
+	src/api/m3u.py src/api/edem_soveni.py src/api/ottclub.py src/api/shura.py \
+	src/api/iptv_e2_soveni.py src/api/onecent_soveni.py \
+	src/api/top_iptv.py src/api/koronaiptv.py \
+	src/api/playlist.py src/api/1ott.py src/api/fox.py src/api/itv_live.py \
+	src/api/ottg.py \
+	src/api/kartina.py src/api/ktv.py src/api/newrus.py \
+	src/api/cbilling.py \
 	src/api/mywy.py src/api/naschetv.py src/api/ozo.py src/api/sovok.py src/api/baltic.py
 datafiles += $(wildcard src/logo/*.png)
 endif
@@ -61,24 +68,42 @@ datainstall := $(patsubst src/%,$(plugindir)/%,$(datafiles))
 $(datainstall): $(plugindir)/%: src/%
 	install -D -m644 $< $@
 
-
-skinfiles := $(shell find skin/ -name *.png) skin/iptvdream.xml
-skininstall := $(patsubst skin/%,$(skindir)/%,$(skinfiles))
-
-$(skininstall): $(skindir)/%: skin/%
+$(plugindir)/LICENSE: LICENSE
 	install -D -m644 $< $@
 
-skin/iptvdream.xml: skin/skin.xml
+$(plugindir)/README.md: README.md
+	install -D -m644 $< $@
+
+install: $(plugindir)/LICENSE $(plugindir)/README.md
+
+
+skin_dir := $(build)$(skin_path)
+skin_files := $(shell find skin/ -name '*.png') skin/iptvdream.xml
+skin_install := $(patsubst skin/%,$(skin_dir)/%,$(skin_files))
+
+$(skin_install): $(skin_dir)/%: skin/%
+	install -D -m644 $< $@
+
+skin-fhd_dir := $(build)$(skin-fhd_path)
+skin-fhd_files := $(shell find skin-fhd/ -name '*.png') skin-fhd/iptvdream.xml
+skin-fhd_install := $(patsubst skin-fhd/%,$(skin-fhd_dir)/%,$(skin-fhd_files))
+
+$(skin-fhd_install): $(skin-fhd_dir)/%: skin-fhd/%
+	install -D -m644 $< $@
+
+skinxmls = $(addsuffix /iptvdream.xml,skin skin-fhd)
+
+$(skinxmls): %/iptvdream.xml: %/skin.xml
 	python skin-post.py $< $@
 
-prepare: skin/iptvdream.xml
+prepare: $(skinxmls)
 
 
 $(build)/etc/iptvdream/iptvdream.epgmap: src/iptvdream.epgmap
 	install -D -m644 $^ $@
 
 
-langs := ru en de
+langs := uk ru en de lt
 
 langs_po := $(addprefix po/,$(langs))
 langs_po := $(addsuffix .po,$(langs_po))
@@ -108,7 +133,7 @@ update-po:
 
 
 #install: $(build)/etc/iptvdream/iptvdream.epgmap
-install: $(pycinstall) $(datainstall) $(skininstall) $(moinstall)
+install: $(pycinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(moinstall)
 	install -d $(build)/etc/iptvdream
 
 
@@ -147,17 +172,12 @@ $(pkgdir)/$(pkgname).$(pkgext): install $(build)/DEBIAN/control $(hooks)
 	dpkg-deb -b -Zgzip $(build) tmp.deb
 	mv tmp.deb $@
 	echo '$(version)' > $(pkgdir)/version-$(provider).txt
+	ln -sf $(pkgname).$(pkgext) $(pkgdir)/latest_$(provider).$(pkgext)
 
 package: $(pkgdir)/$(pkgname).$(pkgext) info
 
 info:
 	echo '{"name": "$(name)"}' > $@.json
-
-sshinstall: $(pkgdir)/$(pkgname).$(pkgext)
-	test -n '$(HOST)'
-	wput -u -nc -nv $< ftp://root@$(HOST)/tmp/$(notdir $<)
-	ssh root@$(HOST) opkg install --force-reinstall /tmp/$(notdir $<)
-
 
 clean:
 	rm -rf build

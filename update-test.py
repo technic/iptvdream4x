@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+"""Test that plugin auto update is working"""
+
 from __future__ import print_function
 
 import subprocess
@@ -97,7 +99,7 @@ def test():
 	os.environ['ENIGMA_DEBUG_LVL'] = '5'
 	enigma2 = subprocess.Popen(["enigma2"])
 	devNull = open('/dev/null', 'w')
-	for i in range(100):
+	for _ in range(100):
 		exitcode = subprocess.call(['xdotool', 'getwindowfocus'], stderr=devNull)
 		if exitcode == 0:
 			print("enigma2 started!")
@@ -114,7 +116,7 @@ def test():
 		print("Send key", key)
 		subprocess.check_call(['xdotool', 'key', key])
 
-	for i in range(100):
+	for _ in range(100):
 		if enigma2.poll() is None:
 			time.sleep(0.1)
 		else:

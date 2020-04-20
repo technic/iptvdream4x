@@ -28,7 +28,7 @@ try:
 	from server import startApiProxy
 	startApiProxy()
 except Exception as e:
-	print("[IPtvDream] Cant start server", e)
+	print("[IPtvDream] Can't start server", e)
 
 
 def checkUpdate(session, callback):
@@ -55,18 +55,26 @@ def checkUpdate(session, callback):
 	session.openWithCallback(run, UpdaterScreen)
 
 
+def provision(session, run):
+	from provision import ProvisionScreen
+	if ProvisionScreen.provisionRequired():
+		session.openWithCallback(run, ProvisionScreen)
+	else:
+		run()
+
+
 def pluginRun(name, session, **kwargs):
 	def run():
 		from manager import runner
 		runner.runPlugin(session, name)
-	checkUpdate(session, run)
+	checkUpdate(session, lambda: provision(session, run))
 
 
 def managerRun(session, **kwargs):
 	def run():
 		from manager import runner
 		runner.runManager(session)
-	checkUpdate(session, run)
+	checkUpdate(session, lambda: provision(session, run))
 
 
 def makeMenuEntry(name, menuid):
@@ -75,6 +83,10 @@ def makeMenuEntry(name, menuid):
 		return [(name, boundFunction(pluginRun, name), "iptvdream_%s" % name, -1)]
 	else:
 		return []
+
+
+def makeExtensionsFunc(name):
+	return lambda session, **kwargs: pluginRun(name, session, **kwargs)
 
 
 def Plugins(path, **kwargs):
@@ -86,8 +98,14 @@ def Plugins(path, **kwargs):
 			if manager.getConfig(name).in_menu.value:
 				plugins += [
 					PluginDescriptor(
-						name=p['title'], description="IPtvDream plugin by technic", icon="%s.png" % name,
+						name=p['name'], description="IPtvDream plugin by technic", icon="%s.png" % name,
 						where=PluginDescriptor.WHERE_MENU, fnc=boundFunction(makeMenuEntry, name))
+				]
+			if manager.getConfig(name).in_extensions.value:
+				plugins += [
+					PluginDescriptor(
+						name=p['name'], description="IPtvDream plugin by technic", icon="%s.png" % name,
+						where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=makeExtensionsFunc(name))
 				]
 	except Exception as e:
 		print("[IPtvDream] error loading plugins:", e)

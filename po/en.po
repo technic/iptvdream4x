@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-08 02:42+0300\n"
+"POT-Creation-Date: 2020-03-31 16:30+0200\n"
 "PO-Revision-Date: 2011-08-24 17:33+0300\n"
 "Last-Translator: technic <alexeytech@gmail.com>\n"
 "Language-Team: none\n"
@@ -17,48 +17,78 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid ""
-"Access denied!\n"
-"Try again?"
+msgid "Add"
 msgstr ""
 
-msgid "Add"
+#, python-format
+msgid "Add \"%s\" to favourites"
+msgstr ""
+
+msgid "Additional playlists number"
 msgstr ""
 
 msgid "All"
 msgstr ""
 
-msgid "Apr"
+msgid "All channels"
 msgstr ""
 
 msgid "Archive"
 msgstr ""
 
-msgid "Aug"
+msgid "Archive url type"
 msgstr ""
 
-msgid "Auto send parental code"
+msgid "Audio"
 msgstr ""
 
-msgid "By group"
+msgid "Authorization error"
+msgstr ""
+
+msgid "Bitrate"
+msgstr ""
+
+msgid "Can not load EPG:"
 msgstr ""
 
 msgid "Cancel"
 msgstr ""
 
-msgid "Change pin code"
-msgstr ""
-
 msgid "Channel Locked"
 msgstr ""
 
-msgid "Configuration of "
+msgid "Channel:"
+msgstr ""
+
+msgid "Checking depends"
+msgstr ""
+
+msgid "Checking updates"
+msgstr ""
+
+msgid "Choose keymap"
+msgstr ""
+
+msgid "Choose skin"
+msgstr ""
+
+msgid "Clear login data and exit"
+msgstr ""
+
+#, python-format
+msgid "Configuration of %s"
 msgstr ""
 
 msgid "Context menu"
 msgstr ""
 
-msgid "Delete"
+msgid "Details"
+msgstr ""
+
+msgid "EPG-json url"
+msgstr ""
+
+msgid "Enable archive"
 msgstr ""
 
 msgid "Enter edit mode"
@@ -67,174 +97,241 @@ msgstr ""
 msgid "Enter protect password"
 msgstr ""
 
-msgid "Enter the service pin"
+msgid "Error while getting stream url:"
 msgstr ""
 
-msgid "Error while getting stream url:"
+msgid "Exit"
 msgstr ""
 
 msgid "Exit edit mode"
 msgstr ""
 
-msgid "Expire: "
+msgid "Exit plugin?"
 msgstr ""
 
-msgid "Failed to save settings"
+msgid "Exiting edit mode"
+msgstr ""
+
+msgid "Extensions"
+msgstr ""
+
+msgid "Failed to authentificate your device"
+msgstr ""
+
+#, python-format
+msgid "Failed to install %s!"
+msgstr ""
+
+msgid "Failed to save favourites list."
+msgstr ""
+
+msgid "Failed to send settings to server."
+msgstr ""
+
+msgid "Failed to update package list!"
 msgstr ""
 
 msgid "Favourites"
 msgstr ""
 
-msgid "Feb"
+msgid "Finished!"
 msgstr ""
 
-msgid "Force kill opkg? Are you sure?"
-msgstr ""
-
-msgid "Fully"
-msgstr ""
-
-msgid "Go to page"
-msgstr ""
-
-msgid "Go to page..."
+msgid "Get playlist"
 msgstr ""
 
 msgid "Groups"
 msgstr ""
 
-msgid "IPtvDream plugin already running"
+msgid "High"
 msgstr ""
 
-msgid "Install"
+#, python-format
+msgid "IPtvDream %s. Providers list:"
 msgstr ""
 
-msgid "Jan"
+msgid "IPtvDream critical error"
 msgstr ""
 
-msgid "Jul"
+msgid "IPtvDream plugin is already running!"
 msgstr ""
 
-msgid "Jump"
+msgid ""
+"In the editing mode you can reorder your favourites list. Quick help:\n"
+"- Select channel that you want to put to a new position.\n"
+"- Press OK to start moving the channel around with arrow buttons.\n"
+"- Press OK again to fix the position of the channel.\n"
+"- Press EXIT when done.\n"
+"Start editing mode?"
 msgstr ""
 
-msgid "Jun"
+msgid "Input pin"
+msgstr ""
+
+#, python-format
+msgid "Installing %s"
+msgstr ""
+
+msgid "Installing update, please wait"
+msgstr ""
+
+msgid "Key"
 msgstr ""
 
 msgid "Keyboard"
 msgstr ""
 
-msgid "Mar"
+msgid "Login"
 msgstr ""
 
-msgid "May"
+msgid "Low"
+msgstr ""
+
+msgid "Media server"
 msgstr ""
 
 msgid "Menu"
 msgstr ""
 
-msgid "Not implemented yet"
-msgstr ""
-
-msgid "Nov"
+msgid "No detailed information"
 msgstr ""
 
 msgid "OK"
 msgstr ""
 
-msgid "Oct"
+#, python-format
+msgid "Open archive for \"%s\""
 msgstr ""
 
-msgid ""
-"Only IPtvDream manager available.\n"
-"Main plugin failed due to error: "
+msgid "Open plugin settings"
 msgstr ""
 
-msgid "Opkg ERROR! Log:"
+msgid "Open provider settings"
 msgstr ""
 
-msgid "Opkg OK! Log:"
+msgid "Options"
 msgstr ""
 
-msgid "Opkg running, please wait..."
+msgid "Password"
 msgstr ""
 
-msgid "Remote config error: "
+msgid "Payment expires: "
+msgstr ""
+
+msgid "Player ID"
+msgstr ""
+
+msgid "Playlist"
+msgstr ""
+
+msgid "Playlist url"
+msgstr ""
+
+#, python-format
+msgid "Please go to %s and generate pin code"
+msgstr ""
+
+msgid "Quality"
 msgstr ""
 
 msgid "Remove"
 msgstr ""
 
-msgid "Resume movie"
+#, python-format
+msgid "Remove \"%s\" from favourites"
 msgstr ""
 
-msgid "Search by name (beta)"
+msgid "Restart enigma2 to apply changes?"
 msgstr ""
 
-msgid "See error log in"
+msgid "Restart enigma2 to apply keymap changes?"
 msgstr ""
 
-msgid "Sep"
+msgid "Restart enigma2 to apply skin changes?"
 msgstr ""
 
-msgid "Service (player) id"
+msgid "Restarting enigma2 after IPtvDream update..."
 msgstr ""
 
-msgid "Show in bouquets"
+msgid "Select keymap style"
 msgstr ""
 
-msgid "Show in mainmenu"
+msgid "Select playlist number"
 msgstr ""
 
-msgid "Sort by default"
+msgid "Select skin"
+msgstr ""
+
+msgid "Server"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Setup"
+msgstr ""
+
+#, python-format
+msgid "Setup finished with %d errors."
+msgstr ""
+
+msgid "Setup finished without errors."
+msgstr ""
+
+msgid "Show all iptv providers"
+msgstr ""
+
+msgid "Show in extensions list"
+msgstr ""
+
+msgid "Show in main menu"
 msgstr ""
 
 msgid "Sort by name"
 msgstr ""
 
-msgid ""
-"Start failed!\n"
-"Edit options?\n"
+msgid "Sort by number"
 msgstr ""
 
-msgid "Stop movie?"
+#, python-format
+msgid "Start of %s failed"
 msgstr ""
 
-msgid "The pin code you entered is wrong."
+msgid "Stream format"
 msgstr ""
 
-msgid "Up to date"
+msgid "Stream server"
 msgstr ""
 
-msgid "Update"
+msgid "Time shift"
 msgstr ""
 
-msgid "add to parental protection"
+msgid "Update failed"
 msgstr ""
 
-msgid "all"
+msgid "Updating package list, please wait ..."
 msgstr ""
 
-msgid "best"
+msgid "We need to authenticate your device"
 msgstr ""
 
-msgid "favourites"
+msgid "Wrong number or pin"
 msgstr ""
 
-msgid "last"
+msgid "Wrong pin!"
 msgstr ""
 
-msgid "login"
+msgid "by name"
 msgstr ""
 
-msgid "min"
+msgid "by number"
 msgstr ""
 
-msgid "password"
+msgid "from playlist.m3u file"
 msgstr ""
 
-msgid "remove from parental protection"
+msgid "from url"
 msgstr ""
 
-msgid "text"
-msgstr "search"
+#~ msgid "text"
+#~ msgstr "search"

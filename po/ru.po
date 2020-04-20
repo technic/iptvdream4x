@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-08 02:42+0300\n"
-"PO-Revision-Date: 2015-06-25 00:40+0200\n"
+"POT-Creation-Date: 2020-03-31 16:30+0200\n"
+"PO-Revision-Date: 2020-03-31 17:10+0200\n"
 "Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
 "Language-Team: Russian / enigma(c) Ukraine, Kiev>\n"
 "Language: ru\n"
@@ -16,229 +16,343 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: iso-8859-15\n"
-"X-Generator: Poedit 1.8.1\n"
-
-msgid ""
-"Access denied!\n"
-"Try again?"
-msgstr "Нет доступа! Попробовать снова?"
+"X-Generator: Poedit 2.3\n"
 
 msgid "Add"
 msgstr "Добавить"
 
+#, python-format
+msgid "Add \"%s\" to favourites"
+msgstr "Добавить \"%s\" в избранное"
+
+msgid "Additional playlists number"
+msgstr "Количество дополнительных плейлистов"
+
 msgid "All"
 msgstr "Все"
 
-msgid "Apr"
-msgstr "Апрель"
+msgid "All channels"
+msgstr "Все каналы"
 
 msgid "Archive"
 msgstr "Архив"
 
-msgid "Aug"
-msgstr "Август"
+msgid "Archive url type"
+msgstr "Тип архива"
 
-msgid "Auto send parental code"
-msgstr "Авто отправление родительского пароля"
+msgid "Audio"
+msgstr "Аудио"
 
-msgid "By group"
-msgstr "Группы"
+msgid "Authorization error"
+msgstr "Ошибка авторизации"
+
+msgid "Bitrate"
+msgstr "Битрейт"
+
+msgid "Can not load EPG:"
+msgstr "Не удалось загрузить EPG"
 
 msgid "Cancel"
 msgstr "Отменить"
 
-msgid "Change pin code"
-msgstr ""
-
 msgid "Channel Locked"
-msgstr ""
+msgstr "Канал закрыт"
 
-msgid "Configuration of "
-msgstr ""
+msgid "Channel:"
+msgstr "Канал:"
+
+msgid "Checking depends"
+msgstr "Проверка зависимостей"
+
+msgid "Checking updates"
+msgstr "Проверка обновлений"
+
+msgid "Choose keymap"
+msgstr "Выбрать keymap"
+
+msgid "Choose skin"
+msgstr "Выбрать skin"
+
+msgid "Clear login data and exit"
+msgstr "Удалить данные авторизации и выйти"
+
+#, python-format
+msgid "Configuration of %s"
+msgstr "Настройки %s"
 
 msgid "Context menu"
 msgstr "Контекстное меню"
 
-msgid "Delete"
-msgstr "Удалить"
+msgid "Details"
+msgstr "Детали"
+
+msgid "EPG-json url"
+msgstr "Ссылка на EPG-json"
+
+msgid "Enable archive"
+msgstr "Наличие архива"
 
 msgid "Enter edit mode"
 msgstr "Войти в режим сортировки"
 
 msgid "Enter protect password"
-msgstr ""
-
-msgid "Enter the service pin"
-msgstr ""
+msgstr "Введите защитный код"
 
 msgid "Error while getting stream url:"
-msgstr ""
+msgstr "Ошибка при получении ссылки на поток:"
+
+msgid "Exit"
+msgstr "Выход"
 
 msgid "Exit edit mode"
 msgstr "Выйти из режима сортировки"
 
-msgid "Expire: "
-msgstr ""
+msgid "Exit plugin?"
+msgstr "Выйти из плагина?"
 
-msgid "Failed to save settings"
-msgstr ""
+msgid "Exiting edit mode"
+msgstr "Выход из режима редактирования"
+
+msgid "Extensions"
+msgstr "Расширения"
+
+msgid "Failed to authentificate your device"
+msgstr "Ошибка при авторизации вашего устройства"
+
+#, python-format
+msgid "Failed to install %s!"
+msgstr "Не удалось установить %s!"
+
+msgid "Failed to save favourites list."
+msgstr "Не удалось сохранить список избранного."
+
+msgid "Failed to send settings to server."
+msgstr "Не удалось сохранить настройки на сервере."
+
+msgid "Failed to update package list!"
+msgstr "Не удалось обновить список пакетов!"
 
 msgid "Favourites"
 msgstr "Избранное"
 
-msgid "Feb"
-msgstr "Февраль"
+msgid "Finished!"
+msgstr "Завершено!"
 
-msgid "Force kill opkg? Are you sure?"
-msgstr ""
-
-msgid "Fully"
-msgstr "Подробно"
-
-msgid "Go to page"
-msgstr ""
-
-msgid "Go to page..."
-msgstr ""
+msgid "Get playlist"
+msgstr "Брать плейлист"
 
 msgid "Groups"
 msgstr "Группы"
 
-msgid "IPtvDream plugin already running"
+msgid "High"
+msgstr "Высокое"
+
+#, python-format
+msgid "IPtvDream %s. Providers list:"
+msgstr "IPtvDream %s. Список провайдеров:"
+
+msgid "IPtvDream critical error"
+msgstr "IPtvDream критическая ошибка"
+
+msgid "IPtvDream plugin is already running!"
 msgstr "IPtvDream плагин уже запущен!"
 
-msgid "Install"
-msgstr "Установить"
-
-msgid "Jan"
-msgstr "Январь"
-
-msgid "Jul"
-msgstr "Июль"
-
-msgid "Jump"
+msgid ""
+"In the editing mode you can reorder your favourites list. Quick help:\n"
+"- Select channel that you want to put to a new position.\n"
+"- Press OK to start moving the channel around with arrow buttons.\n"
+"- Press OK again to fix the position of the channel.\n"
+"- Press EXIT when done.\n"
+"Start editing mode?"
 msgstr ""
+"В режиме редактирования Вы можете упорядочить списко избранное. Справка:\n"
+"- Выберите кананал, который вы хотите переместить на новую позицию.\n"
+"- Нажмите OK и начните перемещать канал стрелками вверх или вниз.\n"
+"- Нажмите OK cнова чтобы зафиксировать новое положение канала.\n"
+"- Нажмите EXIT для завершения.\n"
+"Войти в режим редактирования?"
 
-msgid "Jun"
-msgstr "Июнь"
+msgid "Input pin"
+msgstr "Введите код"
+
+#, python-format
+msgid "Installing %s"
+msgstr "Установка %s"
+
+msgid "Installing update, please wait"
+msgstr "Установка обновления, пожалуйста ожидайте"
+
+msgid "Key"
+msgstr "Ключ"
 
 msgid "Keyboard"
-msgstr ""
+msgstr "Клавиатура"
 
-msgid "Mar"
-msgstr "Март"
+msgid "Login"
+msgstr "Логин"
 
-msgid "May"
-msgstr "Май"
+msgid "Low"
+msgstr "Низкое"
+
+msgid "Media server"
+msgstr "Медиа сервер"
 
 msgid "Menu"
-msgstr ""
+msgstr "Меню"
 
-msgid "Not implemented yet"
-msgstr ""
-
-msgid "Nov"
-msgstr "Ноябрь"
+msgid "No detailed information"
+msgstr "Нет подробной информации"
 
 msgid "OK"
 msgstr "ОК"
 
-msgid "Oct"
-msgstr "Октябрь"
+#, python-format
+msgid "Open archive for \"%s\""
+msgstr "Открыть архив для \"%s\""
 
-msgid ""
-"Only IPtvDream manager available.\n"
-"Main plugin failed due to error: "
+msgid "Open plugin settings"
+msgstr "Открыть настройки плагина"
+
+msgid "Open provider settings"
+msgstr "Открыть настройки провайдера"
+
+msgid "Options"
+msgstr "Опции"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Payment expires: "
+msgstr "Подписка истекает: "
+
+msgid "Player ID"
 msgstr ""
 
-msgid "Opkg ERROR! Log:"
-msgstr ""
+msgid "Playlist"
+msgstr "Плейлист"
 
-msgid "Opkg OK! Log:"
-msgstr ""
+msgid "Playlist url"
+msgstr "Ссылка на плейлист"
 
-msgid "Opkg running, please wait..."
-msgstr ""
+#, python-format
+msgid "Please go to %s and generate pin code"
+msgstr "Откройте %s и сгенерируйте пин-код"
 
-msgid "Remote config error: "
-msgstr ""
+msgid "Quality"
+msgstr "Качество"
 
 msgid "Remove"
 msgstr "Удалить"
 
-msgid "Resume movie"
-msgstr ""
+#, python-format
+msgid "Remove \"%s\" from favourites"
+msgstr "Удалить \"%s\" из избранного"
 
-msgid "Search by name (beta)"
-msgstr ""
+msgid "Restart enigma2 to apply changes?"
+msgstr "Перезапустить enigma2 для применения изменений?"
 
-msgid "See error log in"
-msgstr ""
+msgid "Restart enigma2 to apply keymap changes?"
+msgstr "Перезапустить enigma2 для применения изменений?"
 
-msgid "Sep"
-msgstr "Сентябрь"
+msgid "Restart enigma2 to apply skin changes?"
+msgstr "Перезапустить enigma2 для применения изменений?"
 
-msgid "Service (player) id"
-msgstr ""
+msgid "Restarting enigma2 after IPtvDream update..."
+msgstr "Перезагрузка enigma2 после обновления IPtvDream..."
 
-msgid "Show in bouquets"
-msgstr "Добавить в букеты"
+msgid "Select keymap style"
+msgstr "Выберите тип keymap"
 
-msgid "Show in mainmenu"
+msgid "Select playlist number"
+msgstr "Выберите количество плейлистов"
+
+msgid "Select skin"
+msgstr "Выберите skin"
+
+msgid "Server"
+msgstr "Сервер"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Setup"
+msgstr "Настройка"
+
+#, python-format
+msgid "Setup finished with %d errors."
+msgstr "Настройка завершена ошибок %d."
+
+msgid "Setup finished without errors."
+msgstr "Настройка завершена без ошибок."
+
+msgid "Show all iptv providers"
+msgstr "Cписок провайдеров iptv"
+
+msgid "Show in extensions list"
+msgstr "Отображать в списке расширений"
+
+msgid "Show in main menu"
 msgstr "Отображать в главном меню"
-
-msgid "Sort by default"
-msgstr "Отсортировать по умолчанию"
 
 msgid "Sort by name"
 msgstr "Отсортировать по имени"
 
-msgid ""
-"Start failed!\n"
-"Edit options?\n"
-msgstr ""
+msgid "Sort by number"
+msgstr "Отсортировать по номеру"
 
-msgid "Stop movie?"
-msgstr ""
+#, python-format
+msgid "Start of %s failed"
+msgstr "Не удалось запустить %s"
 
-msgid "The pin code you entered is wrong."
-msgstr ""
+msgid "Stream format"
+msgstr "Формат потока"
 
-msgid "Up to date"
-msgstr ""
+msgid "Stream server"
+msgstr "Сервер вещания"
 
-msgid "Update"
-msgstr "Обновить"
+msgid "Time shift"
+msgstr "Сдвиг времени"
 
-msgid "add to parental protection"
-msgstr ""
+msgid "Update failed"
+msgstr "Ошибка при обновлении"
 
-msgid "all"
-msgstr "Все"
+msgid "Updating package list, please wait ..."
+msgstr "Обновление списка пакетов, пожалуйста ожидайте ..."
 
-msgid "best"
-msgstr "лучшие"
+msgid "We need to authenticate your device"
+msgstr "Необходима авторизация вашего устройства"
 
-msgid "favourites"
-msgstr "Избранное"
+msgid "Wrong number or pin"
+msgstr "Неправильный логин или пин код"
 
-msgid "last"
-msgstr "последние"
+msgid "Wrong pin!"
+msgstr "Не верный код!"
 
-msgid "login"
-msgstr "Абонемент"
+msgid "by name"
+msgstr "по имени"
 
-msgid "min"
-msgstr ""
+msgid "by number"
+msgstr "по номеру"
 
-msgid "password"
-msgstr "Пароль"
+msgid "from playlist.m3u file"
+msgstr "из файла playlist.m3u"
 
-msgid "remove from parental protection"
-msgstr ""
+msgid "from url"
+msgstr "по ссылке"
 
-msgid "text"
-msgstr "поиск"
+#~ msgid ""
+#~ "Access denied!\n"
+#~ "Try again?"
+#~ msgstr "Нет доступа! Попробовать снова?"
+
+#~ msgid "Apr"
+#~ msgstr "Апрель"
+
+#~ msgid "Aug"
+#~ msgstr "Август"
+
+#~ msgid "Auto send parental code"
+#~ msgstr "Авто отправление родительского пароля"
 
 #~ msgid "Best"
 #~ msgstr "Лучшие"
@@ -249,14 +363,17 @@ msgstr "поиск"
 #~ msgid "Buffering time, milliseconds"
 #~ msgstr "Время буферизации, миллисекунды"
 
+#~ msgid "By group"
+#~ msgstr "Группы"
+
 #~ msgid "Channel"
 #~ msgstr "Канал"
 
 #~ msgid "Channel Selection"
 #~ msgstr "Выбор канала"
 
-#~ msgid "Details"
-#~ msgstr "Детали"
+#~ msgid "Delete"
+#~ msgstr "Удалить"
 
 #~ msgid "EPG"
 #~ msgstr "EPG"
@@ -270,6 +387,12 @@ msgstr "поиск"
 #~ msgid "Expire on"
 #~ msgstr "Подписка до"
 
+#~ msgid "Feb"
+#~ msgstr "Февраль"
+
+#~ msgid "Fully"
+#~ msgstr "Подробно"
+
 #~ msgid "Generes"
 #~ msgstr "Жанры"
 
@@ -279,6 +402,21 @@ msgstr "поиск"
 #~ msgid "Genres: "
 #~ msgstr "Жанры:"
 
+#~ msgid "IPtvDream plugin already running"
+#~ msgstr "IPtvDream плагин уже запущен!"
+
+#~ msgid "Install"
+#~ msgstr "Установить"
+
+#~ msgid "Jan"
+#~ msgstr "Январь"
+
+#~ msgid "Jul"
+#~ msgstr "Июль"
+
+#~ msgid "Jun"
+#~ msgstr "Июнь"
+
 #~ msgid "Kartina.TV"
 #~ msgstr "Kartina.TV"
 
@@ -287,9 +425,6 @@ msgstr "поиск"
 
 #~ msgid "Last"
 #~ msgstr "Последние"
-
-#~ msgid "Login"
-#~ msgstr "Логин"
 
 #~ msgid "Login failed! Edit options?"
 #~ msgstr "Вход не удался! Изменить настройки?"
@@ -301,8 +436,17 @@ msgstr "поиск"
 #~ "Вход не удался!\n"
 #~ "Редактировать настройки?"
 
-#~ msgid "Password"
-#~ msgstr "Пароль"
+#~ msgid "Mar"
+#~ msgstr "Март"
+
+#~ msgid "May"
+#~ msgstr "Май"
+
+#~ msgid "Nov"
+#~ msgstr "Ноябрь"
+
+#~ msgid "Oct"
+#~ msgstr "Октябрь"
 
 #~ msgid "Search"
 #~ msgstr "Поиск"
@@ -313,11 +457,26 @@ msgstr "поиск"
 #~ msgid "Select channel"
 #~ msgstr "Выбор канала"
 
+#~ msgid "Sep"
+#~ msgstr "Сентябрь"
+
+#~ msgid "Show in bouquets"
+#~ msgstr "Добавить в букеты"
+
+#~ msgid "Show in mainmenu"
+#~ msgstr "Отображать в главном меню"
+
+#~ msgid "Sort by default"
+#~ msgstr "Отсортировать по умолчанию"
+
 #~ msgid "Style clock of infobar"
 #~ msgstr "Стиль часов на инфопанеле"
 
 #~ msgid "Timeshift"
 #~ msgstr "Задержка в просмотре (ч)"
+
+#~ msgid "Update"
+#~ msgstr "Обновить"
 
 #~ msgid "Use sericets instead of Gstreamer"
 #~ msgstr "Использовать sericets вместо Gstreamer"
@@ -328,11 +487,32 @@ msgstr "поиск"
 #~ msgid "You can't run this plugin in KartinaTV mode"
 #~ msgstr "Вы не можете запустить этот плагин в режиме KartinaTV"
 
+#~ msgid "all"
+#~ msgstr "Все"
+
 #~ msgid "analog"
 #~ msgstr "стрелочные"
+
+#~ msgid "best"
+#~ msgstr "лучшие"
 
 #~ msgid "by group"
 #~ msgstr "Группы"
 
 #~ msgid "digital"
 #~ msgstr "цифровые"
+
+#~ msgid "favourites"
+#~ msgstr "Избранное"
+
+#~ msgid "last"
+#~ msgstr "последние"
+
+#~ msgid "login"
+#~ msgstr "Абонемент"
+
+#~ msgid "password"
+#~ msgstr "Пароль"
+
+#~ msgid "text"
+#~ msgstr "поиск"

@@ -2,15 +2,40 @@
 version
 /info.json
 skin/iptvdream.xml
+skin-fhd/iptvdream.xml
 *.mo
 build/
 packages/
 *.pot
+src/keymap.xml
 # python
 *.py[cod]
+.venv/
+.ropeproject/
+__pycache__/
+Pipfile.lock
 # backup files
 *~
 # linux stuff
 .directory
 # temprorary ci file
 *.yml.tmp
+# Private configuration
+secret.json
+/*.m3u8
+/*.m3u
+# Twisted tests
+_trial_temp*
+
+# VSCode IDE
+.vscode/tags
+.vscode/sftp.json
+
+# JetBrains IDE
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+.idea/shelf
+.idea/dbnavigator.xml
+.idea/codeStyles

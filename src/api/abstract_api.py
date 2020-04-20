@@ -9,6 +9,8 @@
 # Software Foundation; either version 2, or (at your option) any later
 # version.
 
+from __future__ import print_function
+
 import socket
 import zlib
 import cookielib
@@ -16,12 +18,13 @@ import urllib
 import urllib2
 from json import loads as json_loads
 from os import path as os_path
-from xml.etree.cElementTree import fromstring
-from ..utils import getHwAddr, syncTime, Group, Channel, APIException, EPG
 from datetime import datetime
-from urllib import urlencode
-from twisted.internet.defer import Deferred, succeed
-from twisted.web.client import getPage
+try:
+	from typing import Dict  # pylint: disable=unused-import
+except ImportError:
+	pass
+
+from ..utils import getHwAddr, Group, Channel, APIException, APILoginFailed, EPG
 from ..dist import VERSION
 
 MODE_STREAM = 0
@@ -43,15 +46,15 @@ class AbstractAPI(object):
 	HAS_PIN = False
 	SERVICES = []
 	USE_SEEK = True
-	HAS_LOGIN = True
+	AUTH_TYPE = "Login"
 
 	def __init__(self, username, password):
 		self.username = username
 		self.password = password
 		self.sid = None
 		self.packet_expire = None
-		self.settings = []
-	
+		self.settings = {}
+
 		socket.setdefaulttimeout(10)
 		self.uuid = getHwAddr('eth0')
 		self.cookiejar = cookielib.CookieJar()
@@ -68,7 +71,7 @@ class AbstractAPI(object):
 
 	def authorize(self):
 		pass
-		
+
 	def readHttp(self, request):
 		o = self.urlopener.open(request)
 		enc = o.headers.get('Content-Encoding')
@@ -79,14 +82,12 @@ class AbstractAPI(object):
 			return o.read()
 
 	def getData(self, url, params, name='', fromauth=None):
-		reauthOnError = True
 		if not self.sid and not fromauth:
-			reauthOnError = False
 			self.cookiejar.clear()
 			self.authorize()
 		elif fromauth:
 			self.cookiejar.clear()
-				
+
 		try:
 			request = url+urllib.urlencode(params)
 			self.trace("Getting %s (%s)" % (name, request))
@@ -104,7 +105,7 @@ class AbstractAPI(object):
 			self.authorize()
 		elif fromauth:
 			self.cookiejar.clear()
-		
+
 		try:
 			request = url+urllib.urlencode(params)
 			self.trace("Getting %s" % name, url, request)
@@ -123,55 +124,27 @@ class AbstractAPI(object):
 			if reauthOnError and not fromauth:
 				return self.getJsonData(url, params, name)
 			error = json['error']
-			raise APIException(str(error['code']) + ": " + error['message'].encode('utf-8'))
+			if str(error['code']) in ['ACC_WRONG', 'AСС_EMPTY']:
+				raise APILoginFailed(str(error['code']) + ": " + error['message'].encode('utf-8'))
+			else:
+				raise APIException(str(error['code']) + ": " + error['message'].encode('utf-8'))
 		self.trace("getJsonData ok")
 		return json
 
-	def getXmlData(self, url, params, name='', fromauth=None):
-		reauthOnError = True
-		if not self.sid and not fromauth:
-			reauthOnError = False
-			self.cookiejar.clear()
-			self.authorize()
-		elif fromauth:
-			self.cookiejar.clear()
-		
-		self.trace("Getting %s" % name)
+	def _resolveConfigurationFile(self, file_name):
 		try:
-			reply = self.readHttp(url+urllib.urlencode(params))
-		except IOError as e:
-			self.sid = None
-			raise APIException(e)
-
-		try:
-			root = fromstring(reply)
-		except SyntaxError as e:
-			raise APIException("Failed to parse xml response: %s" % str(e))
-
-		err = root.find('error')
-		if err:
-			self.sid = None
-			self.cookiejar.clear()
-			if reauthOnError and not fromauth:
-				return self.getXmlData(url, params, name)
-			raise APIException(err.find('code').text.encode('utf-8')+" "+err.find('message').text.encode('utf-8'))
-		return root
+			from Tools.Directories import resolveFilename, SCOPE_SYSETC
+			return resolveFilename(SCOPE_SYSETC, 'iptvdream/%s' % file_name)
+		except ImportError:
+			self.trace("error: cant locate configuration files")
+			return "/tmp/%s" % file_name
 
 	def trace(self, *args):
 		"""Use for API debug"""
 		print("[IPtvDream] %s: %s" % (self.NAME, " ".join(map(str, args))))
-	
-	def get_hashID(self):
-		return int(hash(self.NAME) & 0xffffff)
-	hashID = property(get_hashID)
 
 
 class AbstractStream(AbstractAPI):
-	"""
-	:type groups: dict[int, Group]
-	:type channels: dict[int, Channel]
-	"""
-
 	SERVICE = 1
 	URL_DYNAMIC = True
 	Sort_N = 0
@@ -180,68 +153,62 @@ class AbstractStream(AbstractAPI):
 
 	def __init__(self, username, password):
 		super(AbstractStream, self).__init__(username, password)
-		self.channels = {}
-		self.groups = {}
+		self.channels = {}  # type: Dict[int, Channel]
+		self.groups = {}  # type: Dict[int, Group]
 		self.favourites = []
 		self.got_favourites = False
 
 	def setChannelsList(self):
 		pass
-	
+
 	def addFav(self, cid):
 		if not self.favourites.count(cid):
 			self.favourites.append(cid)
-			self.uploadFavourites(self.favourites, cid, True)
+			self.uploadFavourites(self.favourites)
 
 	def rmFav(self, cid):
 		self.favourites.remove(cid)
-		self.uploadFavourites(self.favourites, cid, False)
+		self.uploadFavourites(self.favourites)
 
-	def loadChannelsEpg(self, cids):
-		for cid, program in self.getChannelsEpg(cids):
-			try:
-				self.channels[cid].addEpg(program)
-			except KeyError:
-				self.trace("unknown channel", cid)
-	
-	def loadCurrentEpg(self, cid):
-		for e in self.getCurrentEpg(cid):
-			self.channels[cid].addEpg(e)
-	
+	def setFavourites(self, favourites):
+		self.favourites = favourites
+		self.uploadFavourites(self.favourites)
+
 	def loadDayEpg(self, cid, date):
 		date = datetime(date.year, date.month, date.day)
 		self.channels[cid].addEpgDay(date, list(self.getDayEpg(cid, date)))
-	
+
 	def getPiconName(self, cid):
 		"""You can return reference to cid or to channel name, anything you want ;)"""
 		return "%s:%s:" % (self.NAME, cid)
-	
+
 	# Return lists for GUI
-	
+
 	def selectGroups(self):
 		return self.groups.values()
-	
+
 	def selectAll(self, sort_key=Sort_N):
 		attr = self.SORT[sort_key]
 		return sorted(self.channels.values(), key=lambda c: getattr(c, attr))
-	
+
 	def selectChannels(self, gid, sort_key=Sort_N):
 		attr = self.SORT[sort_key]
 		return sorted(self.groups[gid].channels, key=lambda c: getattr(c, attr))
 
 	def selectFavourites(self):
 		if not self.got_favourites:
-			s = set(self.getFavourites()).intersection(self.channels.keys())
-			self.favourites = list(s)
+			keys = set(self.channels.keys())
+			favourites = self.getFavourites()
+			self.favourites = [cid for cid in favourites if cid in keys]
 			self.got_favourites = True
 		return [self.channels[cid] for cid in self.favourites]
-	
+
 	def findNumber(self, number):
 		for cid, ch in self.channels.iteritems():
 			if ch.number == number:
 				return cid
 		return None
-	
+
 	def isLocked(self, cid):
 		return self.channels[cid].is_protected
 
@@ -262,7 +229,7 @@ class AbstractStream(AbstractAPI):
 	def getChannelsEpg(self, cids):
 		"""
 		:param list[int] cids: list of channel ids
-		:rtype: list[(int, EPG)]
+		:rtype: list[(int, list[EPG])]
 		"""
 		return []
 
@@ -285,42 +252,43 @@ class AbstractStream(AbstractAPI):
 		"""
 		return []
 
-	def uploadFavourites(self, current, cid, added):
+	def uploadFavourites(self, current):
 		"""
 		:param list[int] current: list of current favourites
-		:param int cid: channel id that was just added or removed
-		:param bool added: whether channel should be in favourites
 		"""
 		pass
 
 	def getSettings(self):
+		""" Return setting id to ConfEntry object dict """
 		return {}
 
-	def pushSettings(self, sett):
+	def pushSettings(self, settings):
+		"""
+		Push settings to server for key to value dict
+		:type settings: typing.Dict[str, str]
+		"""
 		pass
+
+	def getPiconUrl(self, cid):
+		""" Return url to channel icon """
+		return ""
 
 
 class OfflineFavourites(AbstractStream):
 	def __init__(self, username, password):
 		super(OfflineFavourites, self).__init__(username, password)
-		try:
-			from Tools.Directories import resolveFilename, SCOPE_SYSETC
-			self._favorites_file = resolveFilename(SCOPE_SYSETC, 'iptvdream/%s.txt' % self.NAME)
-		except ImportError:
-			self.trace("error: cant locate favourites files")
-			self._favorites_file = "/tmp/fav_%s.txt" % self.NAME
+		self._favorites_file = self._resolveConfigurationFile('%s.txt' % self.NAME)
 
 	def getFavourites(self):
 		if not os_path.isfile(self._favorites_file):
 			return []
 		with open(self._favorites_file) as f:
 			data = f.read().strip()
-			fav = []
-			for cid in map(int, data.split(',')):
-				fav.append(cid)
-			return fav
+			if not data:
+				return []
+			return [int(c) for c in data.split(',')]
 
-	def uploadFavourites(self, current, cid, added):
+	def uploadFavourites(self, current):
 		try:
 			with open(self._favorites_file, 'w') as f:
 				f.write(','.join(map(str, current)))
@@ -328,75 +296,38 @@ class OfflineFavourites(AbstractStream):
 			raise APIException(str(e))
 
 
-class CallbackCore(object):
+class JsonSettings(AbstractAPI):
 	def __init__(self, username, password):
-		self.username = username
-		self.password = password
-		self.sid = None
-		self.requests = []
-		self.authorizing = False
-		self.agent = "iptvdream-plugin/%d.%d %s/%s" % (VERSION[0], VERSION[1], self.NAME, self.VERSION)
-	
-	# You may use this to print debug information
-	def trace(self, *args):
-		print("[IPtvDream] %s" % self.NAME, ' '.join(map(str, args)))
-	
-	# Public function to get data
-	def get(self, params):
-		return self._get(params, 0)
-	
-	# All these functions below are private.
-	# You must not override or directly use them.
-	def authorize(self):
-		self.sid = None
-		self.authorizing = True
-		self.trace("Authorization of username = %s" % self.username)
-		d = getPage(self.authRequest(), agent=self.agent)
-		return d.addErrback(self.error).addCallback(self.retProcess).addCallback(self.authCb).addErrback(self.authErr)
+		super(JsonSettings, self).__init__(username, password)
+		self._settings_file = self._resolveConfigurationFile('%s.json' % self.NAME)
 
-	def authCb(self, json):
-		self.authorizing = False
-		self.trace("authCallback")
-		self.sid = self.authProcess(json)
-		for r in self.requests:
-			r.callback(self.sid)
-		self.requests = []
-	
-	def authErr(self, err):
-		self.trace("authErrback")
-		self.authorizing = False
-		for r in self.requests:
-			r.errback(err)
-		self.requests = []
-		raise err
-	
-	def getSid(self):
-		if self.sid:
-			return succeed(self.sid)
-		else:
-			if not self.authorizing:
-				self.authorize()
-			d = Deferred()
-			self.requests.append(d)
-			return d
-	
-	def _get(self, params, depth):
-		return self.getSid().addCallback(self.doGet, params, depth)
-	
-	def doGet(self, sid, params, depth):
-		self.trace("doGet")
-		d = getPage(self.makeRequest(sid, params), agent=self.agent).addErrback(self.error)
-		return d.addCallback(self.retProcess).addErrback(self.getErr, params, depth)
+	def _loadSettings(self):
+		"""Read json from settings file without verification"""
+		from json import load as json_load
+		if not os_path.isfile(self._settings_file):
+			return {}
+		with open(self._settings_file) as f:
+			return json_load(f) or {}
 
-	def getErr(self, err, params, depth):
-		err.trap(APIException)
-		self.sid = None
-		if depth < 1:
-			self.trace("retry", depth + 1)
-			return self._get(params, depth + 1)
-		else:
-			raise err
-	
-	def error(self, err):
-		self.trace("getPage error:", err.getErrorMessage())
-		raise APIException(self.NAME + "error: " + err.getErrorMessage())
+	def _safeLoadSettings(self, defaults):
+		"""Update defaults with verified values loaded from json"""
+		for k, v in self._loadSettings().items():
+			try:
+				defaults[k].safeSetValue(str(v))
+			except KeyError:
+				continue
+		return defaults
+
+	def _saveSettings(self, settings):
+		"""Dump settings dictionary to file"""
+		from json import dump as json_dump
+		try:
+			with open(self._settings_file, 'w') as f:
+				json_dump(settings, f)
+		except Exception as e:
+			raise APIException(str(e))
+
+	def pushSettings(self, settings):
+		data = self._loadSettings()
+		data.update(settings)
+		self._saveSettings(data)

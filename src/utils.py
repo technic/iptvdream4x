@@ -11,11 +11,11 @@
 
 from __future__ import print_function
 
+from functools import wraps
 from datetime import datetime, timedelta
 import time
 import re
 import htmlentitydefs
-from os import path as os_path
 
 
 def trace(*args):
@@ -23,6 +23,7 @@ def trace(*args):
 
 
 def timeit(f):
+	@wraps(f)
 	def wrapper(*args, **kwargs):
 		t = time.time()
 		result = f(*args, **kwargs)
@@ -120,38 +121,77 @@ class EPG(object):
 		return tdmSec(self.end - t)
 
 	def percent(self, t, size):
-		return size * self.timePass(t) / self.duration()
+		try:
+			return size * self.timePass(t) / self.duration()
+		except ZeroDivisionError:
+			return size
 
-	def __getitem__(self, key):
-		# print("DEPRECATED")
-		return self.__dict__[key]
+	def progress(self, t):
+		try:
+			return float(self.timePass(t)) / float(self.duration())
+		except ZeroDivisionError:
+			return 1.0
 
-	def __setitem__(self, key, value):
-		# print("DEPRECATED")
-		self.__dict__[key] = value
+	def isAt(self, t):
+		return self.begin <= t < self.end
 
 	def __repr__(self):
-		return self.begin.strftime("%H:%M") + "-" + self.end.strftime("%H:%M") + "|" + self.name
+		return "%s-%s|%s" % (self.begin.strftime("%H:%M"), self.end.strftime("%H:%M"), self.name)
 
 
 class ConfEntry(object):
-	def __init__(self, name, title):
-		pass
+	def __init__(self, title):
+		"""
+		Base class for api configuration
+		:type title: str
+		"""
+		self.title = title
+		self.value = None
+
+	def safeSetValue(self, value):
+		""" Override and do validation if required """
+		self.value = value
 
 
-class ConfInteger:
-	def __init__(self, name, title, value, limits):
-		pass
+class ConfInteger(ConfEntry):
+	def __init__(self, title, value, limits):
+		"""
+		:type value: int
+		:type limits: typing.Tuple[int, int]
+		"""
+		super(ConfInteger, self).__init__(title)
+		self.value = value
+		self.limits = limits
+
+	def safeSetValue(self, value):
+		value = int(value)
+		if self.limits[0] <= value <= self.limits[1]:
+			self.value = value
 
 
-class ConfString:
-	def __init__(self, name, title, value):
-		pass
+class ConfString(ConfEntry):
+	def __init__(self, title, value):
+		"""
+		:type value: str
+		"""
+		super(ConfString, self).__init__(title)
+		self.value = value
 
 
-class ConfSelection:
-	def __init__(self, name, title, value, values):
-		pass
+class ConfSelection(ConfEntry):
+	def __init__(self, title, value, choices):
+		"""
+		choices should be list of (value, description) tuples
+		:type value: str
+		:type choices: List[Tuple[str, str]]
+		"""
+		super(ConfSelection, self).__init__(title)
+		self.value = value
+		self.choices = choices
+
+	def safeSetValue(self, value):
+		if value in [c[0] for c in self.choices]:
+			self.value = value
 
 
 class EPGDB(object):
@@ -161,7 +201,7 @@ class EPGDB(object):
 		self.last = 0
 
 	# bisect copies from python library
-	
+
 	def bisect(self, x, lo=0, hi=None):
 		if lo < 0:
 			raise ValueError('lo must be non-negative')
@@ -174,7 +214,7 @@ class EPGDB(object):
 			else:
 				lo = mid+1
 		return lo
-	
+
 	def bisect_left(self, x, lo=0, hi=None):
 		if lo < 0:
 			raise ValueError('lo must be non-negative')
@@ -187,7 +227,7 @@ class EPGDB(object):
 			else:
 				hi = mid
 		return lo
-	
+
 	def findEpg(self, time):
 		if time is None:
 			time = syncTime()
@@ -203,7 +243,7 @@ class EPGDB(object):
 		t = toTimestamp(time)
 		i = self.bisect(t)
 		return self.atTime(time, i, update)
-	
+
 	def atTime(self, time, i, update):
 		if i == 0 or i-1 >= len(self.l):
 			return None
@@ -214,19 +254,19 @@ class EPGDB(object):
 			return i-1
 		else:
 			return None
-	
+
 	def checkHint(self, i, t):
 		return i > 0 and (i == len(self.l) or t < self.l[i][0]) and (i == 0 or self.l[i-1] <= t)
 
 	### Public methods
-	
+
 	def epgCurrent(self, time=None):
 		i = self.findEpg(time)
 		if i is not None:
 			return self.l[i][1]
 		else:
 			return None
-	
+
 	def epgNext(self, time=None):
 		i = self.findEpg(time)
 		if (i is not None) and (i+1 < len(self.l)):
@@ -238,7 +278,7 @@ class EPGDB(object):
 				return None
 		else:
 			return None
-	
+
 	def epgDay(self, date):
 		# for apis that can't get correct range in getDayEpg
 		try:
@@ -249,7 +289,7 @@ class EPGDB(object):
 		i1 = self.bisect_left(toTimestamp(t1))
 		i2 = self.bisect_left(toTimestamp(t2), lo=i1)
 		return [x[1] for x in self.l[i1:i2]]  # FIXME: extra copy
-	
+
 	def addEpg(self, epg, hint=-1):
 		t = toTimestamp(epg.begin)
 		if self.checkHint(hint, t):
@@ -259,19 +299,19 @@ class EPGDB(object):
 		if i > 0:
 			prev = self.l[i-1][1]
 			if prev.begin == epg.begin or prev.end > epg.begin:
-				print("[IPtvDream] EPG conflict!")
+				trace("EPG conflict!")
 				self.l[i-1] = (t, epg)
 				return i
 		self.l.insert(i, (t, epg))
 		if self.last >= i:
 			self.last += 1
 		return i+1
-	
+
 	def addEpgSorted(self, epg_list):
 		hint = 0
 		for e in epg_list:
 			hint = self.addEpg(e, hint)
-	
+
 	def addEpgDay(self, date, epglist):
 		self.days_start[toDate(date)] = date
 		self.addEpgSorted(epglist)
@@ -304,18 +344,16 @@ class Group(object):
 
 
 class Channel(EPGDB):
-	def __init__(self, cid, gid, name, number, has_archive=False, is_protected=False):
+	def __init__(self, cid, name, number, has_archive=False, is_protected=False):
 		"""
 		:param int cid: channel id
-		:param int gid: group id, that channel belongs to
 		:param str name: channel title
 		:param int number: channel number
-		:param has_archive:
-		:param is_protected:
+		:param bool has_archive:
+		:param bool is_protected:
 		"""
 		EPGDB.__init__(self)
 		self.cid = cid
-		self.gid = gid
 		self.name = name
 		self.number = number
 		self.has_archive = has_archive
@@ -348,7 +386,7 @@ def unescapeEntities(text):
 			except KeyError:
 				pass
 		return text  # leave as is
-	return re.sub("&#?\w+;", fixup, text)
+	return re.sub(r"&#?\w+;", fixup, text)
 
 
 class APIException(Exception):

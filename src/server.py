@@ -23,9 +23,6 @@ from utils import trace, APIException
 
 
 class ApiInstanceManager(object):
-	"""
-	:type running: abstract_api.AbstractStream
-	"""
 	def __init__(self):
 		self.running = {}
 		manager.onConfigChanged.append(self.reset)

@@ -11,13 +11,19 @@
 from __future__ import print_function
 
 from datetime import datetime
+
+from abstract_api import OfflineFavourites
 from ..utils import Channel, Group, APIWrongPin, EPG
-from abstract_api import AbstractStream
 
 
-class OTTProvider(AbstractStream):
+class OTTProvider(OfflineFavourites):
 	NAME = "SovokTV"
 	site = "http://api.sovok.tv/v2.3/json"
+	icons_url = "http://sovok.tv"
+
+	def __init__(self, username, password):
+		super(OTTProvider, self).__init__(username, password)
+		self.icons = {}
 
 	def authorize(self):
 		self.trace("Authorization of username = %s" % self.username)
@@ -46,10 +52,11 @@ class OTTProvider(AbstractStream):
 				cid = int(c['id'])
 				number += 1
 				channel = Channel(
-					cid, gid, c['name'].encode('utf-8'), number,
+					cid, c['name'].encode('utf-8'), number,
 					bool(int(c['have_archive'])), bool(int(c['protected']))
 				)
 				self.channels[cid] = channel
+				self.icons[cid] = c['icon'].encode('utf-8')
 				channels.append(channel)
 			self.groups[gid] = Group(gid, g['name'].encode('utf-8'), channels)
 
@@ -68,9 +75,9 @@ class OTTProvider(AbstractStream):
 	def getChannelsEpg(self, cids):
 		data = self.getJsonData(self.site + "/epg_next2?", {"cids": ",".join(map(str, cids))})
 		for e in data['epg']:
-			yield int(e['chid']), EPG(
+			yield int(e['chid']), [EPG(
 				int(e['start']), int(e['end']),
-				e['progname'].encode('utf-8'), e['description'].encode('utf-8'))
+				e['progname'].encode('utf-8'), e['description'].encode('utf-8'))]
 
 	def getCurrentEpg(self, cid):
 		data = self.getJsonData(self.site + "/epg_next2?", {"cid": cid})
@@ -86,3 +93,9 @@ class OTTProvider(AbstractStream):
 			yield EPG(
 				int(e['ut_start']), int(e['ut_end']),
 				e['progname'].encode('utf-8'), e['description'].encode('utf-8'))
+
+	def getPiconUrl(self, cid):
+		url = self.icons[cid]
+		if url:
+			return self.icons_url + url
+		return ""

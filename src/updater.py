@@ -10,6 +10,8 @@
 
 from __future__ import print_function
 
+import time
+
 # enigma2 imports
 from Screens.MessageBox import MessageBox
 from Components.Console import Console
@@ -36,7 +38,7 @@ def fatalError(err):
 	"""
 	print("[IPtvDream] plugin error - exit 5")
 	print(err)
-	with open('/tmp/IPtvDream.crash', 'w') as f:
+	with open('/tmp/IPtvDream_crash.txt', 'w') as f:
 		f.write(str(err))
 	# exit code 5 = bsod
 	quitMainloop(5)
@@ -72,7 +74,6 @@ class Updater(object):
 		self.url = "http://technic.cf/iptvdream4x/packages/"
 		self.console = Console()
 		self.prefix = "enigma2-plugin-extensions"
-		self.agent = "IPtvDream-%s/%s" % (NAME, VERSION)
 		self._version = None
 
 	def checkUpdate(self):
@@ -91,8 +92,10 @@ class Updater(object):
 				return err
 			else:
 				fatalError(err)
+				return None
 
-		return getPage(self.url + "version-%s.txt" % NAME.lower()).addCallback(cb).addErrback(eb)
+		ts = int(time.time())
+		return getPage(self.url + "version-%s.txt?ts=%s" % (NAME.lower(), ts)).addCallback(cb).addErrback(eb)
 
 	def installUpdate(self):
 		print("[IPtvDream] install update")
@@ -119,6 +122,7 @@ class Updater(object):
 				return err
 			else:
 				fatalError(err)
+				return None
 
 		return downloadPage(url, file_name).addCallback(cb).addErrback(eb)
 
