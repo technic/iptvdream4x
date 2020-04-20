@@ -126,8 +126,14 @@ update-po:
 	$(MAKE) UPDATE_PO=y $(langs_po)
 
 
+bin_install := $(build)/usr/bin/hlsgw.py
+
+$(bin_install): $(build)/usr/bin/%: tools/%
+	install -D -m755 $< $@
+
+
 #install: $(build)/etc/iptvdream/iptvdream.epgmap
-install: $(pycinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(moinstall)
+install: $(pycinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(moinstall) $(bin_install)
 	install -d $(build)/etc/iptvdream
 
 
