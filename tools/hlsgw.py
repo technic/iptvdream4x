@@ -29,7 +29,8 @@ import time
 import datetime
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from SocketServer import ThreadingMixIn
-
+import logging
+from logging.handlers import RotatingFileHandler
 
 SUPPORTED_VERSION = 3
 USER_AGENT = "hlsgw/0.1"
@@ -132,8 +133,9 @@ def getM3U8MediaList(url):
 			elif tag == '#EXT-X-VERSION':
 				assert len(attribs) == 1
 				if int(attribs[0]) > SUPPORTED_VERSION:
-					print("[warn] file version %s exceeds supported version %d; some things might be broken"
-											% (attribs[0], SUPPORTED_VERSION))
+					log.warn(
+						"file version %s exceeds supported version %d; some things might be broken",
+						attribs[0], SUPPORTED_VERSION)
 			else:
 				pass
 		else:
@@ -159,56 +161,53 @@ def serveHLS(url, write_cb, bitrate=0):
 	targetduration = 5
 	media_bytes_total = 0
 	buffering_needed = False
-	try:
-		while True:
-			if bitrate:
-				bitrate -= (bitrate/10)
-			if len(variants):
-				url = urlparse.urljoin(root_url, getBestBitrate(variants, bitrate))
 
-			media_start_time = datetime.datetime.now()
-			media_bytes_total = 0
-			data = ''
-			for media in list(getM3U8MediaList(url)):
-				if media is None:
-					continue
-				seq, duration, targetduration, media_url = media
-				if seq > last_seq:
-					for chunk in readM3U8Chunks(urlparse.urljoin(url, media_url), targetduration or duration):
-						data += chunk
-						media_bytes_total += len(chunk)
-						if buffering_needed and len(data) < 15000000/8:
-							continue
-						write_cb(data)
-						data = ''
-						buffering_needed = False
-					if data:
-						write_cb(data)
-						data = ''
-					last_seq = seq
-					changed = 1
-			if len(variants):
-				bitrate = int((media_bytes_total*8) / (datetime.datetime.now() - media_start_time).total_seconds())
-			if changed == 1:
-				# initial minimum reload delay
-				delta = (datetime.datetime.now() - media_start_time).total_seconds()
-				if delta < duration:
-					time.sleep(duration - delta)
-				else:
-					buffering_needed = True
-			elif changed == 0:
-				# first attempt
-				time.sleep(targetduration*0.5)
-			elif changed == -1:
-				# second attempt
-				time.sleep(targetduration*1.5)
+	while True:
+		if bitrate:
+			bitrate -= (bitrate/10)
+		if len(variants):
+			url = urlparse.urljoin(root_url, getBestBitrate(variants, bitrate))
+
+		media_start_time = datetime.datetime.now()
+		media_bytes_total = 0
+		data = ''
+		for media in list(getM3U8MediaList(url)):
+			if media is None:
+				continue
+			seq, duration, targetduration, media_url = media
+			if seq > last_seq:
+				for chunk in readM3U8Chunks(urlparse.urljoin(url, media_url), targetduration or duration):
+					data += chunk
+					media_bytes_total += len(chunk)
+					if buffering_needed and len(data) < 15000000/8:
+						continue
+					write_cb(data)
+					data = ''
+					buffering_needed = False
+				if data:
+					write_cb(data)
+					data = ''
+				last_seq = seq
+				changed = 1
+		if len(variants):
+			bitrate = int((media_bytes_total*8) / (datetime.datetime.now() - media_start_time).total_seconds())
+		if changed == 1:
+			# initial minimum reload delay
+			delta = (datetime.datetime.now() - media_start_time).total_seconds()
+			if delta < duration:
+				time.sleep(duration - delta)
 			else:
-				# third attempt and beyond
-				time.sleep(targetduration*3.0)
-			changed -= 1
-	except Exception as e:
-		print('exception:', str(e))
-		raise
+				buffering_needed = True
+		elif changed == 0:
+			# first attempt
+			time.sleep(targetduration*0.5)
+		elif changed == -1:
+			# second attempt
+			time.sleep(targetduration*1.5)
+		else:
+			# third attempt and beyond
+			time.sleep(targetduration*3.0)
+		changed -= 1
 
 
 class HlsHandler(BaseHTTPRequestHandler):
@@ -222,7 +221,7 @@ class HlsHandler(BaseHTTPRequestHandler):
 			if n == -1 or not len(url[n+4:]):
 				self.send_response(404)
 				self.end_headers()
-				print("No hls url found")
+				log.warn("No hls url found")
 				return
 
 			url = url[n+4:]
@@ -230,11 +229,11 @@ class HlsHandler(BaseHTTPRequestHandler):
 			self.send_header('Content-type', "video/mp2t")
 			self.end_headers()
 
-			print("Serving HLS url %s" % url)
+			log.debug("Serving HLS url %s", url)
 			serveHLS(url, self.wfile.write)
-			print("Serving HLS ended")
-		except Exception as e:
-			print("Serving HLS ended with exception: %s" % e)
+			log.debug("Serving HLS ended")
+		except Exception:  # pylint: disable=broad-except
+			log.exception("Serving HLS ended with exception")
 
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
@@ -245,15 +244,17 @@ def serve():
 	try:
 		socket.setdefaulttimeout(30)
 		server = HTTPServer(('127.0.0.1', PORT_NUMBER), HlsHandler)
-		print('Started hls gateway on port', PORT_NUMBER)
-
-		# Wait forever for incoming http requests
+		log.info('Started hls gateway on port %d', PORT_NUMBER)
 		server.serve_forever(poll_interval=3)
-
 	except KeyboardInterrupt:
-		print('^C received, shutting down hls gateway')
+		log.info('^C received, shutting down hls gateway')
 		server.socket.close()
 
 
 if __name__ == '__main__':
-	serve()
+	log = logging.getLogger('hlsgw')
+	log.addHandler(RotatingFileHandler('/tmp/hlsgw.log', maxBytes=10 * 1024))
+	try:
+		serve()
+	except Exception:  # pylint: disable=broad-except
+		log.exception("exception in main")
