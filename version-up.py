@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
 		log = check_readme(nextVer)
 
-		with open(versionFile, 'w') as f:
+		with open(versionFile, 'wb') as f:
 			f.writelines(lines)
 			f.write('\n')
 

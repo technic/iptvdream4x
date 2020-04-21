@@ -67,7 +67,8 @@ class IPtvDreamConfig(ConfigListScreen, Screen):
 		cfg_list += [
 			getConfigListEntry(_("Show in main menu"), cfg.in_menu),
 			getConfigListEntry(_("Show in extensions list"), cfg.in_extensions),
-			getConfigListEntry(_("Player ID"), cfg.playerid)
+			getConfigListEntry(_("Player ID"), cfg.playerid),
+			getConfigListEntry(_("Use HLS proxy"), cfg.use_hlsgw),
 		]
 		ConfigListScreen.__init__(self, cfg_list, session)
 		self.setTitle(_("Configuration of %s") % name)

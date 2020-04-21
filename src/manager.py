@@ -273,6 +273,7 @@ class Manager(object):
 					self.config[name].in_menu = ConfigYesNo(default=False)
 					self.config[name].in_extensions = ConfigYesNo(default=False)
 					self.config[name].playerid = ConfigSelection(PLAYERS, default='4097')
+					self.config[name].use_hlsgw = ConfigYesNo(default=False)
 					self.config[name].last_played = ConfigText()
 
 				trace("Loading module", f)
@@ -451,13 +452,31 @@ class IPtvDreamManager(Screen):
 			self.session.open(TryQuitMainloop, retvalue=3)
 
 
+class DaemonHelper(object):
+	def __init__(self, program):
+		from Components.Console import Console
+		self.program = program
+		self._console = Console()
+
+	def start(self):
+		self._console.ePopen('%s start' % self.program, self._finished)
+
+	def stop(self):
+		self._console.ePopen('%s stop' % self.program, self._finished)
+
+	def _finished(self, output, exitcode, extra_args=None):
+		trace("%s exitcode %d\n%s" % (self.program, exitcode, output.strip()))
+
+
 class Runner(object):
 	def __init__(self):
 		self._running = False
+		self.hlsgw = DaemonHelper("/usr/bin/hlsgwd.sh")
 
 	def runPlugin(self, session, name):
 		if not self._running:
 			self._running = True
+			self.hlsgw.start()
 			session.openWithCallback(self.closed, PluginStarter, name)
 		else:
 			self.showWarning(session)
@@ -465,11 +484,13 @@ class Runner(object):
 	def runManager(self, session):
 		if not self._running:
 			self._running = True
+			self.hlsgw.start()
 			session.openWithCallback(self.closed, IPtvDreamManager)
 		else:
 			self.showWarning(session)
 
 	def closed(self, *args):
+		self.hlsgw.stop()
 		self._running = False
 
 	def showWarning(self, session):
