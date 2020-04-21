@@ -126,7 +126,7 @@ update-po:
 	$(MAKE) UPDATE_PO=y $(langs_po)
 
 
-bin_install := $(build)/usr/bin/hlsgw.py
+bin_install := $(build)/usr/bin/hlsgw.py $(build)/usr/bin/hlsgwd.sh
 
 $(bin_install): $(build)/usr/bin/%: tools/%
 	install -D -m755 $< $@

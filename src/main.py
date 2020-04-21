@@ -13,6 +13,7 @@ from __future__ import print_function
 
 # system imports
 from datetime import datetime, timedelta
+import urllib
 try:
 	# noinspection PyUnresolvedReferences
 	from typing import Callable, Optional, List, Tuple  # pylint: disable=unused-import
@@ -249,6 +250,8 @@ class IPtvDreamStreamPlayer(
 
 	def playUrl(self, url):
 		cid = self.cid
+		if self.cfg.use_hlsgw.value:
+			url = "http://localhost:7001/url=%s" % urllib.quote(url)
 		trace("play", url)
 		ref = eServiceReference(int(self.cfg.playerid.value), 0, url)
 		ref.setName(self.db.channels[cid].name)

@@ -253,6 +253,7 @@ def serve():
 
 if __name__ == '__main__':
 	log = logging.getLogger('hlsgw')
+	log.setLevel(logging.DEBUG)
 	log.addHandler(RotatingFileHandler('/tmp/hlsgw.log', maxBytes=10 * 1024))
 	try:
 		serve()
