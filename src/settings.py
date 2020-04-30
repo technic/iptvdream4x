@@ -60,9 +60,15 @@ class IPtvDreamConfig(ConfigListScreen, Screen):
 				getConfigListEntry(_("Login"), cfg.login),
 				getConfigListEntry(_("Password"), cfg.password),
 			]
+		elif apiClass.AUTH_TYPE == "Key":
+			cfg_list = [
+				getConfigListEntry(_("Key"), cfg.login),
+			]
 		cfg_list += [
 			getConfigListEntry(_("Show in main menu"), cfg.in_menu),
-			getConfigListEntry(_("Player ID"), cfg.playerid)
+			getConfigListEntry(_("Show in extensions list"), cfg.in_extensions),
+			getConfigListEntry(_("Player ID"), cfg.playerid),
+			getConfigListEntry(_("Use HLS proxy"), cfg.use_hlsgw),
 		]
 		ConfigListScreen.__init__(self, cfg_list, session)
 		self.setTitle(_("Configuration of %s") % name)

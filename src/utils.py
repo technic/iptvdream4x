@@ -121,10 +121,16 @@ class EPG(object):
 		return tdmSec(self.end - t)
 
 	def percent(self, t, size):
-		return size * self.timePass(t) / self.duration()
+		try:
+			return size * self.timePass(t) / self.duration()
+		except ZeroDivisionError:
+			return size
 
 	def progress(self, t):
-		return float(self.timePass(t)) / float(self.duration())
+		try:
+			return float(self.timePass(t)) / float(self.duration())
+		except ZeroDivisionError:
+			return 1.0
 
 	def isAt(self, t):
 		return self.begin <= t < self.end

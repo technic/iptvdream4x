@@ -9,6 +9,7 @@ PROVIDER ?= all
 plugin_name := IPtvDream
 plugin_path := /usr/lib/enigma2/python/Plugins/Extensions/$(plugin_name)
 skin_path := /usr/share/enigma2/$(plugin_name)
+skin-fhd_path := /usr/share/enigma2/$(plugin_name)FHD
 
 ifeq ($(DEB),y)
 pkgext := deb
@@ -19,7 +20,6 @@ architecture := $(ARCH)
 
 build := $(DESTDIR)
 plugindir = $(build)$(plugin_path)
-skindir = $(build)$(skin_path)
 
 all: package
 
@@ -37,8 +37,10 @@ pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py src/api/amigo.p
 	src/api/m3u.py src/api/edem_soveni.py src/api/ottclub.py src/api/shura.py \
 	src/api/iptv_e2_soveni.py src/api/onecent_soveni.py \
 	src/api/top_iptv.py src/api/koronaiptv.py \
-	src/api/playlist.py src/api/1ott.py src/api/fox.py \
+	src/api/playlist.py src/api/1ott.py src/api/fox.py src/api/itv_live.py \
+	src/api/ottg.py \
 	src/api/kartina.py src/api/ktv.py src/api/newrus.py \
+	src/api/cbilling.py \
 	src/api/mywy.py src/api/naschetv.py src/api/ozo.py src/api/sovok.py src/api/baltic.py
 datafiles += $(wildcard src/logo/*.png)
 endif
@@ -74,23 +76,33 @@ $(plugindir)/README.md: README.md
 install: $(plugindir)/LICENSE $(plugindir)/README.md
 
 
-skinfiles := $(shell find skin/ -name '*.png') skin/iptvdream.xml
-skininstall := $(patsubst skin/%,$(skindir)/%,$(skinfiles))
+skin_dir := $(build)$(skin_path)
+skin_files := $(shell find skin/ -name '*.png') skin/iptvdream.xml
+skin_install := $(patsubst skin/%,$(skin_dir)/%,$(skin_files))
 
-$(skininstall): $(skindir)/%: skin/%
+$(skin_install): $(skin_dir)/%: skin/%
 	install -D -m644 $< $@
 
-skin/iptvdream.xml: skin/skin.xml
+skin-fhd_dir := $(build)$(skin-fhd_path)
+skin-fhd_files := $(shell find skin-fhd/ -name '*.png') skin-fhd/iptvdream.xml
+skin-fhd_install := $(patsubst skin-fhd/%,$(skin-fhd_dir)/%,$(skin-fhd_files))
+
+$(skin-fhd_install): $(skin-fhd_dir)/%: skin-fhd/%
+	install -D -m644 $< $@
+
+skinxmls = $(addsuffix /iptvdream.xml,skin skin-fhd)
+
+$(skinxmls): %/iptvdream.xml: %/skin.xml
 	python skin-post.py $< $@
 
-prepare: skin/iptvdream.xml
+prepare: $(skinxmls)
 
 
 $(build)/etc/iptvdream/iptvdream.epgmap: src/iptvdream.epgmap
 	install -D -m644 $^ $@
 
 
-langs := uk ru en de
+langs := uk ru en de lt
 
 langs_po := $(addprefix po/,$(langs))
 langs_po := $(addsuffix .po,$(langs_po))
@@ -118,10 +130,15 @@ endif
 update-po:
 	$(MAKE) UPDATE_PO=y $(langs_po)
 
-$(info AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $(skininstall))
+
+bin_install := $(build)/usr/bin/hlsgw.py $(build)/usr/bin/hlsgwd.sh
+
+$(bin_install): $(build)/usr/bin/%: tools/%
+	install -D -m755 $< $@
+
 
 #install: $(build)/etc/iptvdream/iptvdream.epgmap
-install: $(pycinstall) $(datainstall) $(skininstall) $(moinstall)
+install: $(pycinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(moinstall) $(bin_install)
 	install -d $(build)/etc/iptvdream
 
 

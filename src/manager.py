@@ -21,7 +21,7 @@ from Screens.MessageBox import MessageBox
 from Screens.InputBox import InputBox
 from Screens.ChoiceBox import ChoiceBox
 from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
-	ConfigText, ConfigYesNo, ConfigSelection
+	ConfigText, ConfigYesNo, ConfigSelection, ConfigInteger
 from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Input import Input
@@ -56,7 +56,11 @@ class SkinManager(object):
 			if os.path.isfile(os.path.join(skins_dir, p, self.SKIN_FILE)):
 				self.skins.append(p)
 
-		default = 'IPtvDream'
+		desktop = getDesktop(0)
+		if desktop.size().width() >= 1920:
+			default = 'IPtvDreamFHD'
+		else:
+			default = 'IPtvDream'
 		assert default in self.skins
 		pluginConfig.skin = ConfigSelection(self.skins, default=default)
 
@@ -76,42 +80,9 @@ skinManager = SkinManager()
 skinManager.load()
 
 
-def getPlugins():
-	plugins = []
-	if NAME == 'all':
-		f_name = resolveFilename(SCOPE_SYSETC, 'iptvdream.json')
-		try:
-			with open(f_name, 'r') as f:
-				to_import = json_load(f)['imports']
-		except Exception as e:
-			trace("[IPtvDream] config error:", e)
-			to_import = []
-		for n in to_import:
-			mod = __import__('api.%s' % n)
-			getProviders = getattr(mod, 'getProviders')
-	return plugins
-
-
-def loadProviders():
-	if NAME == 'all':
-		fname = resolveFilename(SCOPE_SYSETC, 'iptvdream.json')
-		try:
-			with open(fname, 'r') as f:
-				to_import = json_load(f)['imports']
-		except Exception as e:
-			trace("[IPtvDream] config error:", e)
-			to_import = []
-
-
 class PluginStarter(Screen):
 	def __init__(self, session, name, task=None):
 		trace("Starting provider", name)
-
-		desktop = getDesktop(0)
-		self.resolution = desktop.size().width(), desktop.size().height()
-		if self.resolution[0] != 1280 and not self.compatibleSkin():
-			gMainDC.getInstance().setResolution(1280, 720)
-			desktop.resize(eSize(1280, 720))
 
 		Screen.__init__(self, session)
 		self.cfg = manager.getConfig(name)
@@ -199,18 +170,9 @@ class PluginStarter(Screen):
 
 	def restoreService(self):
 		self.session.nav.playService(self.last_service)
-		desktop = getDesktop(0)
-		w, h = self.resolution
-		trace("restore resolution", w, h)
-		if w != 1280 and not self.compatibleSkin():
-			gMainDC.getInstance().setResolution(w, h)
-			desktop.resize(eSize(w, h))
 
 
 class TokenPluginStarter(PluginStarter):
-	def __init__(self, session, name):
-		super(TokenPluginStarter, self).__init__(session, name)
-
 	def start(self):
 		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
 		if self.cfg.password.value == '':
@@ -221,7 +183,12 @@ class TokenPluginStarter(PluginStarter):
 	def auth(self):
 		try:
 			self.db.start()
-			return self.run()
+			if self.task == 'provider_settings':
+				self.task = None
+				self.openProviderSettings()
+			else:
+				self.run()
+			return
 		except APILoginFailed as e:
 			cb = lambda ret: self.askToken()
 			message = _("We need to authenticate your device") + "\n" + str(e)
@@ -263,6 +230,9 @@ class TokenPluginStarter(PluginStarter):
 
 class Manager(object):
 	def __init__(self):
+		pluginConfig.max_playlists = ConfigInteger(0, (0, 9))
+		self.max_playlists = pluginConfig.max_playlists.value
+
 		self.enabled = {}
 		self.apiDict = {}
 		self.config = config.IPtvDream = ConfigSubDict()
@@ -271,6 +241,7 @@ class Manager(object):
 
 	def initList(self):
 		api_provider = 'OTTProvider'
+		api_function = 'getOTTProviders'
 		prefix = 'Plugins.Extensions.IPtvDream.api'
 		api_path = resolveFilename(SCOPE_CURRENT_PLUGIN, 'Extensions/IPtvDream/api')
 
@@ -289,22 +260,31 @@ class Manager(object):
 			seen.add(f)
 
 			try:
+				def process(provider):
+					name = provider.NAME
+					if self.isIgnored(name):
+						trace("Ignore", name)
+						return
+					self.apiDict[name] = provider
+					self.config[name] = ConfigSubsection()
+					self.config[name].login = ConfigNumberText()
+					self.config[name].password = ConfigNumberText()
+					self.config[name].parental_code = ConfigNumberText()
+					self.config[name].in_menu = ConfigYesNo(default=False)
+					self.config[name].in_extensions = ConfigYesNo(default=False)
+					self.config[name].playerid = ConfigSelection(PLAYERS, default='4097')
+					self.config[name].use_hlsgw = ConfigYesNo(default=False)
+					self.config[name].last_played = ConfigText()
+
 				trace("Loading module", f)
 				module = my_import('%s.%s' % (prefix, f))
-				if not hasattr(module, api_provider):
-					continue
-				provider = getattr(module, api_provider)
-				name = provider.NAME
-				self.apiDict[name] = provider
-				self.config[name] = ConfigSubsection()
-				self.config[name].login = ConfigNumberText()
-				self.config[name].password = ConfigNumberText()
-				self.config[name].parental_code = ConfigNumberText()
-				self.config[name].in_menu = ConfigYesNo(default=False)
-				self.config[name].playerid = ConfigSelection(PLAYERS, default='4097')
-				self.config[name].last_played = ConfigText()
+				if hasattr(module, api_function):
+					for p in getattr(module, api_function)():
+						process(p)
+				elif hasattr(module, api_provider):
+					process(getattr(module, api_provider))
 
-			except Exception:
+			except Exception:  # pylint: disable=broad-except
 				trace("Exception")
 				import traceback
 				traceback.print_exc()
@@ -312,10 +292,20 @@ class Manager(object):
 
 		trace("Config generated for", self.config.keys())
 
+	def isIgnored(self, name):
+		return name.startswith('M3U-Playlist-') and int(name[-1]) > self.max_playlists
+
+	def getNumberChoices(self):
+		return [(str(n), n) for n in range(4)]
+
+	def setPlaylistNumber(self, n):
+		pluginConfig.max_playlists.value = n
+		pluginConfig.max_playlists.save()
+
 	def getList(self):
 		return sorted(
 			({'name': v.NAME, 'title': v.TITLE} for v in self.apiDict.values()),
-			key=lambda item: item['name'])
+			key=lambda item: item['name'].lower())
 
 	def getApi(self, name):
 		return self.apiDict[name]
@@ -371,7 +361,7 @@ class IPtvDreamManager(Screen):
 	def ok(self):
 		entry = self.getSelected()
 		if entry is not None:
-			self.session.open(PluginStarter, entry['name'])
+			self.startPlugin(entry['name'])
 
 	def setup(self):
 		entry = self.getSelected()
@@ -381,21 +371,28 @@ class IPtvDreamManager(Screen):
 	def providerSetup(self):
 		entry = self.getSelected()
 		if entry is not None:
-			self.session.open(PluginStarter, entry['name'], 'provider_settings')
+			self.startPlugin(entry['name'], 'provider_settings')
+
+	def startPlugin(self, name, task=None):
+		if manager.getApi(name).AUTH_TYPE == 'Token':
+			self.session.open(TokenPluginStarter, name, task)
+		else:
+			self.session.open(PluginStarter, name, task)
 
 	def cancel(self):
 		self.close()
 
 	def showMenu(self):
-		
+
 		def cb(entry=None):
 			if entry is not None:
 				func = entry[1]
 				func()
-		
+
 		actions = [
 			(_("Choose keymap"), self.selectKeymap),
 			(_("Choose skin"), self.selectSkin),
+			(_("Additional playlists number"), self.selectPlaylistNumber),
 		]
 		self.session.openWithCallback(cb, ChoiceBox, _("Context menu"), actions)
 
@@ -433,11 +430,21 @@ class IPtvDreamManager(Screen):
 	def selectSkin(self):
 		def cb(selected):
 			if selected is not None:
-				skinManager.setSkin(selected[0])
+				skinManager.setSkin(selected[1])
 				self.session.openWithCallback(
-					self.restart, MessageBox, _("Restart enigma2 to apply keymap changes?"), MessageBox.TYPE_YESNO)
+					self.restart, MessageBox, _("Restart enigma2 to apply skin changes?"), MessageBox.TYPE_YESNO)
 
 		self.session.openWithCallback(cb, ChoiceBox, title=_("Select skin"), list=[(s, s) for s in skinManager.skins])
+
+	def selectPlaylistNumber(self):
+		def cb(selected):
+			if selected is not None:
+				manager.setPlaylistNumber(selected[1])
+				self.session.openWithCallback(
+					self.restart, MessageBox, _("Restart enigma2 to apply changes?"), MessageBox.TYPE_YESNO)
+
+		self.session.openWithCallback(
+			cb, ChoiceBox, title=_("Select playlist number"), list=manager.getNumberChoices())
 
 	def restart(self, ret):
 		if ret:
@@ -445,13 +452,31 @@ class IPtvDreamManager(Screen):
 			self.session.open(TryQuitMainloop, retvalue=3)
 
 
+class DaemonHelper(object):
+	def __init__(self, program):
+		from Components.Console import Console
+		self.program = program
+		self._console = Console()
+
+	def start(self):
+		self._console.ePopen('%s start' % self.program, self._finished)
+
+	def stop(self):
+		self._console.ePopen('%s stop' % self.program, self._finished)
+
+	def _finished(self, output, exitcode, extra_args=None):
+		trace("%s exitcode %d\n%s" % (self.program, exitcode, output.strip()))
+
+
 class Runner(object):
 	def __init__(self):
 		self._running = False
+		self.hlsgw = DaemonHelper("/usr/bin/hlsgwd.sh")
 
 	def runPlugin(self, session, name):
 		if not self._running:
 			self._running = True
+			self.hlsgw.start()
 			session.openWithCallback(self.closed, TokenPluginStarter, name)
 		else:
 			self.showWarning(session)
@@ -459,11 +484,13 @@ class Runner(object):
 	def runManager(self, session):
 		if not self._running:
 			self._running = True
+			self.hlsgw.start()
 			session.openWithCallback(self.closed, IPtvDreamManager)
 		else:
 			self.showWarning(session)
 
 	def closed(self, *args):
+		self.hlsgw.stop()
 		self._running = False
 
 	def showWarning(self, session):

@@ -22,7 +22,6 @@ from Components.Label import Label
 from Components.ServiceEventTracker import ServiceEventTracker
 from Screens.Screen import Screen
 from enigma import iPlayableService
-from skin import colorNames, SkinError
 
 from layer import eTimer
 from utils import trace
@@ -66,15 +65,6 @@ class ConfigNumberText(ConfigText):
 	def handleKey(self, key):
 		self.timeout()  # Allow to input next key immediately
 		return super(ConfigNumberText, self).handleKey(key)
-
-
-def parseColor(s):  # FIXME: copy-paste form skin source
-	if s[0] != '#':
-		try:
-			return colorNames[s]
-		except:
-			raise SkinError("color '%s' must be #aarrggbb or valid named color" % (s))
-	return int(s[1:], 0x10)
 
 
 class StaticTextService(StaticText):

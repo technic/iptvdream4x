@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
 		log = check_readme(nextVer)
 
-		with open(versionFile, 'w') as f:
+		with open(versionFile, 'wb') as f:
 			f.writelines(lines)
 			f.write('\n')
 
@@ -77,6 +77,7 @@ if __name__ == "__main__":
 		ver = '.'.join(map(str, nextVer))
 		subprocess.check_call(['git', 'commit', '-m', 'version up %s' % ver])
 		subprocess.check_call(['git', 'tag', '-a', 'v/%s' % ver, '-m', 'version up %s' % ver])
+		subprocess.check_call(['git', 'push'])
 
 	print("Done.\n")
 

@@ -125,6 +125,7 @@ class M3UProvider(OfflineFavourites):
 		group_regexp = re.compile('#EXTINF:.*group-title="([^"]*)"')
 		logo_regexp = re.compile('#EXTINF:.*tvg-logo="([^"]*)"')
 		rec_regexp = re.compile('#EXTINF:.*tvg-rec="([^"]*)"')
+		catchup_regexp = re.compile('#EXTINF:.*catchup-days="([^"]*)"')
 
 		import codecs
 		if lines:
@@ -160,7 +161,11 @@ class M3UProvider(OfflineFavourites):
 				if m:
 					rec = m.group(1) == "1"
 				else:
-					rec = False
+					m = catchup_regexp.match(line)
+					if m:
+						rec = m.group(1) != "0"
+					else:
+						rec = False
 			elif line.startswith("#EXTGRP:"):
 				group = line.strip().split(':')[1]
 			elif line.startswith("#"):
