@@ -163,9 +163,7 @@ class M3UProvider(OfflineFavourites):
 					rec = False
 			elif line.startswith("#EXTGRP:"):
 				group = line.strip().split(':')[1]
-			elif line.startswith("#EXTM3U"):
-				continue
-			elif line.startswith("#EXT-X-ENDLIST"):
+			elif line.startswith("#"):
 				continue
 			elif not line.strip():
 				continue

@@ -35,7 +35,8 @@ ifeq ($(PROVIDER),all)
 pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py src/api/amigo.py src/api/emigranttv.py \
 	src/api/pure.py src/api/kinoboom.py \
 	src/api/m3u.py src/api/edem_soveni.py src/api/ottclub.py src/api/shura.py \
-	src/api/iptv_e2_soveni.py src/api/onecent_soveni.py src/api/koronaiptv.py \
+	src/api/iptv_e2_soveni.py src/api/onecent_soveni.py \
+	src/api/top_iptv.py src/api/koronaiptv.py \
 	src/api/playlist.py src/api/1ott.py src/api/fox.py \
 	src/api/kartina.py src/api/ktv.py src/api/newrus.py \
 	src/api/mywy.py src/api/naschetv.py src/api/ozo.py src/api/sovok.py src/api/baltic.py
@@ -73,7 +74,7 @@ $(plugindir)/README.md: README.md
 install: $(plugindir)/LICENSE $(plugindir)/README.md
 
 
-skinfiles := $(shell find skin/ -name *.png) skin/iptvdream.xml
+skinfiles := $(shell find skin/ -name '*.png') skin/iptvdream.xml
 skininstall := $(patsubst skin/%,$(skindir)/%,$(skinfiles))
 
 $(skininstall): $(skindir)/%: skin/%
@@ -117,6 +118,7 @@ endif
 update-po:
 	$(MAKE) UPDATE_PO=y $(langs_po)
 
+$(info AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $(skininstall))
 
 #install: $(build)/etc/iptvdream/iptvdream.epgmap
 install: $(pycinstall) $(datainstall) $(skininstall) $(moinstall)
@@ -164,12 +166,6 @@ package: $(pkgdir)/$(pkgname).$(pkgext) info
 
 info:
 	echo '{"name": "$(name)"}' > $@.json
-
-sshinstall: $(pkgdir)/$(pkgname).$(pkgext)
-	test -n '$(HOST)'
-	wput -u -nc -nv $< ftp://root@$(HOST)/tmp/$(notdir $<)
-	ssh root@$(HOST) opkg install --force-reinstall /tmp/$(notdir $<)
-
 
 clean:
 	rm -rf build

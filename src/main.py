@@ -320,6 +320,9 @@ class IPtvDreamStreamPlayer(
 			self.archive_pause = syncTime()
 			self.session.nav.stopService()
 			self.lockShow()
+			# freeze epg labels
+			self.epgTimer.stop()
+			self.epgProgressTimer.stop()
 
 	def exitArchive(self):
 		self.setArchiveShift(0)
@@ -577,7 +580,7 @@ class ChannelList(MenuList):
 		self.list[index] = self.buildChannelEntry(channel)
 		self.l.invalidateEntry(index)
 
-	def moveUp(self):
+	def moveEntryUp(self):
 		index = self.getSelectedIndex()
 		if index == 0:
 			return
@@ -588,7 +591,7 @@ class ChannelList(MenuList):
 		self._updateIndexMap(index)
 		self.up()
 
-	def moveDown(self):
+	def moveEntryDown(self):
 		index = self.getSelectedIndex()
 		if index + 1 == len(self.list):
 			return
@@ -1113,13 +1116,13 @@ class IPtvDreamChannels(Screen):
 
 	def moveUp(self):
 		if self.marked:
-			self.list.moveUp()
+			self.list.moveEntryUp()
 		else:
 			self.list.up()
 
 	def moveDown(self):
 		if self.marked:
-			self.list.moveDown()
+			self.list.moveEntryDown()
 		else:
 			self.list.down()
 
@@ -1253,7 +1256,11 @@ class IPtvDreamEpg(Screen):
 		self.day = 0
 		self.single = False
 		self.list.onSelectionChanged.append(self.updateLabels)
-		self.onLayoutFinish.append(self.fillList)
+		self.onShown.append(self.start)
+
+	def start(self):
+		self.onShown.remove(self.start)
+		self.fillList()
 
 	def buildEpgEntry(self, entry):
 		if self.db.channels[self.cid].has_archive and entry.begin < syncTime():
@@ -1414,9 +1421,9 @@ class IPtvDreamEpgInfo(Screen):
 	def updateProgress(self, value):
 		t = syncTime()
 		if self.entry.isAt(t):
-			self["epgDuration"] = Label("+%s min" % (self.entry.timeLeft(t) / 60))
+			self["epgDuration"].setText("+%s min" % (self.entry.timeLeft(t) / 60))
 		else:
-			self["epgDuration"] = Label("%s min" % (self.entry.duration() / 60))
+			self["epgDuration"].setText("%s min" % (self.entry.duration() / 60))
 		self["epgProgress"].setValue(int(100 * value))
 
 # gettext HACK:

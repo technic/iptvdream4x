@@ -26,7 +26,7 @@ from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Input import Input
 from Components.Sources.List import List
-from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN
+from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
 from Tools.Import import my_import
 from Tools.LoadPixmap import LoadPixmap
 from enigma import getDesktop, gMainDC, eSize
@@ -42,10 +42,38 @@ from settings import IPtvDreamConfig, IPtvDreamApiConfig
 from main import IPtvDreamStreamPlayer
 
 PLAYERS = [('1', "enigma2 ts (1)"), ('4097', "gstreamer (4097)"), ('5002', "exteplayer3 (5002)")]
-loadSkin("IPtvDream/iptvdream.xml")
-
 KEYMAPS = [('enigma', 'enigma'), ('neutrino', 'neutrino')]
 pluginConfig.keymap_type = ConfigSelection(KEYMAPS)
+
+
+class SkinManager(object):
+	SKIN_FILE = 'iptvdream.xml'
+
+	def __init__(self):
+		self.skins = []
+		skins_dir = resolveFilename(SCOPE_SKIN, '.')
+		for p in os.listdir(skins_dir):
+			if os.path.isfile(os.path.join(skins_dir, p, self.SKIN_FILE)):
+				self.skins.append(p)
+
+		default = 'IPtvDream'
+		assert default in self.skins
+		pluginConfig.skin = ConfigSelection(self.skins, default=default)
+
+	def load(self):
+		skin = pluginConfig.skin.value
+		loadSkin(os.path.join(skin, self.SKIN_FILE))
+
+	def current(self):
+		return pluginConfig.skin.value
+
+	def setSkin(self, skin):
+		pluginConfig.skin.value = skin
+		pluginConfig.skin.save()
+
+
+skinManager = SkinManager()
+skinManager.load()
 
 
 def getPlugins():
@@ -81,7 +109,7 @@ class PluginStarter(Screen):
 
 		desktop = getDesktop(0)
 		self.resolution = desktop.size().width(), desktop.size().height()
-		if self.resolution[0] != 1280:
+		if self.resolution[0] != 1280 and not self.compatibleSkin():
 			gMainDC.getInstance().setResolution(1280, 720)
 			desktop.resize(eSize(1280, 720))
 
@@ -164,12 +192,17 @@ class PluginStarter(Screen):
 	def exit(self):
 		self.close()
 
+	def compatibleSkin(self):
+		SUPPORTED_SKINS = ['BlueMetalFHD']
+		current = config.skin.primary_skin.value
+		return any(current.find(s) > -1 for s in SUPPORTED_SKINS) or skinManager.current() != 'IPtvDream'
+
 	def restoreService(self):
 		self.session.nav.playService(self.last_service)
 		desktop = getDesktop(0)
 		w, h = self.resolution
 		trace("restore resolution", w, h)
-		if w != 1280:
+		if w != 1280 and not self.compatibleSkin():
 			gMainDC.getInstance().setResolution(w, h)
 			desktop.resize(eSize(w, h))
 
@@ -307,7 +340,7 @@ class IPtvDreamManager(Screen):
 		self["key_red"] = Button(_("Exit"))
 		self["key_green"] = Button(_("Setup"))
 		self["key_yellow"] = Button(_("Options"))
-		self["key_blue"] = Button(_("Keymap"))
+		self["key_blue"] = Button(_("Menu"))
 		self["actions"] = ActionMap(
 				["OkCancelActions", "ColorActions"], {
 					"cancel": self.cancel,
@@ -315,7 +348,7 @@ class IPtvDreamManager(Screen):
 					"green": self.setup,
 					"yellow": self.providerSetup,
 					"red": self.cancel,
-					"blue": self.selectKeymap,
+					"blue": self.showMenu,
 				}, -1)
 		self.list = self["list"] = List()
 		self.onFirstExecBegin.append(self.start)
@@ -353,6 +386,19 @@ class IPtvDreamManager(Screen):
 	def cancel(self):
 		self.close()
 
+	def showMenu(self):
+		
+		def cb(entry=None):
+			if entry is not None:
+				func = entry[1]
+				func()
+		
+		actions = [
+			(_("Choose keymap"), self.selectKeymap),
+			(_("Choose skin"), self.selectSkin),
+		]
+		self.session.openWithCallback(cb, ChoiceBox, _("Context menu"), actions)
+
 	def selectKeymap(self):
 		def cb(selected):
 			if selected is not None:
@@ -381,12 +427,22 @@ class IPtvDreamManager(Screen):
 		pluginConfig.keymap_type.save()
 		configfile.save()
 
-		def cb(ret):
-			if ret:
-				from Screens.Standby import TryQuitMainloop
-				self.session.open(TryQuitMainloop, retvalue=3)
 		self.session.openWithCallback(
-				cb, MessageBox, _("Restart enigma2 to apply keymap changes?"), MessageBox.TYPE_YESNO)
+				self.restart, MessageBox, _("Restart enigma2 to apply keymap changes?"), MessageBox.TYPE_YESNO)
+
+	def selectSkin(self):
+		def cb(selected):
+			if selected is not None:
+				skinManager.setSkin(selected[0])
+				self.session.openWithCallback(
+					self.restart, MessageBox, _("Restart enigma2 to apply keymap changes?"), MessageBox.TYPE_YESNO)
+
+		self.session.openWithCallback(cb, ChoiceBox, title=_("Select skin"), list=[(s, s) for s in skinManager.skins])
+
+	def restart(self, ret):
+		if ret:
+			from Screens.Standby import TryQuitMainloop
+			self.session.open(TryQuitMainloop, retvalue=3)
 
 
 class Runner(object):

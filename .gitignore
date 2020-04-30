@@ -28,6 +28,7 @@ _trial_temp*
 
 # VSCode IDE
 .vscode/tags
+.vscode/sftp.json
 
 # JetBrains IDE
 .idea/workspace.xml

@@ -20,6 +20,10 @@
                     "localRoot": "${workspaceRoot}\\src",
                     "remoteRoot": "/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream",
                 },
+                {
+                    "localRoot": "${workspaceRoot}\\..\\enigma2\\lib\\python",
+                    "remoteRoot": "/usr/lib/enigma2/python",
+                },
             ],
             "port": 5678,
             "host": "localhost",
