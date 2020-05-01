@@ -12,7 +12,6 @@
 from __future__ import print_function
 
 # system imports
-from json import load as json_load
 import os
 
 # enigma2 imports
@@ -26,14 +25,14 @@ from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Input import Input
 from Components.Sources.List import List
-from Tools.Directories import resolveFilename, SCOPE_SYSETC, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
+from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
 from Tools.Import import my_import
 from Tools.LoadPixmap import LoadPixmap
-from enigma import getDesktop, gMainDC, eSize
+from enigma import getDesktop
 from skin import loadSkin
 
 # plugin imports
-from dist import NAME, VERSION
+from dist import VERSION
 from provision import pluginConfig
 from common import ConfigNumberText
 from utils import trace, APIException, APILoginFailed
