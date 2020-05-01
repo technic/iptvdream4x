@@ -310,6 +310,11 @@ class Manager(object):
 	def getApi(self, name):
 		return self.apiDict[name]
 
+	def getStarterClass(self, name):
+		if self.getApi(name).AUTH_TYPE == 'Token':
+			return TokenPluginStarter
+		return PluginStarter
+
 	def getConfig(self, name):
 		return self.config[name]
 
@@ -374,10 +379,7 @@ class IPtvDreamManager(Screen):
 			self.startPlugin(entry['name'], 'provider_settings')
 
 	def startPlugin(self, name, task=None):
-		if manager.getApi(name).AUTH_TYPE == 'Token':
-			self.session.open(TokenPluginStarter, name, task)
-		else:
-			self.session.open(PluginStarter, name, task)
+		self.session.open(manager.getStarterClass(name), name, task)
 
 	def cancel(self):
 		self.close()
@@ -477,7 +479,7 @@ class Runner(object):
 		if not self._running:
 			self._running = True
 			self.hlsgw.start()
-			session.openWithCallback(self.closed, PluginStarter, name)
+			session.openWithCallback(self.closed, manager.getStarterClass(name), name)
 		else:
 			self.showWarning(session)
 
