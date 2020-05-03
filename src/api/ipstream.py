@@ -26,7 +26,7 @@ except ImportError:
 		return text
 
 
-class OTTProvider(JsonSettings, M3UProvider):
+class IpStreamOne(JsonSettings, M3UProvider):
 	NAME = "IpStreamOne"
 	AUTH_TYPE = "Token"
 	TVG_MAP = True
@@ -34,9 +34,12 @@ class OTTProvider(JsonSettings, M3UProvider):
 	token_page = "https://ipstream.one"
 
 	def __init__(self, username, password):
-		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://technic.cf/epg-soveni/"
+		super(IpStreamOne, self).__init__(username, password)
 		self._token = password
+
+		self.site = "http://technic.cf/epg-soveni/"
+		self.token_api = "https://ipstream.one/api/iptvdream-apiH4s.php?"
+		self.playlist_url = "http://www.ipstr.im/iptv/m3u_plus-%s"
 
 	def _getJson(self, url, params):
 		try:
@@ -51,19 +54,18 @@ class OTTProvider(JsonSettings, M3UProvider):
 		return json
 
 	def getToken(self, code):
-		data = self._getJson("https://ipstream.one/api/iptvdream-apiH4s.php?", {'k': code})
+		data = self._getJson(self.token_api, {'k': code})
 		if data['status'] == '1':
 			self._token = "%s-%s" % (data['user'].encode('utf-8'), data['password'].encode('utf-8'))
 			return self._token
 		else:
 			self._token = None
-			raise APILoginFailed(_("Ivalid key"))
+			raise APILoginFailed(_("Invalid key"))
 
 	def start(self):
 		self._downloadTvgMap()
-		playlist_url = "http://www.ipstr.im/iptv/m3u_plus-%s" % self._token
 		try:
-			self._parsePlaylist(self.readHttp(playlist_url).split('\n'))
+			self._parsePlaylist(self.readHttp(self.playlist_url % self._token).split('\n'))
 		except HTTPError as e:
 			self.trace("HTTPError:", e, type(e), e.getcode())
 			if e.code in (403, 404):
@@ -77,3 +79,18 @@ class OTTProvider(JsonSettings, M3UProvider):
 	def setChannelsList(self):
 		# Channels are downloaded during start, to allow handling login exceptions
 		pass
+
+
+class SharaClub(IpStreamOne):
+	NAME = "SharaClub"
+
+	token_page = "https://shara.club"
+
+	def __init__(self, username, password):
+		super(SharaClub, self).__init__(username, password)
+		self.token_api = "https://www.tvsmart.live/api/iptvdream-apiFd7.php?"
+		self.playlist_url = "http://list.satfor.pro/tv-m3u8/%s"
+
+
+def getOTTProviders():
+	return (IpStreamOne, SharaClub)
