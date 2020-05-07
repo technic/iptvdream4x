@@ -18,7 +18,7 @@ from json import loads as json_loads
 # plugin imports
 from abstract_api import JsonSettings
 from m3u import M3UProvider
-from ..utils import APIException, APILoginFailed
+from ..utils import APIException, APILoginFailed, Channel
 try:
 	from ..loc import translate as _
 except ImportError:
@@ -75,6 +75,9 @@ class IpStreamOne(JsonSettings, M3UProvider):
 		except IOError as e:
 			self.trace("IOError:", e, type(e))
 			raise APIException(e)
+
+	def makeChannel(self, num, name, url, tvg, logo, rec):
+		return Channel(hash(url), name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
 
 	def setChannelsList(self):
 		# Channels are downloaded during start, to allow handling login exceptions
