@@ -94,7 +94,7 @@ $(skin-contrast_install): $(skin-contrast_dir)/%: skin-contrast/%
 	install -D -m644 $< $@
 
 
-skinxmls = $(addsuffix /iptvdream.xml,skin skin-fhd, skin-contrast)
+skinxmls = $(addsuffix /iptvdream.xml,skin skin-fhd skin-contrast)
 
 $(skinxmls): %/iptvdream.xml: %/skin.xml
 	python skin-post.py $< $@
