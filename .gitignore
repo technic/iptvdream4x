@@ -2,7 +2,7 @@
 version
 /info.json
 skin/iptvdream.xml
-skin-fhd/iptvdream.xml
+skin-*/iptvdream.xml
 *.mo
 build/
 packages/
