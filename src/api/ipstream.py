@@ -96,5 +96,4 @@ class SharaClub(IpStreamOne):
 
 
 def getOTTProviders():
-	return (IpStreamOne, )
-	# return (IpStreamOne, SharaClub)
+	return (IpStreamOne, SharaClub)
