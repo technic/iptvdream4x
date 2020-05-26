@@ -38,7 +38,7 @@ class IpStreamOne(JsonSettings, M3UProvider):
 		self._token = password
 
 		self.site = "http://technic.cf/epg-ipstream/"
-		self.token_api = "https://ipstream.one/api/iptvdream-apiH4s.php?"
+		self.token_api = "http://ipstream.one/api/iptvdream-apiH4s.php?"
 		self.playlist_url = "http://www.ipstr.im/iptv/m3u_plus-%s"
 
 	def _getJson(self, url, params):
