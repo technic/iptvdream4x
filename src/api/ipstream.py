@@ -91,7 +91,7 @@ class SharaClub(IpStreamOne):
 
 	def __init__(self, username, password):
 		super(SharaClub, self).__init__(username, password)
-		self.token_api = "https://www.tvsmart.live/api/iptvdream-apiFd7.php?"
+		self.token_api = "http://www.tvsmart.live/api/iptvdream-apiFd7.php?"
 		self.playlist_url = "http://list.satfor.pro/tv-m3u8/%s"
 
 
