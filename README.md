@@ -11,6 +11,10 @@
 
 # Release notes
 
+## 4.79
+
+- добавлен antifriz.tv
+
 ## 4.78
 
 - добавлен antifriz.tv
