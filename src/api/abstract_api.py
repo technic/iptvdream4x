@@ -69,7 +69,12 @@ class AbstractAPI(object):
 		"""Functions that runs on start, and needs exception handling"""
 		pass
 
+	def getToken(self, code):
+		"""Authorization method for AUTH_TYPE = 'Token'"""
+		pass
+
 	def authorize(self):
+		"""Perform authorization, used when session expired"""
 		pass
 
 	def readHttp(self, request):

@@ -825,8 +825,6 @@ class IPtvDreamChannels(Screen):
 		standbyNotifier.onStandbyChanged.append(workerStandby)
 		self.onClose.append(lambda: standbyNotifier.onStandbyChanged.remove(workerStandby))
 
-		self["packetExpire"] = Label()
-
 		self["actions"] = ActionMap(
 			["OkCancelActions", "IPtvDreamChannelListActions"], {
 				"cancel": self.exit,
@@ -860,6 +858,7 @@ class IPtvDreamChannels(Screen):
 				"addFavourites": self.addRemoveFavourites,
 			}, -1)
 
+		self["packetExpire"] = Label()
 		if self.db.packet_expire is not None:
 			self["packetExpire"].setText(_("Payment expires: ") + self.db.packet_expire.strftime("%d.%m.%Y"))
 
