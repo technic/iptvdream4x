@@ -35,7 +35,7 @@ datafiles := src/keymap_enigma.xml src/keymap_neutrino.xml src/IPtvDream.png
 
 ifeq ($(PROVIDER),all)
 pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py src/api/amigo.py src/api/emigranttv.py \
-	src/api/pure.py src/api/kinoboom.py \
+	src/api/pure.py
 	src/api/m3u.py src/api/edem_soveni.py src/api/ottclub.py src/api/shura.py \
 	src/api/iptv_e2_soveni.py src/api/onecent_soveni.py \
 	src/api/top_iptv.py src/api/koronaiptv.py \
