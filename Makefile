@@ -11,6 +11,7 @@ plugin_path := /usr/lib/enigma2/python/Plugins/Extensions/$(plugin_name)
 skin_path := /usr/share/enigma2/$(plugin_name)
 skin-fhd_path := /usr/share/enigma2/$(plugin_name)FHD
 skin-contrast_path := /usr/share/enigma2/$(plugin_name)Contrast
+skin-fhd-contrast_path := /usr/share/enigma2/$(plugin_name)FHDContrast
 
 ifeq ($(DEB),y)
 pkgext := deb
@@ -94,7 +95,16 @@ $(skin-contrast_install): $(skin-contrast_dir)/%: skin-contrast/%
 	install -D -m644 $< $@
 
 
-skinxmls = $(addsuffix /iptvdream.xml,skin skin-fhd skin-contrast)
+skin-fhd-contrast_dir := $(build)$(skin-fhd-contrast_path)
+skin-fhd-contrast_files := $(shell find skin-fhd-contrast/ -name '*.png') skin-fhd-contrast/iptvdream.xml
+skin-fhd-contrast_install := $(patsubst skin-fhd-contrast/%,$(skin-fhd-contrast_dir)/%,$(skin-fhd-contrast_files))
+
+$(skin-fhd-contrast_install): $(skin-fhd-contrast_dir)/%: skin-fhd-contrast/%
+	install -D -m644 $< $@
+
+
+
+skinxmls = $(addsuffix /iptvdream.xml,skin skin-fhd skin-contrast skin-fhd-contrast)
 
 $(skinxmls): %/iptvdream.xml: %/skin.xml
 	python skin-post.py $< $@
@@ -142,7 +152,7 @@ $(bin_install): $(build)/usr/bin/%: tools/%
 
 
 #install: $(build)/etc/iptvdream/iptvdream.epgmap
-install: $(pycinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(skin-contrast_install) $(moinstall) $(bin_install)
+install: $(pycinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(skin-contrast_install) $(skin-fhd-contrast_install) $(moinstall) $(bin_install)
 	install -d $(build)/etc/iptvdream
 
 
