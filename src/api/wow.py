@@ -43,13 +43,14 @@ class OTTProvider(M3UProvider):
 	def makeChannel(self, num, name, url, tvg, logo, rec):
 		m = self._url_regexp.match(url)
 		if m:
-			cid = int(m.group(1))
+			cid_str = m.group(1)
+			cid = int(cid_str)
+			try:
+				data = self._tvg_info[cid_str]
+				tvg = int(data['tvg-id'])
+				logo = data['tvg-logo'].encode('utf-8')
+			except KeyError:
+				pass
 		else:
 			cid = hash(url)
-		try:
-			data = self._tvg_info[cid]
-			tvg = data['tvg-id']
-			logo = data['tvg-logo']
-		except KeyError:
-			pass
 		return Channel(cid, name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
