@@ -203,4 +203,9 @@
     <widget name="key_yellow" position="280,0" zPosition="5" size="140,40" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" backgroundColor="kyellow"/>
     <widget name="key_blue" position="420,0" zPosition="5" size="140,40" valign="center" halign="center" font="Regular;22" transparent="1" foregroundColor="white" backgroundColor="kblue"/>
   </screen>
+  <screen name="IPtvDreamWebConfig" position="center,center" size="538,446">
+    <widget halign="center" font="Regular;24" name="header" position="15,21" size="504,63"/>
+    <widget font="Regular;25" name="label" position="center,347" size="489,73"/>
+    <widget name="image" position="center,107" size="200,200"/>
+  </screen>
 </skin>
