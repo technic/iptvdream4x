@@ -94,14 +94,14 @@ class OTTProvider(OfflineFavourites):
 	def getDayEpg(self, cid, date):
 		params = {"id": self.web_names[cid], "day": date.strftime("%Y-%m-%d")}
 		data = self._getJson(self.api_site + "/epg_day.php?", params)
-		return map(lambda e: EPG(
+		return [EPG(
 			int(e['begin']), int(e['end']),
-			e['title'].encode('utf-8'), e['description'].encode('utf-8')), data['data'])
+			e['title'].encode('utf-8'), e['description'].encode('utf-8')) for e in data['data']]
 
 	def getChannelsEpg(self, cids):
 		data = self._getJson(self.api_site + "/epg_list.php?", {"time": syncTime().strftime("%s")})
 		for c in data['data']:
-			yield hash(c['channel_id']), map(lambda e: EPG(
+			yield hash(c['channel_id']), [EPG(
 					int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
 					e['description'].encode('utf-8')
-			), c['programs'])
+			) for e in c['programs']]
