@@ -12,6 +12,7 @@ from __future__ import print_function
 
 # system imports
 import urllib
+from urlparse import urlparse
 from urllib2 import HTTPError
 from json import loads as json_loads
 
@@ -89,7 +90,8 @@ class OTTProvider(OfflineFavourites):
 	def getStreamUrl(self, cid, pin, time=None):
 		if time is None:
 			return self.urls[cid]
-		return self.urls[cid].replace('index.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
+		url = self.urls[cid]
+		return url.replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
 
 	def getDayEpg(self, cid, date):
 		params = {"id": self.web_names[cid], "day": date.strftime("%Y-%m-%d")}
