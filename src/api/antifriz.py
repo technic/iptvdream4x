@@ -12,6 +12,7 @@ from __future__ import print_function
 
 # system imports
 import urllib
+from urlparse import urlparse
 from urllib2 import HTTPError
 from json import loads as json_loads
 
@@ -89,19 +90,20 @@ class OTTProvider(OfflineFavourites):
 	def getStreamUrl(self, cid, pin, time=None):
 		if time is None:
 			return self.urls[cid]
-		return self.urls[cid].replace('index.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
+		url = self.urls[cid]
+		return url.replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
 
 	def getDayEpg(self, cid, date):
 		params = {"id": self.web_names[cid], "day": date.strftime("%Y-%m-%d")}
 		data = self._getJson(self.api_site + "/epg_day.php?", params)
-		return map(lambda e: EPG(
+		return [EPG(
 			int(e['begin']), int(e['end']),
-			e['title'].encode('utf-8'), e['description'].encode('utf-8')), data['data'])
+			e['title'].encode('utf-8'), e['description'].encode('utf-8')) for e in data['data']]
 
 	def getChannelsEpg(self, cids):
 		data = self._getJson(self.api_site + "/epg_list.php?", {"time": syncTime().strftime("%s")})
 		for c in data['data']:
-			yield hash(c['channel_id']), map(lambda e: EPG(
+			yield hash(c['channel_id']), [EPG(
 					int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
 					e['description'].encode('utf-8')
-			), c['programs'])
+			) for e in c['programs']]

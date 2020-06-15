@@ -63,4 +63,11 @@
     <name>IPtvDreamManager</name>
     <entries/>
   </screen>
+  <screen>
+    <name>IPtvDreamWebConfig</name>
+    <entries>
+      <entry name="header" value="Please scan QR code or follow the link below" render="Label" type="string"/>
+      <entry name="label" value="Go to https://technic.cf/ws Code: yQzP1r" render="Label" type="string"/>
+    </entries>
+  </screen>
 </screens>
