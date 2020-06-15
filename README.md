@@ -11,6 +11,11 @@
 
 # Release notes
 
+## 4.80
+
+- исправлены архивы cbilling
+- исправлены архивы antifriz
+
 ## 4.79
 
 - добавлен antifriz.tv
