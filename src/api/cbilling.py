@@ -89,8 +89,7 @@ class OTTProvider(OfflineFavourites):
 	def getStreamUrl(self, cid, pin, time=None):
 		if time is None:
 			return self.urls[cid]
-		else:
-			return self.urls[cid].replace('index.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
+		return self.urls[cid].replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
 
 	def getDayEpg(self, cid, date):
 		params = {"id": self.web_names[cid], "day": date.strftime("%Y-%m-%d")}
