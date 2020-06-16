@@ -26,7 +26,6 @@ if __name__ == "__main__":
         # print('Add color', colname, colval)
         coldict[colname] = colval
 
-
     def search(element):
         for attr in element.keys():
             if attr.lower().find('color') > -1:
@@ -40,7 +39,6 @@ if __name__ == "__main__":
                     pass
         for x in element:
             search(x)
-
 
     skin_root = Element('skin')
     for screen in root.findall('screen'):
