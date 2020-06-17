@@ -5,7 +5,6 @@
     <entries>
       <entry name="provider" value="IPtvDream/provider_logo.png" render="Pixmap" type="string"/>
       <entry name="channelName" value="23. BBC Entertainment" render="Label" type="string"/>
-      <entry name="" value="FoobarTV" render="Label" type="string"/>
       <entry name="currentTime" value="18:03" render="Label" type="string"/>
       <entry name="currentName" value="Keeping Up Appearances (Episode 7) (12+)" render="Label" type="string"/>
       <entry name="currentDuration" value="+90 min" render="Label" type="string"/>
