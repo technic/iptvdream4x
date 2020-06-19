@@ -28,7 +28,7 @@ class OTTProvider(OfflineFavourites):
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
 		self.playlist_url = "https://antifriz.tv/api/enigma/%s" % username
-		self.api_site = "http://mag.iptvx.tv/stalker_portal/server/tools"
+		self.api_site = "http://api.iptvx.tv/"
 		self._token = password
 		self.web_names = {}
 		self.urls = {}
@@ -94,16 +94,16 @@ class OTTProvider(OfflineFavourites):
 		return url.replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
 
 	def getDayEpg(self, cid, date):
-		params = {"id": self.web_names[cid], "day": date.strftime("%Y-%m-%d")}
-		data = self._getJson(self.api_site + "/epg_day.php?", params)
-		return [EPG(
-			int(e['begin']), int(e['end']),
-			e['title'].encode('utf-8'), e['description'].encode('utf-8')) for e in data['data']]
+		data = self._getJson(self.api_site + "/epg/%s/?" % self.web_names[cid], {"date": date.strftime("%Y-%m-%d")})
+		return [
+			EPG(e['time'], e['time_to'], e['name'].encode('utf-8'), e['descr'].encode('utf-8'))
+			for e in data
+		]
 
 	def getChannelsEpg(self, cids):
-		data = self._getJson(self.api_site + "/epg_list.php?", {"time": syncTime().strftime("%s")})
-		for c in data['data']:
-			yield hash(c['channel_id']), [EPG(
-					int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
-					e['description'].encode('utf-8')
-			) for e in c['programs']]
+		data = self._getJson(self.api_site + "/epg/current", {})
+		for c in data:
+			yield hash(c['alias']), [
+				EPG(e['time'], e['time_to'], e['name'].encode('utf-8'), e['descr'].encode('utf-8'))
+				for e in c['epg']
+			]
