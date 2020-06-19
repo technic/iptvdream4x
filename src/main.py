@@ -298,8 +298,7 @@ class IPtvDreamStreamPlayer(
 	def time(self):
 		if self.shift:
 			return syncTime() + secTd(self.shift)
-		else:
-			return None
+		return None
 
 	def archiveSeekFwd(self):
 		self.session.openWithCallback(self.fwdJumpMinutes, MinuteInput)
