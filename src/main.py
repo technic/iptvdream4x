@@ -270,6 +270,8 @@ class IPtvDreamStreamPlayer(
 			trace("entered standby")
 			if self.shift and not self.archive_pause:
 				self.playPauseArchive()
+			else:
+				self.session.nav.stopService()
 		else:
 			trace("exited standby")
 			if self.shift:
