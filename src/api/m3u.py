@@ -159,7 +159,7 @@ class M3UProvider(OfflineFavourites):
 					logo = ""
 				m = rec_regexp.match(line)
 				if m:
-					rec = m.group(1) == "1"
+					rec = m.group(1) != "0"
 				else:
 					m = catchup_regexp.match(line)
 					if m:
