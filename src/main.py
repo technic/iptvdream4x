@@ -1260,6 +1260,8 @@ class IPtvDreamEpg(Screen):
 		self["progress"] = self._progress = EpgProgress()
 		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
 
+		self["packetExpire"] = Label()
+
 		self["actions"] = ActionMap(
 			["OkCancelActions", "IPtvDreamEpgListActions", "ColorActions"], {
 				"cancel": self.close,
