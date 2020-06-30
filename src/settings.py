@@ -253,7 +253,7 @@ class IPtvDreamConfig(ConfigListScreen, Screen):
 	def showHideKb(self):
 		c = self["config"].getCurrent()
 		# Add to support ConfigSearchText
-		if c and (isinstance(c[1], ConfigSearchText) or isinstance(c[1], ConfigNumberText)):
+		if c and isinstance(c[1], (ConfigSearchText, ConfigNumberText)):
 			self["actions_kbd"].setEnabled(True)
 			self["Keyboard"].boolean = True
 			self["key_blue"].show()
@@ -324,7 +324,7 @@ class IPtvDreamApiConfig(ConfigListScreen, Screen):
 	def showHideKb(self):
 		c = self["config"].getCurrent()
 		# Add to support ConfigSearchText
-		if c and (isinstance(c[1], ConfigSearchText) or isinstance(c[1], ConfigNumberText)):
+		if c and isinstance(c[1], (ConfigSearchText, ConfigNumberText)):
 			self["actions_kbd"].setEnabled(True)
 			self["Keyboard"].boolean = True
 			self["key_blue"].show()
