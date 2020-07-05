@@ -22,17 +22,23 @@ jobs:
             whoami
             echo PROVIDER=${PROVIDER}
       - run:
+          name: prepare
+          command: |
+            apt-get update && apt-get install -y python-virtualenv
+            python -m virtualenv env
+            source env/bin/activate
+            python -m pip install pylint pycodestyle
+      - run:
           name: pep8
           command: |
+            source env/bin/activate
             echo $PATH |tr ':' '\n'
-            sudo pip install pycodestyle
             pycodestyle --version
             pycodestyle src
       - run:
           name: pylint
           command: |
-            sudo pip install --upgrade pip
-            sudo pip install pylint==1.9
+            source env/bin/activate
             pylint src || true
       - run:
           name: test update
@@ -43,7 +49,7 @@ jobs:
             export DISPLAY=:99
             ps ax
             cat src/dist.py
-            sudo -E python update-test.py
+            python update-test.py
 
   build:
     docker:
