@@ -219,6 +219,7 @@ class WebConfig(object):
 		self.revision = None
 		self.poll_defer = None
 		self._run_defer = None
+		self._error_count = 0
 
 	def start(self):
 		def cb(data):
@@ -245,10 +246,15 @@ class WebConfig(object):
 	def _run(self):
 		def eb(err):
 			trace("Poll error:", err)
-			self._run()
+			self._error_count += 1
+			if self._error_count > 5:
+				self.poll_defer.errback(err)
+			else:
+				self._run()  # retry
 
 		def cb(data):
 			trace("Poll result:", data)
+			self._error_count = 0
 			data = json_loads(data)
 			self.revision = data['revision']
 			self.poll_defer.callback(data)
@@ -261,12 +267,12 @@ class WebConfig(object):
 			revision = self.revision
 
 		url = self.site + 'stb/poll?' + urllib.urlencode({'sid': self.session, 'revision': revision})
-		print(url)
 		self._run_defer = getRequest(url)
 		self._run_defer.addErrback(eb).addCallback(cb)
 
 	def poll(self):
-		assert self.poll_defer is None
+		if self.poll_defer:
+			self.poll_defer.cancel()
 		self.poll_defer = Deferred()
 		self._run()
 		return self.poll_defer

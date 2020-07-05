@@ -3,6 +3,21 @@
   <output id="0">
     <resolution xres="1920" yres="1080" bpp="32"/>
   </output>
+  <windowstyle type="skinned" id="0">
+    <title offset="33,14" font="Regular;20"/>
+    <color name="Background" color="#25062748"/>
+    <color name="LabelForeground" color="#00ffffff"/>
+    <color name="ListboxBackground" color="#25062748"/>
+    <color name="ListboxForeground" color="#00ffffff"/>
+    <color name="ListboxSelectedBackground" color="#254f7497"/>
+    <color name="ListboxSelectedForeground" color="#00ffffff"/>
+    <color name="ListboxMarkedBackground" color="#00ff0000"/>
+    <color name="ListboxMarkedForeground" color="#00ffffff"/>
+    <color name="ListboxMarkedAndSelectedBackground" color="#ff800000"/>
+    <color name="ListboxMarkedAndSelectedForeground" color="#ffffffff"/>
+    <color name="WindowTitleForeground" color="#00ffffff"/>
+    <color name="WindowTitleBackground" color="#25062748"/>
+  </windowstyle>
   <fonts/>
   <colors>
     <color name="fg" value="#00ffffff"/>
@@ -189,5 +204,10 @@
     <widget name="key_green" position="255,16" zPosition="5" size="175,48" valign="center" font="Regular;33" transparent="1" foregroundColor="white"/>
     <widget name="key_yellow" position="466,16" zPosition="5" size="175,48" valign="center" font="Regular;33" transparent="1" foregroundColor="white"/>
     <widget name="key_blue" position="687,16" zPosition="5" size="175,48" valign="center" font="Regular;33" transparent="1" foregroundColor="white"/>
+  </screen>
+  <screen name="IPtvDreamWebConfig" position="center,288" size="807,503">
+    <widget halign="center" font="Regular;36" name="header" position="center,23" size="737,63"/>
+    <widget font="Regular;40" name="label" position="center,349" size="737,133" halign="center"/>
+    <widget name="image" position="center,107" size="200,200"/>
   </screen>
 </skin>

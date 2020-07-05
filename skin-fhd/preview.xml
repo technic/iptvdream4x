@@ -72,4 +72,11 @@
       <entry name="key_blue" value="Keyboard" render="Label" type="string"/>
     </entries>
   </screen>
+  <screen>
+    <name>IPtvDreamWebConfig</name>
+    <entries>
+      <entry name="header" value="Scan QR code or visit url below" render="Label" type="string"/>
+      <entry name="label" value="Go to https://technic.cf/web Code: xyAbcD" render="Label" type="string"/>
+    </entries>
+  </screen>
 </screens>

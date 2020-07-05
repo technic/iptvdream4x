@@ -134,6 +134,7 @@ class PluginStarter(Screen):
 
 	def login(self):
 		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
+		self.task = None
 		self.openSettings(False)
 
 	def run(self):
