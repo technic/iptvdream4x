@@ -164,7 +164,7 @@ class ConfInteger(ConfEntry):
 	def __init__(self, title, value, limits):
 		"""
 		:type value: int
-		:type limits: typing.Tuple[int, int]
+		:type limits: Tuple[int, int]
 		"""
 		super(ConfInteger, self).__init__(title)
 		self.value = value

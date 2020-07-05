@@ -14,6 +14,11 @@ from __future__ import print_function
 # system imports
 import os
 
+try:
+	from typing import Optional
+except ImportError:
+	pass
+
 # enigma2 imports
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -37,7 +42,7 @@ from provision import pluginConfig
 from common import ConfigNumberText
 from utils import trace, APIException, APILoginFailed
 from loc import translate as _
-from settings import IPtvDreamConfig, IPtvDreamApiConfig
+from settings import IPtvDreamConfig, IPtvDreamWebConfig, SettingsRepository, WebConfig
 from main import IPtvDreamStreamPlayer
 
 PLAYERS = [('1', "enigma2 ts (1)"), ('4097', "gstreamer (4097)"), ('5002', "exteplayer3 (5002)")]
@@ -80,13 +85,17 @@ skinManager.load()
 
 
 class PluginStarter(Screen):
-	def __init__(self, session, name, task=None):
+	def __init__(self, session, name, task=None, use_web=False):
 		trace("Starting provider", name)
 
 		Screen.__init__(self, session)
 		self.cfg = manager.getConfig(name)
 		self.apiClass = manager.getApi(name)
 		self.task = task
+		if use_web:
+			self.web_factory = WebConfigFactory(session)
+		else:
+			self.web_factory = None
 		self.db = None
 
 		try:
@@ -105,12 +114,13 @@ class PluginStarter(Screen):
 			self.auth()
 
 	def auth(self):
+		trace("auth")
 		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
 		try:
 			self.db.start()
-			if self.task == 'provider_settings':
+			if self.task == 'settings':
 				self.task = None
-				self.openProviderSettings()
+				self.openSettings(True)
 			else:
 				self.run()
 			return
@@ -123,12 +133,8 @@ class PluginStarter(Screen):
 		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
 
 	def login(self):
-		def cb(changed=False):
-			if changed:
-				self.auth()
-			else:
-				self.exit()
-		self.session.openWithCallback(cb, IPtvDreamConfig, self.apiClass)
+		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
+		self.openSettings(False)
 
 	def run(self):
 		try:
@@ -141,18 +147,35 @@ class PluginStarter(Screen):
 
 	def finished(self, ret):
 		if ret == 'settings':
-			self.login()
-		elif ret == 'provider_settings':
-			self.openProviderSettings()
+			self.openSettings(True)
 		elif ret == 'clear_login':
 			self.clearLogin()
 			self.exit()
 		else:
 			self.exit()
 
-	def openProviderSettings(self):
-		if self.db:
-			self.session.openWithCallback(lambda ret=None: self.start(), IPtvDreamApiConfig, self.db)
+	def openSettings(self, authorized):
+		"""
+		:type authorized: bool
+		"""
+
+		def cb(changed=False):
+			# FIXME: very hacky return code
+			if changed is None:
+				self.clearLogin()
+				self.start()
+				return
+			else:
+				if changed:
+					self.auth()
+				else:
+					self.exit()
+
+		sr = SettingsRepository(self.db, authorized)
+		if self.web_factory:
+			self.web_factory.open(cb, authorized, sr)
+		else:
+			self.session.openWithCallback(cb, IPtvDreamConfig, sr)
 
 	def clearLogin(self):
 		self.cfg.login.value = ''
@@ -160,6 +183,8 @@ class PluginStarter(Screen):
 		manager.saveConfig()
 
 	def exit(self):
+		if self.web_factory:
+			self.web_factory.stop()
 		self.close()
 
 	def compatibleSkin(self):
@@ -182,9 +207,9 @@ class TokenPluginStarter(PluginStarter):
 	def auth(self):
 		try:
 			self.db.start()
-			if self.task == 'provider_settings':
+			if self.task == 'settings':
 				self.task = None
-				self.openProviderSettings()
+				self.openSettings(True)
 			else:
 				self.run()
 			return
@@ -225,6 +250,43 @@ class TokenPluginStarter(PluginStarter):
 		self.cfg.password.value = token
 		self.cfg.password.save()
 		manager.saveConfig()
+
+
+class WebConfigFactory(object):
+	def __init__(self, session):
+		"""
+		:type session: mytest.Session
+		"""
+		self.session = session
+		self._authorized = None
+		self._instance = None
+
+	def open(self, callback, authorized, repository):
+		"""
+		If authorized value is not changed we can use same web settings session
+		We may want to add support for updating settings list on the server without creating new session later
+		:type callback: (Optional[bool]) -> None
+		:type authorized: bool
+		:type repository: SettingsRepository
+		"""
+		valid = self._instance is not None and self._instance.isStarted() \
+			and self._authorized is not None and self._authorized == authorized
+
+		if not valid:
+			if self._instance is not None:
+				self._instance.stop()
+			self._instance = WebConfig(repository.getAllSettings())
+			self._authorized = authorized
+
+		self.session.openWithCallback(callback, IPtvDreamWebConfig, self._instance, repository)
+
+	def stop(self):
+		"""
+		End web settings session
+		"""
+		if self._instance is not None:
+			self._instance.stop()
+		self._instance = None
 
 
 class Manager(object):
@@ -333,14 +395,14 @@ class IPtvDreamManager(Screen):
 		self.setTitle(_("IPtvDream %s. Providers list:") % VERSION)
 		self["key_red"] = Button(_("Exit"))
 		self["key_green"] = Button(_("Setup"))
-		self["key_yellow"] = Button(_("Options"))
+		self["key_yellow"] = Button(_("Web Setup"))
 		self["key_blue"] = Button(_("Menu"))
 		self["actions"] = ActionMap(
 				["OkCancelActions", "ColorActions"], {
 					"cancel": self.cancel,
 					"ok": self.ok,
 					"green": self.setup,
-					"yellow": self.providerSetup,
+					"yellow": self.webSetup,
 					"red": self.cancel,
 					"blue": self.showMenu,
 				}, -1)
@@ -370,15 +432,15 @@ class IPtvDreamManager(Screen):
 	def setup(self):
 		entry = self.getSelected()
 		if entry is not None:
-			self.session.open(IPtvDreamConfig, manager.getApi(entry['name']))
+			self.startPlugin(entry['name'], 'settings', False)
 
-	def providerSetup(self):
+	def webSetup(self):
 		entry = self.getSelected()
 		if entry is not None:
-			self.startPlugin(entry['name'], 'provider_settings')
+			self.startPlugin(entry['name'], 'settings', True)
 
-	def startPlugin(self, name, task=None):
-		self.session.open(manager.getStarterClass(name), name, task)
+	def startPlugin(self, name, task=None, use_web=False):
+		self.session.open(manager.getStarterClass(name), name, task, use_web)
 
 	def cancel(self):
 		self.close()

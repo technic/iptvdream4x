@@ -74,4 +74,11 @@
       <entry name="label" value="Go to https://technic.cf/ws Code: yQzP1r" render="Label" type="string"/>
     </entries>
   </screen>
+  <screen>
+    <name>IPtvDreamWebConfigWaiting</name>
+    <entries>
+      <entry name="header" value="Waiting for changes in web interface" render="Label" type="string"/>
+      <entry name="key_red" value="Cancel" render="Label" type="string"/>
+    </entries>
+  </screen>
 </screens>

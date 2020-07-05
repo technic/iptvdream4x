@@ -12,25 +12,28 @@ from __future__ import print_function
 
 # system imports
 from io import StringIO, BytesIO
+from collections import OrderedDict
 import urllib
 from json import loads as json_loads, dumps as json_dumps
-from twisted.web.client import downloadPage, FileBodyProducer, readBody
-from twisted.web.client import Agent
+from twisted.web.client import downloadPage, FileBodyProducer, readBody, Agent, Headers
 from twisted.internet import reactor
 from twisted.internet.defer import Deferred
 
 # enigma2 imports
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
-from Components.config import getConfigListEntry, ConfigSearchText, ConfigInteger, ConfigSelection, ConfigYesNo
+from Components.config import getConfigListEntry, \
+		ConfigSearchText, ConfigInteger, ConfigSelection, ConfigYesNo, ConfigElement
 from Components.ConfigList import ConfigListScreen
 from Components.ActionMap import ActionMap
 from Components.Button import Button
 from Components.Pixmap import Pixmap
 from Components.Label import Label
 from Components.Sources.Boolean import Boolean
+from Tools.LoadPixmap import LoadPixmap
 
 # plugin imports
+from dist import NAME, VERSION
 from utils import trace, ConfInteger, ConfSelection, ConfString, ConfBool, APIException
 from virtualkb import VirtualKeyBoard
 from common import ConfigNumberText
@@ -39,27 +42,114 @@ from loc import translate as _
 from updater import getPage
 from common import safecb, fatalError
 
+try:
+	from typing import List, Tuple, Dict  # pylint: disable=unused-import
+except ImportError:
+	pass
+
 
 class SettingsRepository(object):
-	def __init__(self):
-		pass
+	def __init__(self, db, authorized):
+		"""
+		:type db: AbstractStream
+		:type authorized: bool
+		"""
+		self.db = db
+		self.title = self.db.NAME
+		self.authorized = authorized
 
-	def get(self):
-		raise NotImplementedError()
+		self._enigma_settings = {}
+		self._local_settings = {}
+		self._remote_settings = {}
+		self._updateSettings()
 
-	def set(self, values):
-		raise NotImplementedError()
+	def _updateSettings(self):
+		trace("Loading settings")
+		self._enigma_settings = self._buildEnigmaSettings()
+		self._local_settings = self.db.getLocalSettings()
+		try:
+			if self.authorized:
+				self._remote_settings = self.db.getSettings()
+		except APIException as e:
+			trace("Failed to get settings", e)
 
+	@staticmethod
+	def makeConfEntry(title, element, key):
+		return key, convertEnigmaConfigEntry(title, element)
 
-class EnigmaSettingsRepository(SettingsRepository):
-	def __init__(self, name):
-		super(EnigmaSettingsRepository, self).__init__()
+	def _buildEnigmaSettings(self):
+		"""Settings stored in enigma2"""
+		from manager import manager
+		cfg = manager.getConfig(self.db.NAME)
 
-	def get(self):
-		pass
+		settings = OrderedDict()
 
-	def set(self, values):
-		pass
+		def appendEntry(title, name):
+			settings['e2.%s' % name] = convertEnigmaConfigEntry(title, getattr(cfg, name))
+
+		if not self.authorized:
+			if self.db.AUTH_TYPE == "Login":
+				appendEntry(_("Login"), 'login')
+				appendEntry(_("Password"), 'password')
+			elif self.db.AUTH_TYPE == "Key":
+				appendEntry(_("Key"), 'login'),
+
+		appendEntry(_("Show in main menu"), 'in_menu')
+		appendEntry(_("Show in extensions list"), 'in_extensions')
+		appendEntry(_("Player ID"), 'playerid')
+		appendEntry(_("Use HLS proxy"), 'use_hlsgw')
+
+		return settings
+
+	def getAllSettings(self):
+		self._updateSettings()
+		cfg_list = self._enigma_settings.items()
+		cfg_list += self._local_settings.items()
+		cfg_list += self._remote_settings.items()
+		return cfg_list
+
+	def saveValues(self, values):
+		"""
+		:type values: Dict[str, str]
+		"""
+		trace("Saving settings")
+
+		from manager import manager
+		cfg = manager.getConfig(self.db.NAME)
+
+		local_changes = {}
+		remote_changes = {}
+
+		for key, value in values.items():
+			trace(key, '=', value)
+			if key in self._enigma_settings:
+				key = key[3:]
+				element = getattr(cfg, key)  # type: ConfigElement
+				element.value = value
+				element.save()
+			elif key in self._local_settings:
+				local_changes[key] = value
+			elif key in self._remote_settings:
+				remote_changes[key] = value
+			else:
+				raise Exception("Unknown config element", key)
+
+		manager.saveConfig()
+
+		self.db.saveLocalSettings(local_changes)
+		if self.authorized:
+			self.db.pushSettings(remote_changes)
+
+	def getConfigList(self):
+		settings = self.getAllSettings()
+		return [(v.title, convertConfEntry(v), k) for k, v in settings]
+
+	def saveConfigList(self, cfg_list):
+		"""
+		:type cfg_list: List[Tuple[str, ConfigElement, str]]
+		"""
+		values = {key: entry.value for _, entry, key in cfg_list}
+		self.saveValues(values)
 
 
 def convertEnigmaConfigEntry(title, cfg):
@@ -73,48 +163,84 @@ def convertEnigmaConfigEntry(title, cfg):
 		return ConfBool(title, cfg.value)
 	else:
 		trace("Unsupported config", (title, cfg))
+		raise Exception("Unsupported config")
+
+
+def convertConfEntry(conf):
+	"""Convert plugin config class to enigma2 config"""
+	if isinstance(conf, ConfInteger):
+		return ConfigInteger(conf.value, limits=conf.limits)
+	elif isinstance(conf, ConfString):
+		return ConfigSearchText(default=conf.value)
+	elif isinstance(conf, ConfSelection):
+		return ConfigSelection(conf.choices, default=conf.value)
+	elif isinstance(conf, ConfBool):
+		return ConfigYesNo(conf.value)
+	else:
+		raise Exception("Unknown type in settings: " + str(type(conf)))
 
 
 def getRequest(url):
 	agent = Agent(reactor)
-	d = agent.request(b'GET', url)
-	return d.addCallback(readBody)
+	d = agent.request(b'GET', url, headers=defaultHeaders())
+	return d.addCallback(readResponseBody)
 
 
 def postRequest(url, body):
 	agent = Agent(reactor)
-	d = agent.request(b'POST', url, headers=None, bodyProducer=FileBodyProducer(BytesIO(body)))
-	
-	def cb(response):
-		trace(response)
+	headers = defaultHeaders()
+	headers.addRawHeader('Content-Type', 'application/json')
+	d = agent.request(b'POST', url, headers=headers, bodyProducer=FileBodyProducer(BytesIO(body)))
+	return d.addCallback(readResponseBody)
+
+
+def defaultHeaders():
+	headers = Headers()
+	headers.addRawHeader('User-Agent', 'IPtvDream-%s/%s' % (NAME, VERSION))
+	return headers
+
+
+def readResponseBody(response):
+	trace("Response", response.code)
+	# TODO: support redirects
+	if 200 <= response.code < 300:
 		return readBody(response)
-	return d.addCallback(cb)
+	else:
+		raise ValueError("Bad response code %d" % response.code)
 
 
 class WebConfig(object):
-	site = 'http://5ed6e80b94e7.ngrok.io/stb'
+	site = 'http://technic.cf/web/'
 
 	def __init__(self, settings):
 		self.settings = settings
 		self.session = None
-		self.revision = 0
+		self.key = None
+		self.revision = None
 		self.poll_defer = None
 		self._run_defer = None
 
 	def start(self):
 		def cb(data):
-			trace("recieved:", data)
+			trace("received:", data)
 			data = json_loads(data)
+			self.key = data['key']
 			self.session = data['secret']
 			return data['key']
 
 		items = []
-		for k, v in self.settings.items():
+		for k, v in self.settings:
 			item = v.to_json()
 			item['name'] = k
 			items.append(item)
-		print(json_dumps(items))
-		return postRequest(self.site + '/new-session', json_dumps(items)).addCallback(cb)
+		trace(json_dumps(items))
+		return postRequest(self.site + 'stb/new-session', json_dumps(items)).addCallback(cb)
+
+	def isStarted(self):
+		return self.session is not None
+
+	def isLoggedIn(self):
+		return self.isStarted() and self.revision is not None
 
 	def _run(self):
 		def eb(err):
@@ -122,11 +248,19 @@ class WebConfig(object):
 			self._run()
 
 		def cb(data):
+			trace("Poll result:", data)
 			data = json_loads(data)
 			self.revision = data['revision']
-			self.poll_defer.callback(data['values'])
+			self.poll_defer.callback(data)
 
-		url = self.site + '/poll?' + urllib.urlencode({'sid': self.session, 'revision': self.revision})
+		trace("Poll ...")
+		if self.revision is None:
+			# no revision has been received from the server, so we have initial values
+			revision = 0
+		else:
+			revision = self.revision
+
+		url = self.site + 'stb/poll?' + urllib.urlencode({'sid': self.session, 'revision': revision})
 		print(url)
 		self._run_defer = getRequest(url)
 		self._run_defer.addErrback(eb).addCallback(cb)
@@ -138,7 +272,7 @@ class WebConfig(object):
 		return self.poll_defer
 
 	def stop(self):
-		d = getRequest(self.site + '/del-session?' + urllib.urlencode({'sid': self.session}))
+		d = getRequest(self.site + 'stb/del-session?' + urllib.urlencode({'sid': self.session}))
 		if self._run_defer:
 			self._run_defer.cancel()
 		self.session = None
@@ -146,113 +280,156 @@ class WebConfig(object):
 
 
 class IPtvDreamWebConfig(Screen):
-	def __init__(self, session, db):
-		Screen.__init__(self, session)
+	def __init__(self, session, web_config, settings_repository):
+		"""
+		:type web_config: WebConfig
+		:type settings_repository: SettingsRepository
+		"""
 		trace("Web config open")
-		self.db = db
 
+		Screen.__init__(self, session)
+
+		self.settings_repository = settings_repository
+		self.web_config = web_config
+		self.site = self.web_config.site.replace('http://', 'https://')
+		self.onFirstExecBegin.append(self.start)
+
+		self.setTitle(_("Configuration of %s") % settings_repository.title)
 		self["header"] = Label(_("Connecting to server..."))
 		self["image"] = Pixmap()
 		self["label"] = Label()
 
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"], {
 			"red": self.cancel,
+			"yellow": self.logout,
 			"cancel": self.cancel
 		}, -2)
-
-		self.poller = WebConfig(self.db.getSettings())
-		self.onFirstExecBegin.append(self.start)
 
 	@staticmethod
 	def makeQrUrl(url):
 		params = urllib.urlencode({'data': url, 'size': '200x200', 'ecc': 'M'})
 		return "http://api.qrserver.com/v1/create-qr-code/?" + params
 
-	def showQrCode(self, data):
-		PATH = '/tmp/qrcode.png'
+	def showCode(self, data):
+		path = '/tmp/qrcode.png'
 
 		def setPixmap(ret):
 			trace(ret)
-			from Tools.LoadPixmap import LoadPixmap
-			self["image"].instance.setPixmap(LoadPixmap(PATH))
+			self["image"].instance.setPixmap(LoadPixmap(path))
 
 		self["header"].setText(_("Scan QR code or visit url below"))
-		self["label"].setText("Go to https://technic.cf/web\nCode: %s" % data.encode('utf-8'))
-		trace(self.makeQrUrl(data))
-		downloadPage(self.makeQrUrl(data), PATH).addCallback(setPixmap)
+		self["label"].setText("Go to %s\nCode: %s" % (self.site, data.encode('utf-8')))
+		downloadPage(self.makeQrUrl(self.site + "?c=%s" % data), path).addCallback(setPixmap)
 
 	def start(self):
-		self.poller.start().addCallback(self.keyReceived).addErrback(fatalError)
+		# FIXME: handle errors
+		if self.web_config.isStarted():
+			if self.web_config.isLoggedIn():
+				self.waitForChanges()
+			else:
+				self.keyReceived(self.web_config.key)
+		else:
+			self.web_config.start().addCallback(self.keyReceived).addErrback(fatalError)
 
 	def keyReceived(self, key):
 		trace("Obtained key:", key)
-		self.showQrCode(key)
-		self.poller.poll().addCallback(self.newSettingsReceived).addErrback(fatalError)
+		self.showCode(key)
+		# FIXME: handle errors
+		self.web_config.poll().addCallback(self.newSettingsReceived).addErrback(fatalError)
 
-	def newSettingsReceived(self, settings):
-		trace("Obtained settings:", settings)
-		values = {s['name']: s['value'] for s in settings}
-		print(values)
-		self.db.pushSettings(values)
-		self.poller.stop()
-		self.close(True)
+	def newSettingsReceived(self, data):
+		trace("Obtained settings:", data)
+		if data['revision'] == 0:
+			# revision zero indicates that user has logged in
+			self.waitForChanges()
+		else:
+			values = {s['name']: s['value'] for s in data['values']}
+			try:
+				self.settings_repository.saveValues(values)
+				self.close(True)
+			except APIException as ex:
+				self.session.openWithCallback(
+					lambda ret: self.close(False),
+					MessageBox, _("Failed to save settings") + "\n%s" % str(ex), MessageBox.TYPE_ERROR)
+
+	def waitForChanges(self):
+		self.web_config.poll().addCallback(self.newSettingsReceived).addErrback(fatalError)
+		# ui
+		self["header"].setText(_("Waiting for changes to be entered"))
+		self["image"].hide()
+		self["label"].hide()
+
+	def logout(self):
+		# TODO: implement
+		pass
 
 	def cancel(self):
 		trace("Closing web Settings")
-		self.poller.stop()
+		self.close(False)
+
+	def error(self, err):
+		trace("Error", err)
 		self.close(False)
 
 
+class IPtvDreamWebConfigWaiting(Screen):
+	def __init__(self, session):
+		"""
+		:type config_repository: SettingsRepository
+		"""
+		Screen.__init__(self, session)
+		self["text"] = Label(_("Waiting for changes made in the web interface..."))
+		self["key_red"] = Button(_("Exit"))
+		self["key_green"] = Button(_("Generate new code"))
+
+		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"], {
+			"cancel": self.cancel,
+			"red": self.cancel,
+			"green": self.generateNewCode,
+		}, -2)
+
+	def cancel(self):
+		self.close()
+
+	def generateNewCode(self):
+		self.close()
+
+
 class IPtvDreamConfig(ConfigListScreen, Screen):
-	def __init__(self, session, apiClass):
+	def __init__(self, session, config_repository):
+		"""
+		:type config_repository: SettingsRepository
+		"""
 		Screen.__init__(self, session)
 		trace("Config open")
-		name = apiClass.NAME
 
 		self["actions"] = ActionMap(["SetupActions", "ColorActions"], {
 			"green": self.keySave,
 			"red": self.keyCancel,
+			"yellow": self.logout,
 			"cancel": self.keyCancel
 		}, -2)
 
 		self["actions_kbd"] = ActionMap(["ColorActions"], {
 			"blue": self.openKeyboard
 		}, -2)
-
 		self["actions_kbd"].setEnabled(False)
 
 		self["key_red"] = Button(_("Cancel"))
 		self["key_green"] = Button(_("OK"))
+		self["key_yellow"] = Button(_("Logout"))
 		self["key_blue"] = Button(_("Keyboard"))
 		self["Keyboard"] = Boolean(False)
 
-		from manager import manager
-		cfg = manager.getConfig(name)
-		trace(id(cfg))
-
-		cfg_list = []
-		if apiClass.AUTH_TYPE == "Login":
-			cfg_list = [
-				getConfigListEntry(_("Login"), cfg.login),
-				getConfigListEntry(_("Password"), cfg.password),
-			]
-		elif apiClass.AUTH_TYPE == "Key":
-			cfg_list = [
-				getConfigListEntry(_("Key"), cfg.login),
-			]
-		cfg_list += [
-			getConfigListEntry(_("Show in main menu"), cfg.in_menu),
-			getConfigListEntry(_("Show in extensions list"), cfg.in_extensions),
-			getConfigListEntry(_("Player ID"), cfg.playerid),
-			getConfigListEntry(_("Use HLS proxy"), cfg.use_hlsgw),
-		]
+		self.config_repository = config_repository
+		cfg_list = config_repository.getConfigList()
 		ConfigListScreen.__init__(self, cfg_list, session)
-		self.setTitle(_("Configuration of %s") % name)
-		self["config"].onSelectionChanged.append(self.showHideKb)
 
-	def showHideKb(self):
+		self.setTitle(_("Configuration of %s") % config_repository.title)
+		self["config"].onSelectionChanged.append(self.showHideKeyboardButton)
+
+	def showHideKeyboardButton(self):
 		c = self["config"].getCurrent()
-		# Add to support ConfigSearchText
 		if c and isinstance(c[1], (ConfigSearchText, ConfigNumberText)):
 			self["actions_kbd"].setEnabled(True)
 			self["Keyboard"].boolean = True
@@ -268,92 +445,17 @@ class IPtvDreamConfig(ConfigListScreen, Screen):
 
 	def keySave(self):
 		trace("Save config")
-		self.saveAll()
-		from manager import manager
-		manager.saveConfig()
-		self.close(True)
-
-
-class IPtvDreamLogin(Screen):
-	# TODO
-	pass
-
-
-class IPtvDreamApiConfig(ConfigListScreen, Screen):
-	def __init__(self, session, db):
-		Screen.__init__(self, session)
-		self.skinName = "IPtvDreamConfig"
-		trace("ApiConfig open")
-		self.db = db  # type: AbstractStream
-
-		self["actions"] = ActionMap(["SetupActions", "ColorActions"], {
-			"green": self.keySave,
-			"red": self.keyCancel,
-			"cancel": self.keyCancel
-		}, -2)
-
-		self["actions_kbd"] = ActionMap(["ColorActions"], {
-			"blue": self.openKeyboard
-		}, -2)
-
-		self["actions_kbd"].setEnabled(False)
-
-		self["key_red"] = Button(_("Cancel"))
-		self["key_green"] = Button(_("OK"))
-		self["key_blue"] = Button(_("Keyboard"))
-		self["Keyboard"] = Boolean(False)
-
-		self.settings = {}
-		self.cfg_list = []
-		for i, (k, v) in enumerate(self.db.getSettings().items()):
-			if isinstance(v, ConfInteger):
-				entry = getConfigListEntry(v.title, ConfigInteger(v.value, limits=v.limits))
-			elif isinstance(v, ConfSelection):
-				entry = getConfigListEntry(v.title, ConfigSelection(v.choices, default=v.value))
-			elif isinstance(v, ConfString):
-				entry = getConfigListEntry(v.title, ConfigSearchText(default=v.value))
-			else:
-				raise Exception("Unknown type in settings: " + str(type(v)))
-			self.settings[i] = k
-			self.cfg_list.append(entry)
-
-		ConfigListScreen.__init__(self, self.cfg_list, session)
-		self.setTitle(_("Configuration of %s") % self.db.NAME)
-		self["config"].onSelectionChanged.append(self.showHideKb)
-
-	def showHideKb(self):
-		c = self["config"].getCurrent()
-		# Add to support ConfigSearchText
-		if c and isinstance(c[1], (ConfigSearchText, ConfigNumberText)):
-			self["actions_kbd"].setEnabled(True)
-			self["Keyboard"].boolean = True
-			self["key_blue"].show()
-		else:
-			self["actions_kbd"].setEnabled(False)
-			self["Keyboard"].boolean = False
-			self["key_blue"].hide()
-
-	def openKeyboard(self):
-		c = self["config"].getCurrent()
-		self.session.openWithCallback(self.VirtualKeyBoardCallback, VirtualKeyBoard, c[0], c[1].getValue(), ['en_EN'])
-
-	def keySave(self):
-		trace("Save config")
-		update = {}
-		for i, c in enumerate(self.cfg_list):
-			if c[1].isChanged():
-				k = self.settings[i]
-				update[k] = c[1].value
-		if update:
-			self.pushSettings(update)
-		else:
+		if not self["config"].isChanged():
 			self.close(False)
+			return
 
-	def pushSettings(self, settings):
 		try:
-			self.db.pushSettings(settings)
+			self.config_repository.saveConfigList(self["config"].list)
 			self.close(True)
 		except APIException as ex:
 			self.session.openWithCallback(
 				lambda ret: self.close(False),
-				MessageBox, _("Failed to send settings to server.") + "\n%s" % str(ex), MessageBox.TYPE_ERROR)
+				MessageBox, _("Failed to save settings") + "\n%s" % str(ex), MessageBox.TYPE_ERROR)
+
+	def logout(self):
+		self.close(None)

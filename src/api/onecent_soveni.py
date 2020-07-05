@@ -29,16 +29,11 @@ class OTTProvider(JsonSettings, M3UProvider):
 		super(OTTProvider, self).__init__(username, password)
 		self.site = "http://technic.cf/epg-soveni"
 		self.playlist = "only4tv_pl.m3u8"
-		s = self.getSettings()
+		s = self.getLocalSettings()
 		self.playlist_url = "http://soveni.leolitz.info/plist/only4tv_epg_%s.m3u8" % s['playlist'].value
 
-	def getSettings(self):
+	def getLocalSettings(self):
 		settings = {
 			'playlist': ConfSelection(_("Playlist"), 'lite', [('lite', "Lite"), ('full', "Full")]),
 		}
 		return self._safeLoadSettings(settings)
-
-	def pushSettings(self, settings):
-		data = self._loadSettings()
-		data.update(settings)
-		self._saveSettings(data)

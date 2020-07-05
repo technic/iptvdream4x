@@ -49,6 +49,10 @@ class AbstractAPI(object):
 	AUTH_TYPE = "Login"
 
 	def __init__(self, username, password):
+		"""
+		:param str username:
+		:param str password:
+		"""
 		self.username = username
 		self.password = password
 		self.sid = None
@@ -75,6 +79,31 @@ class AbstractAPI(object):
 
 	def authorize(self):
 		"""Perform authorization, used when session expired"""
+		pass
+
+	def getSettings(self):
+		"""
+		Return setting that can be access after start
+		:rtype: Dict[str, utils.ConfEntry]
+		"""
+		return {}
+
+	def pushSettings(self, settings):
+		"""
+		Push settings to server for key to value dict
+		:type settings: typing.Dict[str, str]
+		"""
+		pass
+
+	def getLocalSettings(self):
+		"""
+		Return settings that are stored locally and don't require authorization
+		:rtype: Dict[str, utils.ConfEntry]
+		"""
+		return {}
+
+	def saveLocalSettings(self, settings):
+		"""Save local settings"""
 		pass
 
 	def readHttp(self, request):
@@ -263,17 +292,6 @@ class AbstractStream(AbstractAPI):
 		"""
 		pass
 
-	def getSettings(self):
-		""" Return setting id to ConfEntry object dict """
-		return {}
-
-	def pushSettings(self, settings):
-		"""
-		Push settings to server for key to value dict
-		:type settings: typing.Dict[str, str]
-		"""
-		pass
-
 	def getPiconUrl(self, cid):
 		""" Return url to channel icon """
 		return ""
@@ -332,7 +350,7 @@ class JsonSettings(AbstractAPI):
 		except Exception as e:
 			raise APIException(str(e))
 
-	def pushSettings(self, settings):
+	def saveLocalSettings(self, settings):
 		data = self._loadSettings()
 		data.update(settings)
 		self._saveSettings(data)
