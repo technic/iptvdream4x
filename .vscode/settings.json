@@ -12,9 +12,10 @@
         "test_*.py"
     ],
     "python.linting.pylintEnabled": true,
-    "python.linting.pylintArgs":[],
+    "python.linting.pylintArgs": [],
     "python.linting.enabled": true,
     "cSpell.words": [
+        "hlsgw",
         "iptv",
         "iptvdream",
         "rtype",
