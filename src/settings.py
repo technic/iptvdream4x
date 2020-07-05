@@ -92,7 +92,7 @@ class SettingsRepository(object):
 				appendEntry(_("Login"), 'login')
 				appendEntry(_("Password"), 'password')
 			elif self.db.AUTH_TYPE == "Key":
-				appendEntry(_("Key"), 'login'),
+				appendEntry(_("Key"), 'login')
 
 		appendEntry(_("Show in main menu"), 'in_menu')
 		appendEntry(_("Show in extensions list"), 'in_extensions')
