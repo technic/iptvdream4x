@@ -1307,8 +1307,8 @@ class IPtvDreamEpg(Screen):
 		self.list.setIndex(0)
 
 		if self.day == 0:
-			for i, e in enumerate(epg_list):
-				if e.isAt(time):
+			for i, program in enumerate(epg_list):
+				if program.isAt(time):
 					self.list.setIndex(i)
 					break
 
