@@ -129,7 +129,7 @@ class KtvStream(OfflineFavourites, KartinaAPI):
 				t = int(p['ts'])
 				name, desc = self.parseName(p['progname'].encode('utf-8'))
 				if e is not None:
-					t_start, name, desc = e
+					t_start, name, desc = e  # pylint: disable=unpacking-non-sequence
 					programs.append(EPG(t_start, t, name, desc))
 				e = (t, name, desc)
 			yield cid, programs
