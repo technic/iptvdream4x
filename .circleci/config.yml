@@ -27,7 +27,7 @@ jobs:
             apt-get update && apt-get install -y python-virtualenv
             python -m virtualenv env
             source env/bin/activate
-            python -m pip install pylint pycodestyle
+            python -m pip install pylint pycodestyle twisted "setuptools<45"
       - run:
           name: pep8
           command: |
@@ -37,9 +37,10 @@ jobs:
             pycodestyle src
       - run:
           name: pylint
+          # pylint mask fatal=1 | error=2 | usage error=32
           command: |
             source env/bin/activate
-            pylint src || true
+            PYTHONPATH=/usr/lib/enigma2/python pylint src || exit $(( $? & 35 ))
       - run:
           name: test update
           command: |
