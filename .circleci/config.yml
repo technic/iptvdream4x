@@ -40,7 +40,7 @@ jobs:
           # pylint mask fatal=1 | error=2 | usage error=32
           command: |
             source env/bin/activate
-            PYTHONPATH=/usr/lib/enigma2/python pylint src; exit $(( $? & 35 ));
+            PYTHONPATH=/usr/lib/enigma2/python pylint src || exit $(( $? & 35 ))
       - run:
           name: test update
           command: |
