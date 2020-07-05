@@ -176,12 +176,14 @@
     <widget name="config" position="15,80" size="917,482" scrollbarMode="showOnDemand"/>
     <ePixmap position="23,25" zPosition="4" size="28,28" pixmap="IPtvDreamFHD/buttons/red.png" transparent="1" alphatest="blend"/>
     <ePixmap position="272,25" zPosition="4" size="28,28" pixmap="IPtvDreamFHD/buttons/green.png" transparent="1" alphatest="blend"/>
+    <ePixmap position="484,25" zPosition="4" size="28,28" pixmap="IPtvDreamFHD/buttons/yellow.png" transparent="1" alphatest="blend"/>
     <widget source="Keyboard" render="Pixmap" position="691,25" zPosition="4" size="28,28" pixmap="IPtvDreamFHD/buttons/blue.png" transparent="1" alphatest="blend">
       <convert type="ConditionalShowHide"/>
     </widget>
     <widget name="key_red" position="56,16" zPosition="5" size="213,48" valign="center" font="Regular;33" transparent="1" foregroundColor="white"/>
-    <widget name="key_green" position="304,16" zPosition="5" size="219,48" valign="center" font="Regular;33" transparent="1" foregroundColor="white"/>
+    <widget name="key_green" position="304,16" zPosition="5" size="171,48" valign="center" font="Regular;33" transparent="1" foregroundColor="white"/>
     <widget name="key_blue" position="728,16" zPosition="5" size="216,48" valign="center" font="Regular;33" transparent="1" foregroundColor="white"/>
+    <widget name="key_yellow" position="518,16" zPosition="5" size="158,48" valign="center" font="Regular;33" transparent="1" foregroundColor="white"/>
   </screen>
   <screen name="IPtvDreamManager" position="center,254" size="872,589">
     <widget source="list" render="Listbox" position="center,80" size="827,500" scrollbarMode="showOnDemand">
