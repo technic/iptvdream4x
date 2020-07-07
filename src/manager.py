@@ -43,7 +43,7 @@ from common import ConfigNumberText
 from utils import trace, APIException, APILoginFailed
 from loc import translate as _
 from settings import IPtvDreamConfig, IPtvDreamWebConfig, SettingsRepository, WebConfig
-from main import IPtvDreamStreamPlayer
+from main import IPtvDreamStreamPlayer, IPtvDreamChannels
 
 PLAYERS = [('1', "enigma2 ts (1)"), ('4097', "gstreamer (4097)"), ('5002', "exteplayer3 (5002)")]
 KEYMAPS = [('enigma', 'enigma'), ('neutrino', 'neutrino')]
@@ -295,6 +295,13 @@ class Manager(object):
 		pluginConfig.max_playlists = ConfigInteger(0, (0, 9))
 		self.max_playlists = pluginConfig.max_playlists.value
 
+		# FIXME: spaghetti code warning
+		self.start_mode_choices = [
+			(str(IPtvDreamChannels.GROUPS), _("Groups")),
+			(str(IPtvDreamChannels.FAV), _("Favourites when not empty")),
+		]
+		pluginConfig.start_mode = ConfigSelection(self.start_mode_choices)
+
 		self.enabled = {}
 		self.apiDict = {}
 		self.config = config.IPtvDream = ConfigSubDict()
@@ -363,6 +370,16 @@ class Manager(object):
 	def setPlaylistNumber(self, n):
 		pluginConfig.max_playlists.value = n
 		pluginConfig.max_playlists.save()
+
+	def getStartModeChoices(self):
+		return [(title, value) for value, title in self.start_mode_choices]
+
+	def getStartMode(self):
+		return int(pluginConfig.start_mode.value)
+
+	def setStartMode(self, mode):
+		pluginConfig.start_mode.value = mode
+		pluginConfig.start_mode.save()
 
 	def getList(self):
 		return sorted(
@@ -457,6 +474,7 @@ class IPtvDreamManager(Screen):
 			(_("Choose keymap"), self.selectKeymap),
 			(_("Choose skin"), self.selectSkin),
 			(_("Additional playlists number"), self.selectPlaylistNumber),
+			(_("Start mode"), self.selectStartMode),
 		]
 		self.session.openWithCallback(cb, ChoiceBox, _("Context menu"), actions)
 
@@ -509,6 +527,13 @@ class IPtvDreamManager(Screen):
 
 		self.session.openWithCallback(
 			cb, ChoiceBox, title=_("Select playlist number"), list=manager.getNumberChoices())
+
+	def selectStartMode(self):
+		def cb(selected):
+			if selected is not None:
+				manager.setStartMode(selected[1])
+
+		self.session.openWithCallback(cb, ChoiceBox, title=_("Select start mode"), list=manager.getStartModeChoices())
 
 	def restart(self, ret):
 		if ret:

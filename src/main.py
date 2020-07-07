@@ -842,8 +842,13 @@ class IPtvDreamChannels(Screen):
 
 		self.list.onSelectionChanged.append(self.selectionChanged)
 
+		from manager import manager
+		start_mode = manager.getStartMode()
+		if start_mode == self.FAV and not self.db.selectFavourites():
+			start_mode = self.GROUPS
+
 		self.order_config = SortOrderSettings()
-		self.mode = self.GROUPS
+		self.mode = start_mode
 		self.gid = None
 		self.saved_state = None
 
