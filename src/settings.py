@@ -16,8 +16,9 @@ from collections import OrderedDict
 import urllib
 from json import loads as json_loads, dumps as json_dumps
 from twisted.web.client import downloadPage, FileBodyProducer, readBody, Agent, Headers
+from twisted.web.error import Error as WebError
 from twisted.internet import reactor
-from twisted.internet.defer import Deferred
+from twisted.internet.defer import Deferred, CancelledError
 
 # enigma2 imports
 from Screens.Screen import Screen
@@ -183,7 +184,7 @@ def convertConfEntry(conf):
 def getRequest(url):
 	agent = Agent(reactor)
 	d = agent.request(b'GET', url, headers=defaultHeaders())
-	return d.addCallback(readResponseBody)
+	return d.addErrback(agentError).addCallback(readResponseBody)
 
 
 def postRequest(url, body):
@@ -191,7 +192,7 @@ def postRequest(url, body):
 	headers = defaultHeaders()
 	headers.addRawHeader('Content-Type', 'application/json')
 	d = agent.request(b'POST', url, headers=headers, bodyProducer=FileBodyProducer(BytesIO(body)))
-	return d.addCallback(readResponseBody)
+	return d.addErrback(agentError).addCallback(readResponseBody)
 
 
 def defaultHeaders():
@@ -202,11 +203,24 @@ def defaultHeaders():
 
 def readResponseBody(response):
 	trace("Response", response.code)
-	# TODO: support redirects
+	# TODO: support redirects, this actually can be done with RedirectAgent
 	if 200 <= response.code < 300:
 		return readBody(response)
 	else:
-		raise ValueError("Bad response code %d" % response.code)
+		raise HttpError(response.code, response.phrase)
+
+
+class HttpError(WebError):
+	"""Bad HTTP response code"""
+
+
+class AgentException(Exception):
+	"""Twisted Agent exception"""
+
+
+def agentError(err):
+	"""Wrap twisted failure in AgentException"""
+	raise AgentException(err.getErrorMessage())
 
 
 class WebConfig(object):
@@ -229,6 +243,7 @@ class WebConfig(object):
 			self.session = data['secret']
 			return data['key']
 
+		self.revision = None
 		items = []
 		for k, v in self.settings:
 			item = v.to_json()
@@ -245,12 +260,18 @@ class WebConfig(object):
 
 	def _run(self):
 		def eb(err):
-			trace("Poll error:", err)
-			self._error_count += 1
-			if self._error_count > 5:
+			if err.check(CancelledError):
+				trace("Poll canceled")
+			elif err.check(HttpError):
+				trace("Bad response", err.value)
 				self.poll_defer.errback(err)
 			else:
-				self._run()  # retry
+				trace("Poll error:", err.value)
+				self._error_count += 1
+				if self._error_count > 5:
+					self.poll_defer.errback(err)
+				else:
+					self._run()  # retry
 
 		def cb(data):
 			trace("Poll result:", data)
@@ -268,7 +289,7 @@ class WebConfig(object):
 
 		url = self.site + 'stb/poll?' + urllib.urlencode({'sid': self.session, 'revision': revision})
 		self._run_defer = getRequest(url)
-		self._run_defer.addErrback(eb).addCallback(cb)
+		self._run_defer.addCallback(cb).addErrback(eb)
 
 	def poll(self):
 		if self.poll_defer:
@@ -278,10 +299,12 @@ class WebConfig(object):
 		return self.poll_defer
 
 	def stop(self):
+		trace("Delete session ...")
 		d = getRequest(self.site + 'stb/del-session?' + urllib.urlencode({'sid': self.session}))
 		if self._run_defer:
 			self._run_defer.cancel()
 		self.session = None
+		self.key = None
 		return d
 
 
@@ -299,6 +322,7 @@ class IPtvDreamWebConfig(Screen):
 		self.web_config = web_config
 		self.site = self.web_config.site.replace('http://', 'https://')
 		self.onFirstExecBegin.append(self.start)
+		self._wantCallbacks = None
 
 		self.setTitle(_("Configuration of %s") % settings_repository.title)
 		self["header"] = Label(_("Connecting to server..."))
@@ -320,7 +344,6 @@ class IPtvDreamWebConfig(Screen):
 		path = '/tmp/qrcode.png'
 
 		def setPixmap(ret):
-			trace(ret)
 			self["image"].instance.setPixmap(LoadPixmap(path))
 
 		self["header"].setText(_("Scan QR code or visit url below"))
@@ -335,14 +358,15 @@ class IPtvDreamWebConfig(Screen):
 			else:
 				self.keyReceived(self.web_config.key)
 		else:
-			self.web_config.start().addCallback(self.keyReceived).addErrback(fatalError)
+			self.web_config.start().addCallback(self.keyReceived).addErrback(self.error).addErrback(fatalError)
 
+	@safecb
 	def keyReceived(self, key):
 		trace("Obtained key:", key)
 		self.showCode(key)
-		# FIXME: handle errors
-		self.web_config.poll().addCallback(self.newSettingsReceived).addErrback(fatalError)
+		self.web_config.poll().addCallback(self.newSettingsReceived).addErrback(self.error).addErrback(fatalError)
 
+	@safecb
 	def newSettingsReceived(self, data):
 		trace("Obtained settings:", data)
 		if data['revision'] == 0:
@@ -359,7 +383,7 @@ class IPtvDreamWebConfig(Screen):
 					MessageBox, _("Failed to save settings") + "\n%s" % str(ex), MessageBox.TYPE_ERROR)
 
 	def waitForChanges(self):
-		self.web_config.poll().addCallback(self.newSettingsReceived).addErrback(fatalError)
+		self.web_config.poll().addCallback(self.newSettingsReceived).addErrback(self.error).addErrback(fatalError)
 		# ui
 		self["header"].setText(_("Waiting for changes to be entered"))
 		self["image"].hide()
@@ -373,9 +397,17 @@ class IPtvDreamWebConfig(Screen):
 		trace("Closing web Settings")
 		self.close(False)
 
+	@safecb
 	def error(self, err):
-		trace("Error", err)
-		self.close(False)
+		trace("Web settings error:", err)
+		e = err.trap(CancelledError, AgentException, WebError)
+		if e in (AgentException, WebError):
+			self.session.openWithCallback(
+				lambda ret: self.close(False),
+				MessageBox, _("Web settings error") + "\n%s" % str(err.getErrorMessage()), MessageBox.TYPE_ERROR)
+		else:
+			trace("Cancelled")
+			self.close(False)
 
 
 class IPtvDreamWebConfigWaiting(Screen):
