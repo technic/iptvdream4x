@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPtvDream 4X\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-31 16:30+0200\n"
+"POT-Creation-Date: 2020-07-09 00:31+0200\n"
 "PO-Revision-Date: 2019-08-21 20:27+0200\n"
 "Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
 "Language-Team: Open Source contribution\n"
@@ -80,6 +80,9 @@ msgstr "Persöhnliche daten löschen und beenden"
 msgid "Configuration of %s"
 msgstr "Einstellungen %s"
 
+msgid "Connecting to server..."
+msgstr ""
+
 msgid "Context menu"
 msgstr "Kontexmenü"
 
@@ -126,8 +129,8 @@ msgstr "Instalation fehlgeschlagen %s!"
 msgid "Failed to save favourites list."
 msgstr "Fehler beim Speichern der Favoritenliste."
 
-msgid "Failed to send settings to server."
-msgstr "Fehler beim Speichern der Einstellungen auf dem Server."
+msgid "Failed to save settings"
+msgstr ""
 
 msgid "Failed to update package list!"
 msgstr "Fehler beim Aktualisieren der Pakete!"
@@ -135,8 +138,14 @@ msgstr "Fehler beim Aktualisieren der Pakete!"
 msgid "Favourites"
 msgstr "Favoriten"
 
+msgid "Favourites when not empty"
+msgstr ""
+
 msgid "Finished!"
 msgstr "Fertig!"
+
+msgid "Generate new code"
+msgstr ""
 
 msgid "Get playlist"
 msgstr ""
@@ -166,8 +175,10 @@ msgid ""
 "Start editing mode?"
 msgstr ""
 "Im Bearbeitungsmodus können Sie Ihre Favoritenliste sortieren. Hilfe:\n"
-"- Wählen Sie den Kanal aus, den Sie an eine neue Position verschieben möchten.\n"
-"- Klicken Sie auf OK und bewegen Sie den Kanal mit den Aufwärts- oder Abwärtspfeilen.\n"
+"- Wählen Sie den Kanal aus, den Sie an eine neue Position verschieben "
+"möchten.\n"
+"- Klicken Sie auf OK und bewegen Sie den Kanal mit den Aufwärts- oder "
+"Abwärtspfeilen.\n"
 "- Drücken Sie erneut OK, um die neue Kanalposition festzulegen.\n"
 "- Drücken Sie EXIT, um den Vorgang abzuschließen.\n"
 "Aktivieren Sie den Bearbeitungsmodus?"
@@ -182,6 +193,9 @@ msgstr "Instalation %s"
 msgid "Installing update, please wait"
 msgstr "Update Instaliert bitte warten"
 
+msgid "Invalid key"
+msgstr ""
+
 msgid "Key"
 msgstr ""
 
@@ -190,6 +204,9 @@ msgstr "Tastatur"
 
 msgid "Login"
 msgstr "Login"
+
+msgid "Logout"
+msgstr ""
 
 msgid "Low"
 msgstr "Niedrig"
@@ -212,12 +229,6 @@ msgstr ""
 
 msgid "Open plugin settings"
 msgstr "Plugin Einstellungen Öffnen"
-
-msgid "Open provider settings"
-msgstr "Provider Einstellungen Öffnen"
-
-msgid "Options"
-msgstr ""
 
 msgid "Password"
 msgstr "Passwort"
@@ -260,6 +271,9 @@ msgstr ""
 msgid "Restarting enigma2 after IPtvDream update..."
 msgstr "Starten Sie enigma2 nach dem Update von IPtvDream neu..."
 
+msgid "Scan QR code or visit url below"
+msgstr ""
+
 msgid "Select keymap style"
 msgstr ""
 
@@ -267,6 +281,9 @@ msgid "Select playlist number"
 msgstr ""
 
 msgid "Select skin"
+msgstr ""
+
+msgid "Select start mode"
 msgstr ""
 
 msgid "Server"
@@ -300,6 +317,9 @@ msgstr "Nach Name sortieren"
 msgid "Sort by number"
 msgstr "Nach Nummer sortieren"
 
+msgid "Start mode"
+msgstr ""
+
 #, python-format
 msgid "Start of %s failed"
 msgstr "Starten Fehlgeschlagen %s"
@@ -319,7 +339,22 @@ msgstr "Update Fehlgeschlagen"
 msgid "Updating package list, please wait ..."
 msgstr "Aktualisierung der Paketliste bitte warten sie ..."
 
+msgid "Use HLS proxy"
+msgstr ""
+
+msgid "Waiting for changes made in the web interface..."
+msgstr ""
+
+msgid "Waiting for changes to be entered"
+msgstr ""
+
 msgid "We need to authenticate your device"
+msgstr ""
+
+msgid "Web Setup"
+msgstr ""
+
+msgid "Web settings error"
 msgstr ""
 
 msgid "Wrong number or pin"
@@ -387,6 +422,9 @@ msgstr ""
 #~ msgid "Expire on"
 #~ msgstr "Endet am"
 
+#~ msgid "Failed to send settings to server."
+#~ msgstr "Fehler beim Speichern der Einstellungen auf dem Server."
+
 #~ msgid "Feb"
 #~ msgstr "Februar"
 
@@ -447,6 +485,9 @@ msgstr ""
 
 #~ msgid "Oct"
 #~ msgstr "Oktober"
+
+#~ msgid "Open provider settings"
+#~ msgstr "Provider Einstellungen Öffnen"
 
 #~ msgid "Search"
 #~ msgstr "Suche"

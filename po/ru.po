@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-31 16:30+0200\n"
+"POT-Creation-Date: 2020-07-09 00:31+0200\n"
 "PO-Revision-Date: 2020-03-31 17:10+0200\n"
 "Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
 "Language-Team: Russian / enigma(c) Ukraine, Kiev>\n"
@@ -80,6 +80,9 @@ msgstr "Удалить данные авторизации и выйти"
 msgid "Configuration of %s"
 msgstr "Настройки %s"
 
+msgid "Connecting to server..."
+msgstr ""
+
 msgid "Context menu"
 msgstr "Контекстное меню"
 
@@ -126,8 +129,8 @@ msgstr "Не удалось установить %s!"
 msgid "Failed to save favourites list."
 msgstr "Не удалось сохранить список избранного."
 
-msgid "Failed to send settings to server."
-msgstr "Не удалось сохранить настройки на сервере."
+msgid "Failed to save settings"
+msgstr ""
 
 msgid "Failed to update package list!"
 msgstr "Не удалось обновить список пакетов!"
@@ -135,8 +138,14 @@ msgstr "Не удалось обновить список пакетов!"
 msgid "Favourites"
 msgstr "Избранное"
 
+msgid "Favourites when not empty"
+msgstr ""
+
 msgid "Finished!"
 msgstr "Завершено!"
+
+msgid "Generate new code"
+msgstr ""
 
 msgid "Get playlist"
 msgstr "Брать плейлист"
@@ -182,6 +191,9 @@ msgstr "Установка %s"
 msgid "Installing update, please wait"
 msgstr "Установка обновления, пожалуйста ожидайте"
 
+msgid "Invalid key"
+msgstr ""
+
 msgid "Key"
 msgstr "Ключ"
 
@@ -190,6 +202,9 @@ msgstr "Клавиатура"
 
 msgid "Login"
 msgstr "Логин"
+
+msgid "Logout"
+msgstr ""
 
 msgid "Low"
 msgstr "Низкое"
@@ -212,12 +227,6 @@ msgstr "Открыть архив для \"%s\""
 
 msgid "Open plugin settings"
 msgstr "Открыть настройки плагина"
-
-msgid "Open provider settings"
-msgstr "Открыть настройки провайдера"
-
-msgid "Options"
-msgstr "Опции"
 
 msgid "Password"
 msgstr "Пароль"
@@ -260,6 +269,9 @@ msgstr "Перезапустить enigma2 для применения изме�
 msgid "Restarting enigma2 after IPtvDream update..."
 msgstr "Перезагрузка enigma2 после обновления IPtvDream..."
 
+msgid "Scan QR code or visit url below"
+msgstr ""
+
 msgid "Select keymap style"
 msgstr "Выберите тип keymap"
 
@@ -268,6 +280,9 @@ msgstr "Выберите количество плейлистов"
 
 msgid "Select skin"
 msgstr "Выберите skin"
+
+msgid "Select start mode"
+msgstr ""
 
 msgid "Server"
 msgstr "Сервер"
@@ -300,6 +315,9 @@ msgstr "Отсортировать по имени"
 msgid "Sort by number"
 msgstr "Отсортировать по номеру"
 
+msgid "Start mode"
+msgstr ""
+
 #, python-format
 msgid "Start of %s failed"
 msgstr "Не удалось запустить %s"
@@ -319,8 +337,23 @@ msgstr "Ошибка при обновлении"
 msgid "Updating package list, please wait ..."
 msgstr "Обновление списка пакетов, пожалуйста ожидайте ..."
 
+msgid "Use HLS proxy"
+msgstr ""
+
+msgid "Waiting for changes made in the web interface..."
+msgstr ""
+
+msgid "Waiting for changes to be entered"
+msgstr ""
+
 msgid "We need to authenticate your device"
 msgstr "Необходима авторизация вашего устройства"
+
+msgid "Web Setup"
+msgstr ""
+
+msgid "Web settings error"
+msgstr ""
 
 msgid "Wrong number or pin"
 msgstr "Неправильный логин или пин код"
@@ -387,6 +420,9 @@ msgstr "по ссылке"
 #~ msgid "Expire on"
 #~ msgstr "Подписка до"
 
+#~ msgid "Failed to send settings to server."
+#~ msgstr "Не удалось сохранить настройки на сервере."
+
 #~ msgid "Feb"
 #~ msgstr "Февраль"
 
@@ -447,6 +483,12 @@ msgstr "по ссылке"
 
 #~ msgid "Oct"
 #~ msgstr "Октябрь"
+
+#~ msgid "Open provider settings"
+#~ msgstr "Открыть настройки провайдера"
+
+#~ msgid "Options"
+#~ msgstr "Опции"
 
 #~ msgid "Search"
 #~ msgstr "Поиск"

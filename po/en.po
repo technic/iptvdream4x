@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-31 16:30+0200\n"
+"POT-Creation-Date: 2020-07-09 00:31+0200\n"
 "PO-Revision-Date: 2011-08-24 17:33+0300\n"
 "Last-Translator: technic <alexeytech@gmail.com>\n"
 "Language-Team: none\n"
@@ -79,6 +79,9 @@ msgstr ""
 msgid "Configuration of %s"
 msgstr ""
 
+msgid "Connecting to server..."
+msgstr ""
+
 msgid "Context menu"
 msgstr ""
 
@@ -125,7 +128,7 @@ msgstr ""
 msgid "Failed to save favourites list."
 msgstr ""
 
-msgid "Failed to send settings to server."
+msgid "Failed to save settings"
 msgstr ""
 
 msgid "Failed to update package list!"
@@ -134,7 +137,13 @@ msgstr ""
 msgid "Favourites"
 msgstr ""
 
+msgid "Favourites when not empty"
+msgstr ""
+
 msgid "Finished!"
+msgstr ""
+
+msgid "Generate new code"
 msgstr ""
 
 msgid "Get playlist"
@@ -175,6 +184,9 @@ msgstr ""
 msgid "Installing update, please wait"
 msgstr ""
 
+msgid "Invalid key"
+msgstr ""
+
 msgid "Key"
 msgstr ""
 
@@ -182,6 +194,9 @@ msgid "Keyboard"
 msgstr ""
 
 msgid "Login"
+msgstr ""
+
+msgid "Logout"
 msgstr ""
 
 msgid "Low"
@@ -204,12 +219,6 @@ msgid "Open archive for \"%s\""
 msgstr ""
 
 msgid "Open plugin settings"
-msgstr ""
-
-msgid "Open provider settings"
-msgstr ""
-
-msgid "Options"
 msgstr ""
 
 msgid "Password"
@@ -253,6 +262,9 @@ msgstr ""
 msgid "Restarting enigma2 after IPtvDream update..."
 msgstr ""
 
+msgid "Scan QR code or visit url below"
+msgstr ""
+
 msgid "Select keymap style"
 msgstr ""
 
@@ -260,6 +272,9 @@ msgid "Select playlist number"
 msgstr ""
 
 msgid "Select skin"
+msgstr ""
+
+msgid "Select start mode"
 msgstr ""
 
 msgid "Server"
@@ -293,6 +308,9 @@ msgstr ""
 msgid "Sort by number"
 msgstr ""
 
+msgid "Start mode"
+msgstr ""
+
 #, python-format
 msgid "Start of %s failed"
 msgstr ""
@@ -312,7 +330,22 @@ msgstr ""
 msgid "Updating package list, please wait ..."
 msgstr ""
 
+msgid "Use HLS proxy"
+msgstr ""
+
+msgid "Waiting for changes made in the web interface..."
+msgstr ""
+
+msgid "Waiting for changes to be entered"
+msgstr ""
+
 msgid "We need to authenticate your device"
+msgstr ""
+
+msgid "Web Setup"
+msgstr ""
+
+msgid "Web settings error"
 msgstr ""
 
 msgid "Wrong number or pin"
