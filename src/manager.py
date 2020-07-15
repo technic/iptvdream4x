@@ -128,7 +128,11 @@ class PluginStarter(Screen):
 			cb = lambda ret: self.login()
 			message = _("Authorization error") + "\n" + str(e)
 		except APIException as e:
-			cb = lambda ret: self.exit()
+			if self.task == 'settings':
+				self.task = None
+				cb = lambda ret: self.login()
+			else:
+				cb = lambda ret: self.exit()
 			message = _("Start of %s failed") % self.db.NAME + "\n" + str(e)
 		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
 
