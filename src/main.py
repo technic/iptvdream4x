@@ -576,7 +576,7 @@ class ChannelList(MenuList):
 		res = GUIComponent.applySkin(self, desktop, parent)
 
 		self.l.setItemHeight(self.listItemHeight)
-		self.itemWidth = self.instance.size().width()
+		self.listItemWidth = self.instance.size().width()
 		for x in self.fontCalc:
 			# resize and move away
 			x.resize(eSize(self.listItemWidth, self.listItemHeight))
