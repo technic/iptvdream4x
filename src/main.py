@@ -514,8 +514,8 @@ class ChannelList(MenuList):
 
 		self.pixmapProgressBar = None
 		self.pixmapArchive = None
-		self.itemHeight = 28
-		self.itemWidth = 0
+		self.listItemHeight = 28
+		self.listItemWidth = 0
 		self.l.setFont(0, parseFont("Regular;22", ((1, 1), (1, 1))))
 		self.l.setFont(1, parseFont("Regular;18", ((1, 1), (1, 1))))
 		self.l.setFont(2, parseFont("Regular;20", ((1, 1), (1, 1))))
@@ -559,7 +559,7 @@ class ChannelList(MenuList):
 					if pic:
 						self.pixmapArchive = pic
 				elif attrib == "serviceItemHeight":
-					self.itemHeight = int(value)
+					self.listItemHeight = int(value)
 				elif attrib == "serviceNameFont":
 					self.l.setFont(0, parseFont(value, scale))
 					self.fontCalc[0].setFont(parseFont(value, scale))
@@ -575,11 +575,11 @@ class ChannelList(MenuList):
 		self.skinAttributes = attribs
 		res = GUIComponent.applySkin(self, desktop, parent)
 
-		self.l.setItemHeight(self.itemHeight)
+		self.l.setItemHeight(self.listItemHeight)
 		self.itemWidth = self.instance.size().width()
 		for x in self.fontCalc:
 			# resize and move away
-			x.resize(eSize(self.itemWidth, self.itemHeight))
+			x.resize(eSize(self.listItemWidth, self.listItemHeight))
 			x.move(ePoint(int(self.instance.size().width()+10), int(self.instance.size().height()+10)))
 			x.setNoWrap(1)
 		return res
@@ -645,7 +645,7 @@ class ChannelList(MenuList):
 	def buildGroupEntry(self, group):
 		return [
 			group,
-			(eListboxPythonMultiContent.TYPE_TEXT, 0, 0, self.itemWidth, self.itemHeight,
+			(eListboxPythonMultiContent.TYPE_TEXT, 0, 0, self.listItemWidth, self.listItemHeight,
 				0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, group.title)
 		]
 
@@ -664,7 +664,7 @@ class ChannelList(MenuList):
 			xoffset += 55
 			text = str(c.number)
 			lst.append(
-				(eListboxPythonMultiContent.TYPE_TEXT, 0, 0, xoffset-5, self.itemHeight,
+				(eListboxPythonMultiContent.TYPE_TEXT, 0, 0, xoffset-5, self.listItemHeight,
 					2, RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text))
 
 		if self.pixmapArchive:
@@ -673,7 +673,7 @@ class ChannelList(MenuList):
 			if c.has_archive:
 				lst.append(
 					(eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST,
-						xoffset, (self.itemHeight - height) / 2, width, height, self.pixmapArchive))
+						xoffset, (self.listItemHeight - height) / 2, width, height, self.pixmapArchive))
 			xoffset += width+5
 
 		if self.showEpgProgress:
@@ -683,10 +683,10 @@ class ChannelList(MenuList):
 				percent = e.percent(syncTime(), 100)
 				lst.extend([
 					(eListboxPythonMultiContent.TYPE_PROGRESS,
-						xoffset+1, (self.itemHeight-height)/2, width, height,
+						xoffset+1, (self.listItemHeight-height)/2, width, height,
 						percent, 0, self.col['colorEventProgressbar'], self.col['colorEventProgressbarSelected']),
 					(eListboxPythonMultiContent.TYPE_PROGRESS,
-						xoffset, (self.itemHeight-height)/2 - 1, width+2, height+2,
+						xoffset, (self.listItemHeight-height)/2 - 1, width+2, height+2,
 						0, 1, self.col['colorEventProgressbarBorder'], self.col['colorEventProgressbarBorderSelected'])
 				])
 			xoffset += width+7
@@ -695,18 +695,18 @@ class ChannelList(MenuList):
 		width = self.calculateWidth(text, 0)
 		if c.cid != self.highlight_cid:
 			lst.append(
-				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, width, self.itemHeight,
+				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, width, self.listItemHeight,
 					0, defaultFlag, text))
 		else:
 			lst.append(
-				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, width, self.itemHeight,
+				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, width, self.listItemHeight,
 					0, defaultFlag, text, self.col['colorServicePlaying'], self.col['colorServicePlayingSelected']))
 		xoffset += width+10
 
 		if e:
 			text = '(%s)' % e.name
 			lst.append(
-				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, self.itemWidth, self.itemHeight,
+				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, self.listItemWidth, self.listItemHeight,
 					1, defaultFlag, text,
 					self.col['colorServiceDescription'], self.col['colorServiceDescriptionSelected']))
 
