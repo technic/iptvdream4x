@@ -862,6 +862,7 @@ class IPtvDreamChannels(Screen):
 				"contextMenu": self.showMenu,
 				"addFavourites": self.addRemoveFavourites,
 			}, -1)
+		self["move_actions"].setEnabled(False)
 
 		self["packetExpire"] = Label()
 		if self.db.packet_expire is not None:
