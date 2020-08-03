@@ -19,7 +19,8 @@
         "iptv",
         "iptvdream",
         "rtype",
-        "strftime"
+        "strftime",
+        "xmltv"
     ],
     "python.linting.pycodestyleEnabled": true,
     // enigma2 legacy style
