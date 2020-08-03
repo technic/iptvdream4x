@@ -220,7 +220,12 @@ class M3UProvider(OfflineFavourites):
 
 	def getChannelsEpg(self, cids):
 		t = mktime(syncTime().timetuple())
-		data = self.getJsonData(self.site + "/epg_list?", {"time": int(t), "ids": ",".join(map(str, cids))})
+		tvgs = set(self.channels_data[cid]['tvg'] or 0 for cid in cids)
+		data = self.getJsonData(self.site + "/epg_list?", {
+			"time": int(t),
+			"ids": ",".join(map(str, tvgs)),
+		})
+
 		for c in data['data']:
 			tvg = c['channel_id']
 			try:
