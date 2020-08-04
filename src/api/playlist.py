@@ -43,7 +43,7 @@ class Playlist(JsonSettings, M3UProvider):
 	def start(self):
 		try:
 			self.name_map = json_loads(self.readHttp(self.site + "/channels_names"))['data']
-		except IOError as e:
+		except (IOError, ValueError) as e:
 			self.trace("error!", e)
 			raise APIException(e)
 
