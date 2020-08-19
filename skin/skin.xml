@@ -149,7 +149,7 @@
     <widget name="epgProgress" position="1098,408" size="127,15" backgroundColor="#0038435a" borderColor="#00bbbbbb" borderWidth="1" transparent="1"/>
     <widget backgroundColor="#0038435a" font="Regular;18" foregroundColor="#00bbbbbb" name="epgDescription" position="795,437" size="435,170" transparent="1"/>
     <widget name="btn_red" alphatest="blend" pixmap="IPtvDream/buttons/red.png" position="360,680" size="24,24"/>
-    <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="390,680" size="260,24" transparent="1" zPosition="1"/>
+    <widget backgroundColor="#00000000" font="Regular;20" name="key_red" position="390,680" size="250,24" transparent="1" zPosition="1"/>
     <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/green.png" position="650,680" size="24,24"/>
     <widget backgroundColor="#00000000" font="Regular;20" name="key_green" position="680,680" size="260,24" transparent="1" zPosition="1"/>
   </screen>
