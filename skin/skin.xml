@@ -161,7 +161,7 @@
     <widget size="100,32" name="epgDuration" position="304,505" font="Regular;26"/>
     <widget size="121,30" name="epgDate" position="713,511" font="Regular;21" foregroundColor="blue2" halign="right"/>
     <widget name="btn_red" alphatest="blend" pixmap="IPtvDream/buttons/red.png" position="430,509" size="24,24"/>
-    <widget font="Regular;20" name="key_red" position="466,509" size="188,24" transparent="1" zPosition="1" halign="left"/>
+    <widget font="Regular;20" name="key_red" position="466,509" size="188,24" transparent="1" zPosition="1"/>
   </screen>
   <screen name="IPtvDreamConfig" position="center,center" size="560,320" title="Config">
     <widget name="config" position="5,45" size="540,271" scrollbarMode="showOnDemand"/>
