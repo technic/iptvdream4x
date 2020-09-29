@@ -21,6 +21,7 @@
   <screen>
     <name>IPtvDreamList</name>
     <entries>
+      <entry name="Title" value="FoobarTV / Group / Channel Name" render="Label" type="string"/>
       <entry name="packetExpire" value="Payment expires: 03.09.2019" render="Label" type="string"/>
     </entries>
   </screen>
@@ -40,11 +41,15 @@
   <screen>
     <name>IPtvDreamEpg</name>
     <entries>
+      <entry name="list" value="IPtvDream/rec.png,Mon,12:58,Program name Program name Program name" render="Label" type="string"/>
       <entry name="epgName" value="Program Name" render="Label" type="string"/>
       <entry name="epgTime" value="18:00" render="Label" type="string"/>
       <entry name="epgDuration" value="30 min" render="Label" type="string"/>
       <entry name="epgProgress" value="30" render="Slider" type="string"/>
       <entry name="epgDescription" value="Program Description. Program Description." render="Label" type="string"/>
+      <entry name="btn_red" value="red.png" render="Pixmap" type="string"/>
+      <entry name="key_red" value="Archive" render="Label" type="string"/>
+      <entry name="key_green" value="Details" render="Label" type="string"/>
     </entries>
   </screen>
   <screen>

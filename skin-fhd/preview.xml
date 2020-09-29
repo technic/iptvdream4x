@@ -20,6 +20,7 @@
   <screen>
     <name>IPtvDreamList</name>
     <entries>
+      <entry name="Title" value="FoobarTV / Group / Channel Name" render="Label" type="string"/>
       <entry name="packetExpire" value="Payment expires: 03.09.2019" render="Label" type="string"/>
     </entries>
   </screen>
@@ -39,11 +40,13 @@
   <screen>
     <name>IPtvDreamEpg</name>
     <entries>
+      <entry name="list" value="IPtvDream/rec.png,Mon,12:58,Program name Program name Program name" render="Label" type="string"/>
       <entry name="epgName" value="Oblivion (2013 film)" render="Label" type="string"/>
       <entry name="epgTime" value="18:00" render="Label" type="string"/>
       <entry name="epgDuration" value="50 min" render="Label" type="string"/>
       <entry name="epgProgress" value="30" render="Slider" type="string"/>
       <entry name="epgDescription" value="Oblivion takes place in 2077, on an Earth devastated by war with extraterrestrials that has caused humanity to relocate itself to Titan. The film follows the story of Jack Harper, a technician who has been sent back to Earth to service drones used in the fight against remaining extraterrestrials (scavengers). After witnessing a spacecraft crash, from which he is able to rescue a survivor, Harper is captured by scavengers and fights against a new and evolving alien threat. " render="Label" type="string"/>
+      <entry name="btn_red" value="red.png" render="Pixmap" type="string"/>
       <entry name="key_red" value="Archive" render="Label" type="string"/>
       <entry name="key_green" value="Details" render="Label" type="string"/>
     </entries>
