@@ -122,6 +122,7 @@ references:
       branches:
         ignore:
           - /^cbilling.*/
+          - /^73mtv.*/
       tags:
         only: /^v.*/
 
@@ -133,6 +134,14 @@ references:
           - /^cbilling.*/
       tags:
         only: /^cbilling.*/
+
+  config-73mtv: &config-73mtv
+    provider: 73mtv
+    filters:
+      branches:
+        only: /^73mtv.*/
+      tags:
+        only: /^73mtv\/.*/
 
 workflows:
   task-all:
@@ -157,3 +166,17 @@ workflows:
               ignore: /.*/
             tags:
               only: /cbilling\/v\/(\d)+(\.(\d)+)+$/
+
+  task-73mtv:
+    jobs:
+      - test: *config-73mtv
+      - build: *config-73mtv
+      - deploy:
+          requires:
+              - test
+              - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /73mtv\/v\/(\d)+(\.(\d)+)+$/
