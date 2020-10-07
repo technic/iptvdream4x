@@ -47,6 +47,11 @@ pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py src/api/amigo.p
 datafiles += $(wildcard src/logo/*.png)
 endif
 
+ifeq ($(PROVIDER),73mtv)
+pyfiles += src/api/m3u.py src/api/73mtv.py
+datafiles += src/logo/73mtv.png
+endif
+
 pyext := pyo
 pyinstall := $(pyfiles:src/%=$(plugindir)/%)
 pycinstall := $(pyinstall:.py=.$(pyext))
