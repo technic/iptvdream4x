@@ -201,7 +201,7 @@ $(pkgdir)/$(pkgname).$(pkgext): install $(build)/DEBIAN/control $(hooks)
 package: $(pkgdir)/$(pkgname).$(pkgext) info
 
 info:
-	echo '{"name": "$(name)"}' > $@.json
+	echo '{"name": "$(name)", "version": "$(version)"}' > $@.json
 
 clean:
 	rm -rf build

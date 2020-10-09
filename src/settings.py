@@ -27,7 +27,6 @@ from Components.config import getConfigListEntry, \
 		ConfigSearchText, ConfigInteger, ConfigSelection, ConfigYesNo, ConfigElement
 from Components.ConfigList import ConfigListScreen
 from Components.ActionMap import ActionMap
-from Components.Button import Button
 from Components.Pixmap import Pixmap
 from Components.Label import Label
 from Components.Sources.Boolean import Boolean
@@ -417,8 +416,8 @@ class IPtvDreamWebConfigWaiting(Screen):
 		"""
 		Screen.__init__(self, session)
 		self["text"] = Label(_("Waiting for changes made in the web interface..."))
-		self["key_red"] = Button(_("Exit"))
-		self["key_green"] = Button(_("Generate new code"))
+		self["key_red"] = Label(_("Exit"))
+		self["key_green"] = Label(_("Generate new code"))
 
 		self["actions"] = ActionMap(["OkCancelActions", "ColorActions"], {
 			"cancel": self.cancel,
@@ -453,10 +452,10 @@ class IPtvDreamConfig(ConfigListScreen, Screen):
 		}, -2)
 		self["actions_kbd"].setEnabled(False)
 
-		self["key_red"] = Button(_("Cancel"))
-		self["key_green"] = Button(_("OK"))
-		self["key_yellow"] = Button(_("Logout"))
-		self["key_blue"] = Button(_("Keyboard"))
+		self["key_red"] = Label(_("Cancel"))
+		self["key_green"] = Label(_("OK"))
+		self["key_yellow"] = Label(_("Logout"))
+		self["key_blue"] = Label(_("Keyboard"))
 		self["Keyboard"] = Boolean(False)
 
 		self.config_repository = config_repository

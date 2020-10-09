@@ -27,7 +27,7 @@ from Screens.ChoiceBox import ChoiceBox
 from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
 	ConfigText, ConfigYesNo, ConfigSelection, ConfigInteger
 from Components.ActionMap import ActionMap
-from Components.Button import Button
+from Components.Label import Label
 from Components.Input import Input
 from Components.Sources.List import List
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
@@ -415,10 +415,10 @@ class IPtvDreamManager(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("IPtvDream %s. Providers list:") % VERSION)
-		self["key_red"] = Button(_("Exit"))
-		self["key_green"] = Button(_("Setup"))
-		self["key_yellow"] = Button(_("Web Setup"))
-		self["key_blue"] = Button(_("Menu"))
+		self["key_red"] = Label(_("Exit"))
+		self["key_green"] = Label(_("Setup"))
+		self["key_yellow"] = Label(_("Web Setup"))
+		self["key_blue"] = Label(_("Menu"))
 		self["actions"] = ActionMap(
 				["OkCancelActions", "ColorActions"], {
 					"cancel": self.cancel,

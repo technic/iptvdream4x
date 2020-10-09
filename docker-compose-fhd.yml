@@ -13,6 +13,7 @@ services:
       - "./src:/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream"
       - "./skin:/usr/share/enigma2/IPtvDream"
       - "./skin-fhd:/usr/share/enigma2/IPtvDreamFHD"
+      - "./skin-fhd-contrast:/usr/share/enigma2/IPtvDreamFHDContrast"
       - "./:/project"
     environment:
       - RESOLUTION=1920x1080x16
