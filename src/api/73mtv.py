@@ -45,6 +45,6 @@ class OTTProvider(JsonSettings, M3UProvider):
 
 	def getLocalSettings(self):
 		settings = {
-			'format': ConfSelection(_("Streaming format"), 'm3u', [('m3u', "TS"), ('m3u8', "HLS")])
+			'format': ConfSelection(_("Streaming format"), 'm3u8', [('m3u', "TS"), ('m3u8', "HLS")])
 		}
 		return self._safeLoadSettings(settings)
