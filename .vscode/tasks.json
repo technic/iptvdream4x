@@ -89,7 +89,7 @@
             "label": "Upload package to device",
             "type": "shell",
             "command": "${config:python.pythonPath}",
-            "args": ["scripts/box-upload.py"],
+            "args": ["-m", "scripts.box-upload"],
             "problemMatcher": [],
             "group": "build",
         },
