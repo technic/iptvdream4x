@@ -171,7 +171,7 @@ def convertConfEntry(conf):
 	if isinstance(conf, ConfInteger):
 		return ConfigInteger(conf.value, limits=conf.limits)
 	elif isinstance(conf, ConfString):
-		return ConfigSearchText(default=conf.value)
+		return ConfigNumberText(default=conf.value)
 	elif isinstance(conf, ConfSelection):
 		return ConfigSelection(conf.choices, default=conf.value)
 	elif isinstance(conf, ConfBool):
