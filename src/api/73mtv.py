@@ -10,6 +10,9 @@
 
 from __future__ import print_function
 
+# system imports
+from datetime import datetime
+
 # plugin imports
 from abstract_api import JsonSettings
 from m3u import M3UProvider
@@ -36,6 +39,12 @@ class OTTProvider(JsonSettings, M3UProvider):
 			raise APILoginFailed(_("Wrong number or pin"))
 		s = self.getLocalSettings()
 		self.playlist_url = 'http://pl.73mtv.net/api/%s/high/ottnav.%s' % (token, s['format'].value)
+
+		data = self.getJsonData('http://pl.73mtv.net/api/%s//stat' % token, {})
+		try:
+			self.packet_expire = datetime.fromtimestamp(int(data[0]['pkTimeTill']))
+		except IndexError:
+			pass
 
 	def getStreamUrl(self, cid, pin, time=None):
 		url = self.channels_data[cid]['url']
