@@ -97,15 +97,15 @@
     <ePixmap pixmap="IPtvDreamFHD/back1.png" position="0,0" size="1920,1080" zPosition="-10" />
     <eLabel backgroundColor="white" position="1200,180" size="645,366" zPosition="2" />
     <widget backgroundColor="#ff000000" position="1203,183" render="Pig" size="639,360" source="session.VideoPicture" zPosition="3" />
-    <widget backgroundColor="#001b2c47" font="Regular;39" foregroundColor="#00cacdd3" position="1256,100" render="Label" size="150,42" source="global.CurrentTime" transparent="1">
+    <widget backgroundColor="bg" font="Regular;39" foregroundColor="snow" position="1256,100" render="Label" size="150,42" source="global.CurrentTime" transparent="1">
       <convert type="ClockToText">Default</convert>
     </widget>
-    <widget backgroundColor="#001b2c47" font="Regular;30" foregroundColor="#00cacdd3" position="1683,111" render="Label" size="192,38" source="global.CurrentTime" transparent="1">
+    <widget backgroundColor="bg" font="Regular;30" foregroundColor="snow" position="1683,111" render="Label" size="192,38" source="global.CurrentTime" transparent="1">
       <convert type="ClockToText">Format:%d.%m.%Y</convert>
     </widget>
     <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/info.png" position="1781,1019" size="105,45" zPosition="3" />
     <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/menu.png" position="1668,1019" size="105,45" zPosition="3" />
-    <eLabel backgroundColor="#001b2c47" font="Regular;53" foregroundColor="#00e5b243" halign="center" position="588,35" shadowColor="#000064c7" size="689,65" text="Channel Selection" transparent="1" />
+    <eLabel backgroundColor="bg" font="Regular;53" foregroundColor="#00e5b243" halign="center" position="588,35" shadowColor="#000064c7" size="689,65" text="Channel Selection" transparent="1" />
     <widget backgroundColor="bg" font="Regular;35" foregroundColor="#00ffffff" position="105,107" render="Label" shadowColor="#000064c7" size="1050,42" source="Title" transparent="1" />
     <widget backgroundColor="#15000000" backgroundColorSelected="#000a1822" colorEventProgressbar="#005DB5" colorEventProgressbarBorder="#00bbbbbb" colorEventProgressbarBorderSelected="#FFC387" colorServiceDescription="#00FFFF" colorServiceDescriptionSelected="#FFC387" colorServicePlaying="#00ff0000" colorServicePlayingSelected="#00ff880a" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" name="list" picServiceArchive="IPtvDream/rec.png" position="84,161" scrollbarMode="showOnDemand" serviceInfoFont="Regular;36" serviceItemHeight="54" serviceNameFont="Regular;37" serviceNumberFont="Regular;37" size="1071,810" transparent="1" />
     <widget backgroundColor="#0038435a" font="Regular;33" foregroundColor="#00e5b243" halign="center" name="epgName" position="1193,563" size="645,38" transparent="1" />
@@ -120,7 +120,7 @@
     <widget backgroundColor="bg" font="Regular;34" foregroundColor="#00ffffff" name="key_green" position="528,1016" size="300,36" transparent="1" zPosition="1" />
     <widget backgroundColor="bg" font="Regular;34" foregroundColor="#00ffffff" name="key_yellow" position="926,1016" size="300,36" transparent="1" zPosition="1" />
     <widget backgroundColor="bg" font="Regular;34" foregroundColor="#00ffffff" name="key_blue" position="1301,1016" size="300,36" transparent="1" zPosition="1" />
-    <widget backgroundColor="bg" font="Regular;27" foregroundColor="#00cacdd3" halign="right" name="packetExpire" position="1434,21" size="416,33" transparent="1" />
+    <widget backgroundColor="bg" font="Regular;27" foregroundColor="snow" halign="right" name="packetExpire" position="1434,21" size="416,33" transparent="1" />
     <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/icons/calendar.png" position="1646,110" size="32,35" />
     <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/icons/clock.png" position="1212,107" size="32,32" />
   </screen>
@@ -128,13 +128,13 @@
     <ePixmap pixmap="IPtvDreamFHD/back1.png" position="center,-2" size="1920,1080" zPosition="-10" />
     <eLabel backgroundColor="white" position="1200,180" size="645,366" zPosition="2" />
     <widget backgroundColor="#ff000000" position="1203,183" render="Pig" size="639,360" source="session.VideoPicture" zPosition="3" />
-    <widget backgroundColor="#001b2c47" font="Regular;39" foregroundColor="#00cacdd3" halign="right" position="1250,107" render="Label" size="99,42" source="global.CurrentTime" transparent="1">
+    <widget backgroundColor="bg" font="Regular;39" foregroundColor="snow" halign="right" position="1250,107" render="Label" size="99,42" source="global.CurrentTime" transparent="1">
       <convert type="ClockToText">Default</convert>
     </widget>
-    <widget backgroundColor="#001b2c47" font="Regular;30" foregroundColor="#00cacdd3" halign="right" position="1684,111" render="Label" size="154,38" source="global.CurrentTime" transparent="1">
+    <widget backgroundColor="bg" font="Regular;30" foregroundColor="snow" halign="right" position="1684,111" render="Label" size="154,38" source="global.CurrentTime" transparent="1">
       <convert type="ClockToText">Format:%d.%m.%Y</convert>
     </widget>
-    <eLabel backgroundColor="#001b2c47" font="Regular;53" foregroundColor="#00e5b243" halign="center" position="588,35" shadowColor="#000064c7" size="689,65" text="EPG List" transparent="1" />
+    <eLabel backgroundColor="bg" font="Regular;53" foregroundColor="#00e5b243" halign="center" position="588,35" shadowColor="#000064c7" size="689,65" text="EPG List" transparent="1" />
     <widget backgroundColor="#00343c4f" font="Regular;35" position="105,107" render="Label" shadowColor="#000064c7" size="1050,42" source="Title" transparent="1" />
     <widget backgroundColor="#15000000" backgroundColorSelected="#000a1822" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" position="84,161" render="Listbox" scrollbarMode="showOnDemand" size="1071,810" source="list" transparent="1">
       <convert type="TemplatedMultiContent">
