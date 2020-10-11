@@ -11,14 +11,14 @@
 from __future__ import print_function
 
 # system imports
+import random
 import urllib
-from urlparse import urlparse
 from urllib2 import HTTPError
 from json import loads as json_loads
 
 # plugin imports
 from abstract_api import OfflineFavourites
-from ..utils import syncTime, APIException, APILoginFailed, EPG, Channel, Group
+from ..utils import APIException, APILoginFailed, EPG, Channel, Group
 
 
 class OTTProvider(OfflineFavourites):
@@ -89,7 +89,9 @@ class OTTProvider(OfflineFavourites):
 
 	def getStreamUrl(self, cid, pin, time=None):
 		if time is None:
-			return self.urls[cid]
+			ALPHA_NUM = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+			salt = ''.join(random.choice(ALPHA_NUM) for _ in range(5))
+			return "%s_%s" % (self.urls[cid], salt)
 		url = self.urls[cid]
 		return url.replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
 
