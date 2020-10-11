@@ -109,7 +109,7 @@ class M3UProvider(OfflineFavourites):
 			cid = hash(url)
 			self.trace("Failed to get cid from url", url)
 		url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
-		return Channel(cid, name, num, True), {'tvg': tvg, 'url': url, 'logo': logo}
+		return Channel(cid, name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
 
 	def _parsePlaylist(self, lines):
 		group_names = {}
