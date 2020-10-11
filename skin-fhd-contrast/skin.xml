@@ -136,9 +136,9 @@
           {
             "template": [
                 MultiContentEntryPixmapAlphaTest(pos = (0, 15), size = (16, 16), png = 1), # red dot
-                MultiContentEntryText(pos = (18, 2),  size = (60, 36),  text = 2), # day,
-                MultiContentEntryText(pos = (87, 2),  size = (135, 36),  text = 3), # time,
-                MultiContentEntryText(pos = (227, 2), size = (585, 36), text = 4), # title,
+                MultiContentEntryText(pos = (18, 2),  size = (70, 50),  text = 2), # day,
+                MultiContentEntryText(pos = (95, 2),  size = (120, 50),  text = 3), # time,
+                MultiContentEntryText(pos = (225, 2), size = (845, 50), text = 4), # title,
             ],
             "fonts": [gFont("Regular", 36)],
             "itemHeight": 54
