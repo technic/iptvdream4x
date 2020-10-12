@@ -5,7 +5,6 @@
     <entries>
       <entry name="provider" value="IPtvDream/provider_logo.png" render="Pixmap" type="string"/>
       <entry name="channelName" value="23. BBC Entertainment" render="Label" type="string"/>
-      <entry name="" value="FoobarTV" render="Label" type="string"/>
       <entry name="currentTime" value="18:03" render="Label" type="string"/>
       <entry name="currentName" value="Keeping Up Appearances (Episode 7) (12+)" render="Label" type="string"/>
       <entry name="currentDuration" value="+90 min" render="Label" type="string"/>
@@ -20,6 +19,13 @@
     </entries>
   </screen>
   <screen>
+    <name>IPtvDreamList</name>
+    <entries>
+      <entry name="Title" value="FoobarTV / Group / Channel Name" render="Label" type="string"/>
+      <entry name="packetExpire" value="Payment expires: 03.09.2019" render="Label" type="string"/>
+    </entries>
+  </screen>
+  <screen>
     <name>IPtvDreamChannels</name>
     <entries>
       <entry name="epgName" value="Oblivion (2013 film)" render="Label" type="string"/>
@@ -30,17 +36,20 @@
       <entry name="key_green" value="Groups" render="Label" type="string"/>
       <entry name="key_yellow" value="Add" render="Label" type="string"/>
       <entry name="key_blue" value="Favourites" render="Label" type="string"/>
-      <entry name="packetExpire" value="Payment expires: 03.09.2019" render="Label" type="string"/>
     </entries>
   </screen>
   <screen>
     <name>IPtvDreamEpg</name>
     <entries>
+      <entry name="list" value="IPtvDream/rec.png,Mon,12:58,Program name Program name Program name" render="Label" type="string"/>
       <entry name="epgName" value="Program Name" render="Label" type="string"/>
       <entry name="epgTime" value="18:00" render="Label" type="string"/>
       <entry name="epgDuration" value="30 min" render="Label" type="string"/>
       <entry name="epgProgress" value="30" render="Slider" type="string"/>
       <entry name="epgDescription" value="Program Description. Program Description." render="Label" type="string"/>
+      <entry name="btn_red" value="red.png" render="Pixmap" type="string"/>
+      <entry name="key_red" value="Archive" render="Label" type="string"/>
+      <entry name="key_green" value="Details" render="Label" type="string"/>
     </entries>
   </screen>
   <screen>
@@ -61,13 +70,25 @@
   </screen>
   <screen>
     <name>IPtvDreamManager</name>
-    <entries/>
+    <entries>
+      <entry name="key_red" value="Cancel" render="Label" type="string"/>
+      <entry name="key_green" value="OK" render="Label" type="string"/>
+      <entry name="key_yellow" value="Logout" render="Label" type="string"/>
+      <entry name="key_blue" value="Keyboard" render="Label" type="string"/>
+    </entries>
   </screen>
   <screen>
     <name>IPtvDreamWebConfig</name>
     <entries>
       <entry name="header" value="Please scan QR code or follow the link below" render="Label" type="string"/>
       <entry name="label" value="Go to https://technic.cf/ws Code: yQzP1r" render="Label" type="string"/>
+    </entries>
+  </screen>
+  <screen>
+    <name>IPtvDreamWebConfigWaiting</name>
+    <entries>
+      <entry name="header" value="Waiting for changes in web interface" render="Label" type="string"/>
+      <entry name="key_red" value="Cancel" render="Label" type="string"/>
     </entries>
   </screen>
 </screens>

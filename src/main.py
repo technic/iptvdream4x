@@ -270,6 +270,8 @@ class IPtvDreamStreamPlayer(
 			trace("entered standby")
 			if self.shift and not self.archive_pause:
 				self.playPauseArchive()
+			else:
+				self.session.nav.stopService()
 		else:
 			trace("exited standby")
 			if self.shift:
@@ -296,8 +298,7 @@ class IPtvDreamStreamPlayer(
 	def time(self):
 		if self.shift:
 			return syncTime() + secTd(self.shift)
-		else:
-			return None
+		return None
 
 	def archiveSeekFwd(self):
 		self.session.openWithCallback(self.fwdJumpMinutes, MinuteInput)
@@ -513,8 +514,8 @@ class ChannelList(MenuList):
 
 		self.pixmapProgressBar = None
 		self.pixmapArchive = None
-		self.itemHeight = 28
-		self.itemWidth = 0
+		self.listItemHeight = 28
+		self.listItemWidth = 0
 		self.l.setFont(0, parseFont("Regular;22", ((1, 1), (1, 1))))
 		self.l.setFont(1, parseFont("Regular;18", ((1, 1), (1, 1))))
 		self.l.setFont(2, parseFont("Regular;20", ((1, 1), (1, 1))))
@@ -558,7 +559,7 @@ class ChannelList(MenuList):
 					if pic:
 						self.pixmapArchive = pic
 				elif attrib == "serviceItemHeight":
-					self.itemHeight = int(value)
+					self.listItemHeight = int(value)
 				elif attrib == "serviceNameFont":
 					self.l.setFont(0, parseFont(value, scale))
 					self.fontCalc[0].setFont(parseFont(value, scale))
@@ -574,11 +575,11 @@ class ChannelList(MenuList):
 		self.skinAttributes = attribs
 		res = GUIComponent.applySkin(self, desktop, parent)
 
-		self.l.setItemHeight(self.itemHeight)
-		self.itemWidth = self.instance.size().width()
+		self.l.setItemHeight(self.listItemHeight)
+		self.listItemWidth = self.instance.size().width()
 		for x in self.fontCalc:
 			# resize and move away
-			x.resize(eSize(self.itemWidth, self.itemHeight))
+			x.resize(eSize(self.listItemWidth, self.listItemHeight))
 			x.move(ePoint(int(self.instance.size().width()+10), int(self.instance.size().height()+10)))
 			x.setNoWrap(1)
 		return res
@@ -644,7 +645,7 @@ class ChannelList(MenuList):
 	def buildGroupEntry(self, group):
 		return [
 			group,
-			(eListboxPythonMultiContent.TYPE_TEXT, 0, 0, self.itemWidth, self.itemHeight,
+			(eListboxPythonMultiContent.TYPE_TEXT, 0, 0, self.listItemWidth, self.listItemHeight,
 				0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, group.title)
 		]
 
@@ -663,7 +664,7 @@ class ChannelList(MenuList):
 			xoffset += 55
 			text = str(c.number)
 			lst.append(
-				(eListboxPythonMultiContent.TYPE_TEXT, 0, 0, xoffset-5, self.itemHeight,
+				(eListboxPythonMultiContent.TYPE_TEXT, 0, 0, xoffset-5, self.listItemHeight,
 					2, RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text))
 
 		if self.pixmapArchive:
@@ -672,7 +673,7 @@ class ChannelList(MenuList):
 			if c.has_archive:
 				lst.append(
 					(eListboxPythonMultiContent.TYPE_PIXMAP_ALPHATEST,
-						xoffset, (self.itemHeight - height) / 2, width, height, self.pixmapArchive))
+						xoffset, (self.listItemHeight - height) / 2, width, height, self.pixmapArchive))
 			xoffset += width+5
 
 		if self.showEpgProgress:
@@ -682,10 +683,10 @@ class ChannelList(MenuList):
 				percent = e.percent(syncTime(), 100)
 				lst.extend([
 					(eListboxPythonMultiContent.TYPE_PROGRESS,
-						xoffset+1, (self.itemHeight-height)/2, width, height,
+						xoffset+1, (self.listItemHeight-height)/2, width, height,
 						percent, 0, self.col['colorEventProgressbar'], self.col['colorEventProgressbarSelected']),
 					(eListboxPythonMultiContent.TYPE_PROGRESS,
-						xoffset, (self.itemHeight-height)/2 - 1, width+2, height+2,
+						xoffset, (self.listItemHeight-height)/2 - 1, width+2, height+2,
 						0, 1, self.col['colorEventProgressbarBorder'], self.col['colorEventProgressbarBorderSelected'])
 				])
 			xoffset += width+7
@@ -694,18 +695,18 @@ class ChannelList(MenuList):
 		width = self.calculateWidth(text, 0)
 		if c.cid != self.highlight_cid:
 			lst.append(
-				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, width, self.itemHeight,
+				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, width, self.listItemHeight,
 					0, defaultFlag, text))
 		else:
 			lst.append(
-				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, width, self.itemHeight,
+				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, width, self.listItemHeight,
 					0, defaultFlag, text, self.col['colorServicePlaying'], self.col['colorServicePlayingSelected']))
 		xoffset += width+10
 
 		if e:
 			text = '(%s)' % e.name
 			lst.append(
-				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, self.itemWidth, self.itemHeight,
+				(eListboxPythonMultiContent.TYPE_TEXT, xoffset, 0, self.listItemWidth, self.listItemHeight,
 					1, defaultFlag, text,
 					self.col['colorServiceDescription'], self.col['colorServiceDescriptionSelected']))
 
@@ -841,8 +842,12 @@ class IPtvDreamChannels(Screen):
 
 		self.list.onSelectionChanged.append(self.selectionChanged)
 
+		start_mode = manager.getStartMode()
+		if start_mode == self.FAV and not self.db.selectFavourites():
+			start_mode = self.GROUPS
+
 		self.order_config = SortOrderSettings()
-		self.mode = self.GROUPS
+		self.mode = start_mode
 		self.gid = None
 		self.saved_state = None
 
@@ -857,6 +862,7 @@ class IPtvDreamChannels(Screen):
 				"contextMenu": self.showMenu,
 				"addFavourites": self.addRemoveFavourites,
 			}, -1)
+		self["move_actions"].setEnabled(False)
 
 		self["packetExpire"] = Label()
 		if self.db.packet_expire is not None:
@@ -1079,8 +1085,6 @@ class IPtvDreamChannels(Screen):
 				else:
 					actions += [(_("Exit edit mode"), self.notifyFinishEditing)]
 		actions += [(_("Open plugin settings"), self.openSettings)]
-		if self.db.getSettings():
-			actions += [(_("Open provider settings"), self.openProviderSettings)]
 		if self.db.AUTH_TYPE:
 			actions += [(_("Clear login data and exit"), self.clearLogin)]
 
@@ -1234,9 +1238,6 @@ class IPtvDreamChannels(Screen):
 	def openSettings(self):
 		self.close(None, None, 'settings')
 
-	def openProviderSettings(self):
-		self.close(None, None, 'provider_settings')
-
 	def clearLogin(self):
 		self.close(None, None, 'clear_login')
 
@@ -1258,6 +1259,8 @@ class IPtvDreamEpg(Screen):
 		self["epgProgress"] = Slider(0, 100)
 		self["progress"] = self._progress = EpgProgress()
 		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
+
+		self["packetExpire"] = Label()
 
 		self["actions"] = ActionMap(
 			["OkCancelActions", "IPtvDreamEpgListActions", "ColorActions"], {
@@ -1309,8 +1312,8 @@ class IPtvDreamEpg(Screen):
 		self.list.setIndex(0)
 
 		if self.day == 0:
-			for i, e in enumerate(epg_list):
-				if e.isAt(time):
+			for i, program in enumerate(epg_list):
+				if program.isAt(time):
 					self.list.setIndex(i)
 					break
 

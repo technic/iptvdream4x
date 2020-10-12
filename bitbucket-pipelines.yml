@@ -1,5 +1,5 @@
 image:
-  name: technic93/e2xvfb:0.1
+  name: technic93/e2xvfb
   run-as-user: 0
 
 stepdefs:

@@ -31,7 +31,7 @@ class Playlist(JsonSettings, M3UProvider):
 
 	def __init__(self, username, password):
 		super(Playlist, self).__init__(username, password)
-		s = self.getSettings()
+		s = self.getLocalSettings()
 		self.site = s['epg_url'].value
 		self._m3u_from = s['from'].value
 		self.playlist_url = s['playlist_url'].value
@@ -43,7 +43,7 @@ class Playlist(JsonSettings, M3UProvider):
 	def start(self):
 		try:
 			self.name_map = json_loads(self.readHttp(self.site + "/channels_names"))['data']
-		except IOError as e:
+		except (IOError, ValueError) as e:
 			self.trace("error!", e)
 			raise APIException(e)
 
@@ -92,7 +92,7 @@ class Playlist(JsonSettings, M3UProvider):
 		else:
 			raise Exception("Unknown archive_url")
 
-	def getSettings(self):
+	def getLocalSettings(self):
 		settings = {
 			'from': ConfSelection(_("Get playlist"), 'file', [
 				('file', _("from playlist.m3u file")), ('url', _("from url")),

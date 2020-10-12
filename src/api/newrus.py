@@ -100,7 +100,7 @@ class OTTProvider(AbstractStream, NewrusAPI):
 				cid = int(c["id"])
 				name, description = self.parseProgram(c['epg_progname'].encode('utf-8'))
 				if name:
-					yield (cid, [EPG(int(c['epg_start']), int(c['epg_end']), name, description)])
+					yield cid, [EPG(int(c['epg_start']), int(c['epg_end']), name, description)]
 
 	def getDayEpg(self, cid, date):
 		params = {"cid": cid, "day": date.strftime("%d%m%y")}

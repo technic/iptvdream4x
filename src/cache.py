@@ -17,7 +17,7 @@ from utils import trace, APIException, EPG
 from layer import eTimer
 
 try:
-	from typing import List, Dict, Callable  # pylint: disable=unused-import
+	from typing import List, Dict, Callable, Tuple  # pylint: disable=unused-import
 except ImportError:
 	pass
 

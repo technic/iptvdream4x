@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-31 16:30+0200\n"
+"POT-Creation-Date: 2020-07-09 00:31+0200\n"
 "PO-Revision-Date: 2020-04-02 11:33+0200\n"
 "Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
 "Language-Team: Russian / enigma(c) Ukraine, Kiev>\n"
@@ -17,6 +17,7 @@ msgstr ""
 msgid "Add"
 msgstr "Додати"
 
+#, python-format
 msgid "Add \"%s\" to favourites"
 msgstr "Додати \"%s\" в обрані"
 
@@ -71,8 +72,12 @@ msgstr "Вибрати skin"
 msgid "Clear login data and exit"
 msgstr "Видалити дані авторизації та вийти"
 
+#, python-format
 msgid "Configuration of %s"
 msgstr "Налаштування %s"
+
+msgid "Connecting to server..."
+msgstr ""
 
 msgid "Context menu"
 msgstr "Контекстне меню"
@@ -113,14 +118,15 @@ msgstr "Разширення"
 msgid "Failed to authentificate your device"
 msgstr "Помилка при авторизації вашого пристрою"
 
+#, python-format
 msgid "Failed to install %s!"
 msgstr "Не вдалося встановити %s!"
 
 msgid "Failed to save favourites list."
 msgstr "Не вдалося зберегти список обраного."
 
-msgid "Failed to send settings to server."
-msgstr "Не вдалося зберегти налаштування на сервері."
+msgid "Failed to save settings"
+msgstr ""
 
 msgid "Failed to update package list!"
 msgstr "Не вдалося обновити список пакетів!"
@@ -128,8 +134,14 @@ msgstr "Не вдалося обновити список пакетів!"
 msgid "Favourites"
 msgstr "Обрані"
 
+msgid "Favourites when not empty"
+msgstr ""
+
 msgid "Finished!"
 msgstr "Завершено!"
+
+msgid "Generate new code"
+msgstr ""
 
 msgid "Get playlist"
 msgstr "Отримати список відтворення"
@@ -140,6 +152,7 @@ msgstr "Групи"
 msgid "High"
 msgstr "Високе"
 
+#, python-format
 msgid "IPtvDream %s. Providers list:"
 msgstr "IPtvDream %s. Список провайдерів:"
 
@@ -167,11 +180,15 @@ msgstr ""
 msgid "Input pin"
 msgstr "Введіть код"
 
+#, python-format
 msgid "Installing %s"
 msgstr "Встановлення %s"
 
 msgid "Installing update, please wait"
 msgstr "Встановлення оновлення, будь ласка зачекайте"
+
+msgid "Invalid key"
+msgstr ""
 
 msgid "Key"
 msgstr "Ключ"
@@ -181,6 +198,9 @@ msgstr "Клавіатура"
 
 msgid "Login"
 msgstr "Логін"
+
+msgid "Logout"
+msgstr ""
 
 msgid "Low"
 msgstr "Низьке"
@@ -197,17 +217,12 @@ msgstr "Немає докладної інформації"
 msgid "OK"
 msgstr "ОК"
 
+#, python-format
 msgid "Open archive for \"%s\""
 msgstr "Відкрити архів для \"%s\""
 
 msgid "Open plugin settings"
 msgstr "Відкрити налаштування плагіна"
-
-msgid "Open provider settings"
-msgstr "Відкрити налаштування провайдера"
-
-msgid "Options"
-msgstr "Опції"
 
 msgid "Password"
 msgstr "Пароль"
@@ -215,12 +230,16 @@ msgstr "Пароль"
 msgid "Payment expires: "
 msgstr "Підписка закінчується: "
 
+msgid "Player ID"
+msgstr ""
+
 msgid "Playlist"
 msgstr "Плейлист"
 
 msgid "Playlist url"
 msgstr "Посилання на плейлист"
 
+#, python-format
 msgid "Please go to %s and generate pin code"
 msgstr "Відкрийте %s і згенеруйте пін-код"
 
@@ -230,6 +249,7 @@ msgstr "Якість"
 msgid "Remove"
 msgstr "Видалити"
 
+#, python-format
 msgid "Remove \"%s\" from favourites"
 msgstr "Видалити \"%s\" з обраного"
 
@@ -245,6 +265,9 @@ msgstr "Перезапустіть enigma2, щоб застосувати змі
 msgid "Restarting enigma2 after IPtvDream update..."
 msgstr "Перезагрузка enigma2 після оновлення IPtvDream..."
 
+msgid "Scan QR code or visit url below"
+msgstr ""
+
 msgid "Select keymap style"
 msgstr "Виберіть тип keymap"
 
@@ -253,6 +276,9 @@ msgstr "Виберіть кількість плейлистів"
 
 msgid "Select skin"
 msgstr "Виберіть skin"
+
+msgid "Select start mode"
+msgstr ""
 
 msgid "Server"
 msgstr "Сервер"
@@ -263,6 +289,7 @@ msgstr "Налаштування"
 msgid "Setup"
 msgstr "Налаштування"
 
+#, python-format
 msgid "Setup finished with %d errors."
 msgstr "Налаштування завершено помилок %d."
 
@@ -284,6 +311,10 @@ msgstr "Відсортувати по імені"
 msgid "Sort by number"
 msgstr "Відсортувати по номеру"
 
+msgid "Start mode"
+msgstr ""
+
+#, python-format
 msgid "Start of %s failed"
 msgstr "Не вдалося запустити %s"
 
@@ -302,8 +333,23 @@ msgstr "Помилка при оновленні"
 msgid "Updating package list, please wait ..."
 msgstr "Оновлення списку пакетів, будь ласка зачекайте ..."
 
+msgid "Use HLS proxy"
+msgstr ""
+
+msgid "Waiting for changes made in the web interface..."
+msgstr ""
+
+msgid "Waiting for changes to be entered"
+msgstr ""
+
 msgid "We need to authenticate your device"
 msgstr "Необхідна авторизація вашого пристрою"
+
+msgid "Web Setup"
+msgstr ""
+
+msgid "Web settings error"
+msgstr ""
 
 msgid "Wrong number or pin"
 msgstr "Неправильний логін або пін код"
@@ -322,3 +368,12 @@ msgstr "з файла playlist.m3u"
 
 msgid "from url"
 msgstr "по URL-адресу"
+
+#~ msgid "Failed to send settings to server."
+#~ msgstr "Не вдалося зберегти налаштування на сервері."
+
+#~ msgid "Open provider settings"
+#~ msgstr "Відкрити налаштування провайдера"
+
+#~ msgid "Options"
+#~ msgstr "Опції"

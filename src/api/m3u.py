@@ -109,7 +109,7 @@ class M3UProvider(OfflineFavourites):
 			cid = hash(url)
 			self.trace("Failed to get cid from url", url)
 		url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
-		return Channel(cid, name, num, True), {'tvg': tvg, 'url': url, 'logo': logo}
+		return Channel(cid, name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
 
 	def _parsePlaylist(self, lines):
 		group_names = {}
@@ -159,7 +159,7 @@ class M3UProvider(OfflineFavourites):
 					logo = ""
 				m = rec_regexp.match(line)
 				if m:
-					rec = m.group(1) == "1"
+					rec = m.group(1) != "0"
 				else:
 					m = catchup_regexp.match(line)
 					if m:
@@ -214,13 +214,18 @@ class M3UProvider(OfflineFavourites):
 	def getDayEpg(self, cid, date):
 		params = {"id": self.channels_data[cid]['tvg'], "day": date.strftime("%Y.%m.%d")}
 		data = self.getJsonData(self.site + "/epg_day?", params)
-		return map(lambda e: EPG(
-				int(e['begin']), int(e['end']),
-				e['title'].encode('utf-8'), e['description'].encode('utf-8')), data['data'])
+		return [EPG(
+			int(e['begin']), int(e['end']),
+			e['title'].encode('utf-8'), e['description'].encode('utf-8')) for e in data['data']]
 
 	def getChannelsEpg(self, cids):
 		t = mktime(syncTime().timetuple())
-		data = self.getJsonData(self.site + "/epg_list?", {"time": int(t)})
+		tvgs = set(self.channels_data[cid]['tvg'] or 0 for cid in cids)
+		data = self.getJsonData(self.site + "/epg_list?", {
+			"time": int(t),
+			"ids": ",".join(map(str, tvgs)),
+		})
+
 		for c in data['data']:
 			tvg = c['channel_id']
 			try:
@@ -229,9 +234,9 @@ class M3UProvider(OfflineFavourites):
 				# self.trace("Unknown teleguide id", tvg)
 				continue
 			for cid in cids:
-				yield cid, map(lambda e: EPG(
+				yield cid, [EPG(
 					int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
-					e['description'].encode('utf-8')), c['programs'])
+					e['description'].encode('utf-8')) for e in c['programs']]
 
 	def getPiconUrl(self, cid):
 		return self.channels_data[cid]['logo']

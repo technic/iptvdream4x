@@ -36,7 +36,7 @@ datafiles := src/keymap_enigma.xml src/keymap_neutrino.xml src/IPtvDream.png
 ifeq ($(PROVIDER),all)
 pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py src/api/amigo.py src/api/emigranttv.py \
 	src/api/pure.py \
-	src/api/m3u.py src/api/edem_soveni.py src/api/ottclub.py src/api/shura.py \
+	src/api/m3u.py src/api/edem_soveni.py src/api/edem.py src/api/ottclub.py src/api/shura.py \
 	src/api/iptv_e2_soveni.py src/api/onecent_soveni.py \
 	src/api/top_iptv.py src/api/koronaiptv.py \
 	src/api/playlist.py src/api/1ott.py src/api/fox.py src/api/itv_live.py \
@@ -50,6 +50,10 @@ endif
 ifeq ($(PROVIDER),cbilling)
 pyfiles += src/api/cbilling.py
 datafiles += src/logo/cbilling.png
+
+ifeq ($(PROVIDER),73mtv)
+pyfiles += src/api/m3u.py src/api/73mtv.py
+datafiles += src/logo/73mtv.png
 endif
 
 pyext := pyo
@@ -201,7 +205,7 @@ $(pkgdir)/$(pkgname).$(pkgext): install $(build)/DEBIAN/control $(hooks)
 package: $(pkgdir)/$(pkgname).$(pkgext) info
 
 info:
-	echo '{"name": "$(name)"}' > $@.json
+	echo '{"name": "$(name)", "version": "$(version)"}' > $@.json
 
 clean:
 	rm -rf build

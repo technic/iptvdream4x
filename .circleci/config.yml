@@ -22,27 +22,35 @@ jobs:
             whoami
             echo PROVIDER=${PROVIDER}
       - run:
+          name: prepare
+          command: |
+            apt-get update && apt-get install -y python-virtualenv
+            python -m virtualenv env
+            source env/bin/activate
+            python -m pip install pylint pycodestyle twisted "setuptools<45"
+      - run:
           name: pep8
           command: |
+            source env/bin/activate
             echo $PATH |tr ':' '\n'
-            sudo pip install pycodestyle
             pycodestyle --version
             pycodestyle src
       - run:
           name: pylint
+          # pylint mask fatal=1 | error=2 | usage error=32
           command: |
-            sudo pip install pylint==1.9
-            pylint src || true
+            source env/bin/activate
+            PYTHONPATH=/usr/lib/enigma2/python pylint src || exit $(( $? & 35 ))
       - run:
           name: test update
           command: |
-            sudo mkdir -p /dev/input
-            sudo service apache2 start
-            sudo Xvfb :99 -ac -screen 0 1280x720x16 &
+            mkdir -p /dev/input
+            service apache2 start
+            Xvfb :99 -ac -screen 0 1280x720x16 &
             export DISPLAY=:99
             ps ax
             cat src/dist.py
-            sudo -E python update-test.py
+            python update-test.py
 
   build:
     docker:
@@ -116,6 +124,7 @@ references:
       branches:
         ignore:
           - /^cbilling.*/
+          - /^73mtv.*/
       tags:
         only: /^v.*/
 
@@ -127,6 +136,14 @@ references:
           - /^cbilling.*/
       tags:
         only: /^cbilling.*/
+
+  config-73mtv: &config-73mtv
+    provider: 73mtv
+    filters:
+      branches:
+        only: /^73mtv.*/
+      tags:
+        only: /^73mtv\/.*/
 
 workflows:
   task-all:
@@ -151,3 +168,17 @@ workflows:
               ignore: /.*/
             tags:
               only: /cbilling\/v\/(\d)+(\.(\d)+)+$/
+
+  task-73mtv:
+    jobs:
+      - test: *config-73mtv
+      - build: *config-73mtv
+      - deploy:
+          requires:
+              - test
+              - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /73mtv\/v\/(\d)+(\.(\d)+)+$/

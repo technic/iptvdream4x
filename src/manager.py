@@ -14,6 +14,11 @@ from __future__ import print_function
 # system imports
 import os
 
+try:
+	from typing import Optional
+except ImportError:
+	pass
+
 # enigma2 imports
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
@@ -22,7 +27,7 @@ from Screens.ChoiceBox import ChoiceBox
 from Components.config import config, configfile, ConfigSubsection, ConfigSubDict,\
 	ConfigText, ConfigYesNo, ConfigSelection, ConfigInteger
 from Components.ActionMap import ActionMap
-from Components.Button import Button
+from Components.Label import Label
 from Components.Input import Input
 from Components.Sources.List import List
 from Tools.Directories import resolveFilename, SCOPE_CURRENT_PLUGIN, SCOPE_SKIN
@@ -37,8 +42,8 @@ from provision import pluginConfig
 from common import ConfigNumberText
 from utils import trace, APIException, APILoginFailed
 from loc import translate as _
-from settings import IPtvDreamConfig, IPtvDreamApiConfig
-from main import IPtvDreamStreamPlayer
+from settings import IPtvDreamConfig, IPtvDreamWebConfig, SettingsRepository, WebConfig
+from main import IPtvDreamStreamPlayer, IPtvDreamChannels
 
 PLAYERS = [('1', "enigma2 ts (1)"), ('4097', "gstreamer (4097)"), ('5002', "exteplayer3 (5002)")]
 KEYMAPS = [('enigma', 'enigma'), ('neutrino', 'neutrino')]
@@ -80,13 +85,17 @@ skinManager.load()
 
 
 class PluginStarter(Screen):
-	def __init__(self, session, name, task=None):
+	def __init__(self, session, name, task=None, use_web=False):
 		trace("Starting provider", name)
 
 		Screen.__init__(self, session)
 		self.cfg = manager.getConfig(name)
 		self.apiClass = manager.getApi(name)
 		self.task = task
+		if use_web:
+			self.web_factory = WebConfigFactory(session)
+		else:
+			self.web_factory = None
 		self.db = None
 
 		try:
@@ -105,12 +114,13 @@ class PluginStarter(Screen):
 			self.auth()
 
 	def auth(self):
+		trace("auth")
 		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
 		try:
 			self.db.start()
-			if self.task == 'provider_settings':
+			if self.task == 'settings':
 				self.task = None
-				self.openProviderSettings()
+				self.openSettings(True)
 			else:
 				self.run()
 			return
@@ -118,17 +128,18 @@ class PluginStarter(Screen):
 			cb = lambda ret: self.login()
 			message = _("Authorization error") + "\n" + str(e)
 		except APIException as e:
-			cb = lambda ret: self.exit()
+			if self.task == 'settings':
+				self.task = None
+				cb = lambda ret: self.login()
+			else:
+				cb = lambda ret: self.exit()
 			message = _("Start of %s failed") % self.db.NAME + "\n" + str(e)
 		self.session.openWithCallback(cb, MessageBox, message, MessageBox.TYPE_ERROR)
 
 	def login(self):
-		def cb(changed=False):
-			if changed:
-				self.auth()
-			else:
-				self.exit()
-		self.session.openWithCallback(cb, IPtvDreamConfig, self.apiClass)
+		self.db = self.apiClass(self.cfg.login.value, self.cfg.password.value)
+		self.task = None
+		self.openSettings(False)
 
 	def run(self):
 		try:
@@ -141,18 +152,35 @@ class PluginStarter(Screen):
 
 	def finished(self, ret):
 		if ret == 'settings':
-			self.login()
-		elif ret == 'provider_settings':
-			self.openProviderSettings()
+			self.openSettings(True)
 		elif ret == 'clear_login':
 			self.clearLogin()
 			self.exit()
 		else:
 			self.exit()
 
-	def openProviderSettings(self):
-		if self.db:
-			self.session.openWithCallback(lambda ret=None: self.start(), IPtvDreamApiConfig, self.db)
+	def openSettings(self, authorized):
+		"""
+		:type authorized: bool
+		"""
+
+		def cb(changed=False):
+			# FIXME: very hacky return code
+			if changed is None:
+				self.clearLogin()
+				self.start()
+				return
+			else:
+				if changed:
+					self.auth()
+				else:
+					self.exit()
+
+		sr = SettingsRepository(self.db, authorized)
+		if self.web_factory:
+			self.web_factory.open(cb, authorized, sr)
+		else:
+			self.session.openWithCallback(cb, IPtvDreamConfig, sr)
 
 	def clearLogin(self):
 		self.cfg.login.value = ''
@@ -160,6 +188,8 @@ class PluginStarter(Screen):
 		manager.saveConfig()
 
 	def exit(self):
+		if self.web_factory:
+			self.web_factory.stop()
 		self.close()
 
 	def compatibleSkin(self):
@@ -182,9 +212,9 @@ class TokenPluginStarter(PluginStarter):
 	def auth(self):
 		try:
 			self.db.start()
-			if self.task == 'provider_settings':
+			if self.task == 'settings':
 				self.task = None
-				self.openProviderSettings()
+				self.openSettings(True)
 			else:
 				self.run()
 			return
@@ -227,10 +257,54 @@ class TokenPluginStarter(PluginStarter):
 		manager.saveConfig()
 
 
+class WebConfigFactory(object):
+	def __init__(self, session):
+		"""
+		:type session: mytest.Session
+		"""
+		self.session = session
+		self._authorized = None
+		self._instance = None
+
+	def open(self, callback, authorized, repository):
+		"""
+		If authorized value is not changed we can use same web settings session
+		We may want to add support for updating settings list on the server without creating new session later
+		:type callback: (Optional[bool]) -> None
+		:type authorized: bool
+		:type repository: SettingsRepository
+		"""
+		valid = self._instance is not None and self._instance.isStarted() \
+			and self._authorized is not None and self._authorized == authorized
+
+		if not valid:
+			if self._instance is not None:
+				self._instance.stop()
+			self._instance = WebConfig(repository.getAllSettings())
+			self._authorized = authorized
+
+		self.session.openWithCallback(callback, IPtvDreamWebConfig, self._instance, repository)
+
+	def stop(self):
+		"""
+		End web settings session
+		"""
+		if self._instance is not None:
+			self._instance.stop()
+		self._instance = None
+
+
 class Manager(object):
 	def __init__(self):
 		pluginConfig.max_playlists = ConfigInteger(0, (0, 9))
 		self.max_playlists = pluginConfig.max_playlists.value
+
+		# FIXME: spaghetti code warning
+		self.start_mode_choices = [
+			(str(IPtvDreamChannels.GROUPS), _("Groups")),
+			(str(IPtvDreamChannels.FAV), _("Favourites when not empty")),
+		]
+		pluginConfig.start_mode = ConfigSelection(self.start_mode_choices)
 
 		self.enabled = {}
 		self.apiDict = {}
@@ -301,6 +375,16 @@ class Manager(object):
 		pluginConfig.max_playlists.value = n
 		pluginConfig.max_playlists.save()
 
+	def getStartModeChoices(self):
+		return [(title, value) for value, title in self.start_mode_choices]
+
+	def getStartMode(self):
+		return int(pluginConfig.start_mode.value)
+
+	def setStartMode(self, mode):
+		pluginConfig.start_mode.value = mode
+		pluginConfig.start_mode.save()
+
 	def getList(self):
 		return sorted(
 			({'name': v.NAME, 'title': v.TITLE} for v in self.apiDict.values()),
@@ -331,16 +415,16 @@ class IPtvDreamManager(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("IPtvDream %s. Providers list:") % VERSION)
-		self["key_red"] = Button(_("Exit"))
-		self["key_green"] = Button(_("Setup"))
-		self["key_yellow"] = Button(_("Options"))
-		self["key_blue"] = Button(_("Menu"))
+		self["key_red"] = Label(_("Exit"))
+		self["key_green"] = Label(_("Setup"))
+		self["key_yellow"] = Label(_("Web Setup"))
+		self["key_blue"] = Label(_("Menu"))
 		self["actions"] = ActionMap(
 				["OkCancelActions", "ColorActions"], {
 					"cancel": self.cancel,
 					"ok": self.ok,
 					"green": self.setup,
-					"yellow": self.providerSetup,
+					"yellow": self.webSetup,
 					"red": self.cancel,
 					"blue": self.showMenu,
 				}, -1)
@@ -370,15 +454,15 @@ class IPtvDreamManager(Screen):
 	def setup(self):
 		entry = self.getSelected()
 		if entry is not None:
-			self.session.open(IPtvDreamConfig, manager.getApi(entry['name']))
+			self.startPlugin(entry['name'], 'settings', False)
 
-	def providerSetup(self):
+	def webSetup(self):
 		entry = self.getSelected()
 		if entry is not None:
-			self.startPlugin(entry['name'], 'provider_settings')
+			self.startPlugin(entry['name'], 'settings', True)
 
-	def startPlugin(self, name, task=None):
-		self.session.open(manager.getStarterClass(name), name, task)
+	def startPlugin(self, name, task=None, use_web=False):
+		self.session.open(manager.getStarterClass(name), name, task, use_web)
 
 	def cancel(self):
 		self.close()
@@ -394,6 +478,7 @@ class IPtvDreamManager(Screen):
 			(_("Choose keymap"), self.selectKeymap),
 			(_("Choose skin"), self.selectSkin),
 			(_("Additional playlists number"), self.selectPlaylistNumber),
+			(_("Start mode"), self.selectStartMode),
 		]
 		self.session.openWithCallback(cb, ChoiceBox, _("Context menu"), actions)
 
@@ -446,6 +531,13 @@ class IPtvDreamManager(Screen):
 
 		self.session.openWithCallback(
 			cb, ChoiceBox, title=_("Select playlist number"), list=manager.getNumberChoices())
+
+	def selectStartMode(self):
+		def cb(selected):
+			if selected is not None:
+				manager.setStartMode(selected[1])
+
+		self.session.openWithCallback(cb, ChoiceBox, title=_("Select start mode"), list=manager.getStartModeChoices())
 
 	def restart(self, ret):
 		if ret:

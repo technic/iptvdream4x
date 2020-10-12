@@ -43,7 +43,7 @@ def clip(s):
 	print("Copied to clipboard")
 
 
-if __name__ == "__main__":
+def main():
 	subprocess.check_call(['git', 'reset'])
 	c = subprocess.call(['git', 'diff', '--exit-code', '--', versionFile, readmeFile])
 	if c != 0:
@@ -87,3 +87,7 @@ if __name__ == "__main__":
 		with open('secret.json') as f:
 			url = json.load(f)['forum']
 		subprocess.call(["C:/Program Files/Mozilla Firefox/firefox.exe", url])
+
+
+if __name__ == "__main__":
+	main()

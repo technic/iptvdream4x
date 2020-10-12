@@ -34,7 +34,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
 		self.site = "http://technic.cf/epg-1ott/"
-		server = self.getSettings()['server'].value
+		server = self.getLocalSettings()['server'].value
 		self.playlist_url = "http://pl.tvshka.net/?uid=%s&srv=%s&type=halva" % (username, server)
 		self._url_regexp = re.compile(r"https?://[\w.]+/~\w+/(\d+)/hls/.*\.m3u8")
 		self.name_map = {}
@@ -77,7 +77,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 			self.trace("Failed to get cid from url", url)
 		return Channel(cid, name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
 
-	def getSettings(self):
+	def getLocalSettings(self):
 		settings = {
 			'server': ConfInteger(_("Server"), 1, (0, 10000)),
 		}

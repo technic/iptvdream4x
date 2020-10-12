@@ -32,7 +32,7 @@ class Korona(JsonSettings, M3UProvider):
 		super(Korona, self).__init__(username, password)
 		self.site = "http://technic.cf/epg-korona/"
 		self.playlist = ""
-		s = self.getSettings()
+		s = self.getLocalSettings()
 		self.playlist_url = "http://pl.korona-tv.top/%s/%s/%s/%s/tv.m3u" % (
 			s['server'].value, s['quality'].value, username, password)
 
@@ -143,7 +143,7 @@ class Korona(JsonSettings, M3UProvider):
 
 		self.trace("Loaded {} channels".format(len(self.channels)))
 
-	def getSettings(self):
+	def getLocalSettings(self):
 		settings = {
 			'server': ConfSelection(
 				_("Server"), '1',
@@ -155,11 +155,6 @@ class Korona(JsonSettings, M3UProvider):
 			),
 		}
 		return self._safeLoadSettings(settings)
-
-	def pushSettings(self, settings):
-		data = self._loadSettings()
-		data.update(settings)
-		self._saveSettings(data)
 
 
 class OTTProvider(Korona):
