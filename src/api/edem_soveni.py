@@ -12,6 +12,7 @@ from __future__ import print_function
 
 # plugin imports
 from abstract_api import JsonSettings
+from ..utils import Channel
 from m3u import M3UProvider
 
 from ..utils import ConfSelection
@@ -38,3 +39,13 @@ class OTTProvider(JsonSettings, M3UProvider):
 			'playlist': ConfSelection(_("Playlist"), 'lite', [('lite', "Lite"), ('ico', "Full")]),
 		}
 		return self._safeLoadSettings(settings)
+
+	def makeChannel(self, num, name, url, tvg, logo, rec):
+		m = self._url_regexp.match(url)
+		if m:
+			cid = int(m.group(1))
+		else:
+			cid = hash(url)
+			self.trace("Failed to get cid from url", url)
+		url = url.replace("localhost", self._domain).replace("00000000000000", self._key)
+		return Channel(cid, name, num, True), {'tvg': tvg, 'url': url, 'logo': logo}
