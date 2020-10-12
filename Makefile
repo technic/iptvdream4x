@@ -50,6 +50,7 @@ endif
 ifeq ($(PROVIDER),cbilling)
 pyfiles += src/api/cbilling.py
 datafiles += src/logo/cbilling.png
+endif
 
 ifeq ($(PROVIDER),73mtv)
 pyfiles += src/api/m3u.py src/api/73mtv.py
