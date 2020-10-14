@@ -16,7 +16,7 @@ from urllib2 import HTTPError
 # plugin imports
 from abstract_api import JsonSettings
 from m3u import M3UProvider
-from ..utils import APIException, APILoginFailed
+from ..utils import APIException, APILoginFailed, Channel
 try:
 	from ..loc import translate as _
 except ImportError:
@@ -51,6 +51,15 @@ class OTTProvider(JsonSettings, M3UProvider):
 	def setChannelsList(self):
 		# Channels are downloaded during start, to allow handling login exceptions
 		pass
+
+	def makeChannel(self, num, name, url, tvg, logo, rec):
+		m = self._url_regexp.match(url)
+		if m:
+			cid = int(m.group(1))
+		else:
+			cid = hash(url)
+			# self.trace("Failed to get cid from url", url)
+		return Channel(cid, name, num, True), {'tvg': tvg, 'url': url, 'logo': logo}
 
 	def getStreamUrl(self, cid, pin, time=None):
 		url = self.channels_data[cid]['url']
