@@ -59,4 +59,4 @@ class OTTProvider(JsonSettings, M3UProvider):
 		else:
 			cid = hash(url)
 			# self.trace("Failed to get cid from url", url)
-		return Channel(cid, name, num, True), {'tvg': tvg, 'url': url, 'logo': logo}
+		return Channel(cid, name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
