@@ -38,7 +38,7 @@ pyfiles += src/api/api1.py src/api/teleprom.py src/api/raduga.py src/api/amigo.p
 	src/api/pure.py \
 	src/api/m3u.py src/api/edem_soveni.py src/api/edem.py src/api/shura.py \
 	src/api/iptv_e2_soveni.py src/api/onecent_soveni.py \
-	src/api/top_iptv.py src/api/koronaiptv.py src/api/shurik.py \
+	src/api/top_iptv.py src/api/koronaiptv.py src/api/shurik.py src/api/shara-tv.py \
 	src/api/playlist.py src/api/1ott.py src/api/fox.py src/api/itv_live.py \
 	src/api/ottg.py src/api/antifriz.py \
 	src/api/kartina.py src/api/ktv.py src/api/newrus.py \
