@@ -40,6 +40,11 @@ class OTTProvider(JsonSettings, M3UProvider):
 		}
 		return self._safeLoadSettings(settings)
 
+	def setChannelsList(self):
+		super(OTTProvider, self).setChannelsList()
+		import re
+		self._markProtected(re.compile(r"взрослые|XXX", flags=re.IGNORECASE))
+
 	def makeChannel(self, num, name, url, tvg, logo, rec):
 		m = self._url_regexp.match(url)
 		if m:
