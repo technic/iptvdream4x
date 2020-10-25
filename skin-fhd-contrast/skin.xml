@@ -128,7 +128,7 @@
     <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/info.png" position="1781,1019" size="105,45" zPosition="3"/>
   </screen>
   <screen flags="wfNoBorder" name="IPtvDreamEpg" position="0,0" size="1920,1080" title="Channel EPG">
-    <ePixmap pixmap="IPtvDreamFHD/back1.png" position="center,-2" size="1920,1080" zPosition="-10"/>
+    <ePixmap pixmap="IPtvDreamFHD/back1.png" position="0,0" size="1920,1080" zPosition="-10"/>
     <panel zPosition="-10" size="1920,1080" position="0,0" name="IPtvDreamList"/>
     <eLabel backgroundColor="bg" font="Regular;53" foregroundColor="#00e5b243" halign="center" position="588,35" shadowColor="#000064c7" size="689,65" text="EPG List" transparent="1"/>
     <widget backgroundColor="#15000000" backgroundColorSelected="#000a1822" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" position="84,161" render="Listbox" scrollbarMode="showOnDemand" size="1071,810" source="list" transparent="1">
