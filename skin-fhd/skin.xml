@@ -136,7 +136,7 @@
           {
             "template": [
                 MultiContentEntryPixmapAlphaTest(pos = (0, 13), size = (16, 16), png = 1), # red dot
-                MultiContentEntryText(pos = (18, 2),  size = (60, 33),  text = 2), # day,
+                MultiContentEntryText(pos = (20, 2),  size = (60, 33),  text = 2), # day,
                 MultiContentEntryText(pos = (87, 2),  size = (135, 33),  text = 3), # time,
                 MultiContentEntryText(pos = (227, 2), size = (842, 36), text = 4), # title,
             ],
