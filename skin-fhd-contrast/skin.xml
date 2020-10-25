@@ -194,10 +194,10 @@
     <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/buttons/green.png" position="222,25" size="28,28" transparent="1" zPosition="4"/>
     <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/buttons/yellow.png" position="434,25" size="28,28" transparent="1" zPosition="4"/>
     <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/buttons/blue.png" position="651,25" size="28,28" transparent="1" zPosition="4"/>
-    <widget font="Regular;34" foregroundColor="white" name="key_red" position="47,16" size="175,48" transparent="1" valign="center" zPosition="5"/>
-    <widget font="Regular;34" foregroundColor="white" name="key_green" position="255,16" size="175,48" transparent="1" valign="center" zPosition="5"/>
-    <widget font="Regular;34" foregroundColor="white" name="key_yellow" position="466,16" size="175,48" transparent="1" valign="center" zPosition="5"/>
-    <widget font="Regular;34" foregroundColor="white" name="key_blue" position="687,16" size="175,48" transparent="1" valign="center" zPosition="5"/>
+    <widget font="Regular;33" foregroundColor="white" name="key_red" position="47,16" size="175,48" transparent="1" valign="center" zPosition="5"/>
+    <widget font="Regular;33" foregroundColor="white" name="key_green" position="255,16" size="175,48" transparent="1" valign="center" zPosition="5"/>
+    <widget font="Regular;33" foregroundColor="white" name="key_yellow" position="466,16" size="175,48" transparent="1" valign="center" zPosition="5"/>
+    <widget font="Regular;33" foregroundColor="white" name="key_blue" position="687,16" size="175,48" transparent="1" valign="center" zPosition="5"/>
   </screen>
   <screen name="IPtvDreamWebConfig" position="center,288" size="807,503">
     <widget halign="center" font="Regular;36" name="header" position="center,23" size="737,63"/>
