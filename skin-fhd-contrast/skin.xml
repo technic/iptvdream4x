@@ -165,18 +165,18 @@
     <widget alphatest="blend" name="btn_red" pixmap="IPtvDreamFHD/buttons/red.png" position="657,768" size="28,28"/>
     <widget font="Regular;30" foregroundColor="fg" name="key_red" position="699,764" size="282,36" transparent="1" zPosition="1"/>
   </screen>
-  <screen name="IPtvDreamConfig" position="center,center" size="954,569" title="Config">
-    <widget name="config" position="15,80" scrollbarMode="showOnDemand" size="917,482"/>
-    <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/buttons/red.png" position="23,25" size="28,28" transparent="1" zPosition="4"/>
-    <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/buttons/green.png" position="272,25" size="28,28" transparent="1" zPosition="4"/>
-    <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/buttons/yellow.png" position="484,25" size="28,28" transparent="1" zPosition="4"/>
-    <widget alphatest="blend" pixmap="IPtvDreamFHD/buttons/blue.png" position="691,25" render="Pixmap" size="28,28" source="Keyboard" transparent="1" zPosition="4">
+  <screen name="IPtvDreamConfig" position="center,center" size="955,569" title="Config">
+    <widget name="config" position="center,80" scrollbarMode="showOnDemand" size="917,482"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/buttons/red.png" position="15,25" size="28,28" transparent="1" zPosition="4"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/buttons/green.png" position="247,24" size="28,28" transparent="1" zPosition="4"/>
+    <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/buttons/yellow.png" position="479,25" size="28,28" transparent="1" zPosition="4"/>
+    <widget alphatest="blend" pixmap="IPtvDreamFHD/buttons/blue.png" position="711,25" render="Pixmap" size="28,28" source="Keyboard" transparent="1" zPosition="4">
       <convert type="ConditionalShowHide"/>
     </widget>
-    <widget font="Regular;33" foregroundColor="white" name="key_red" position="56,16" size="213,48" transparent="1" valign="center" zPosition="5"/>
-    <widget font="Regular;33" foregroundColor="white" name="key_green" position="304,16" size="219,48" transparent="1" valign="center" zPosition="5"/>
-    <widget font="Regular;33" foregroundColor="white" name="key_blue" position="728,16" size="216,48" transparent="1" valign="center" zPosition="5"/>
-    <widget name="key_yellow" position="518,16" zPosition="5" size="158,48" valign="center" font="Regular;33" transparent="1" foregroundColor="white"/>
+    <widget font="Regular;33" foregroundColor="white" name="key_red" position="46,12" size="195,48" transparent="1" valign="center" zPosition="5"/>
+    <widget font="Regular;33" foregroundColor="white" name="key_green" position="278,12" size="195,48" transparent="1" valign="center" zPosition="5"/>
+    <widget font="Regular;33" foregroundColor="white" name="key_blue" position="742,12" size="200,48" transparent="1" valign="center" zPosition="5"/>
+    <widget font="Regular;33" foregroundColor="white" name="key_yellow" position="510,12" size="195,48" transparent="1" valign="center" zPosition="5"/>
   </screen>
   <screen name="IPtvDreamManager" position="center,254" size="872,589">
     <widget position="center,80" render="Listbox" scrollbarMode="showOnDemand" size="827,500" source="list">
