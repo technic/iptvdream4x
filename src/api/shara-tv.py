@@ -25,14 +25,14 @@ except ImportError:
 
 
 class OTTProvider(JsonSettings, M3UProvider):
-	NAME = "SchurikTV"
-	AUTH_TYPE = "Key"
-	TVG_MAP = True
+	NAME = "SharaTV"
+	AUTH_TYPE = "Login"
+	TVG_MAP = False
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
-		self.site = "http://technic.cf/epg-smart/"
-		self.playlist_url = "http://pl.is-a-player.com/ott/m3u/%s/playlist.m3u" % username
+		self.site = "http://technic.cf/epg-shara-tv/"
+		self.playlist_url = "http://tvfor.pro/g/%s:%s/1/playlist.m3u" % (username, password)
 
 	def start(self):
 		self._downloadTvgMap()
@@ -59,10 +59,4 @@ class OTTProvider(JsonSettings, M3UProvider):
 		else:
 			cid = hash(url)
 			# self.trace("Failed to get cid from url", url)
-		return Channel(cid, name, num, True), {'tvg': tvg, 'url': url, 'logo': logo}
-
-	def getStreamUrl(self, cid, pin, time=None):
-		url = self.channels_data[cid]['url']
-		if time is None:
-			return url
-		return url.replace('mpegts', 'timeshift_abs/%s' % time.strftime('%s'))
+		return Channel(cid, name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
