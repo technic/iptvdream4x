@@ -42,9 +42,11 @@ class OTTProvider(JsonSettings, M3UProvider):
 
 		data = self.getJsonData('http://pl.73mtv.net/api/%s//stat' % token, {})
 		try:
-			self.packet_expire = datetime.fromtimestamp(int(data[0]['pkTimeTill']))
-		except IndexError:
-			pass
+			subscr = data[0]
+			if isinstance(subscr, dict):
+				self.packet_expire = datetime.fromtimestamp(int(subscr['pkTimeTill']))
+		except (IndexError, KeyError):
+			return
 
 	def getStreamUrl(self, cid, pin, time=None):
 		url = self.channels_data[cid]['url']
