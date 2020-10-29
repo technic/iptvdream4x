@@ -205,6 +205,12 @@ class M3UProvider(OfflineFavourites):
 
 		self.trace("Loaded {} channels".format(len(self.channels)))
 
+	def _markProtected(self, group_regexp):
+		for g in self.groups.values():
+			if group_regexp.search(g.title) is not None:
+				for c in g.channels:
+					c.is_protected = True
+
 	def getStreamUrl(self, cid, pin, time=None):
 		url = self.channels_data[cid]['url']
 		if time:

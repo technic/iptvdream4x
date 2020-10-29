@@ -11,24 +11,11 @@
             "group": "build",
         },
         {
-            "label": "Skin post",
+            "label": "Skins post",
             "type": "process",
             "command": "${config:python.pythonPath}",
             "args": [
-                "./skin-post.py",
-                "skin/skin.xml",
-                "skin/iptvdream.xml"
-            ],
-            "group": "build",
-        },
-        {
-            "label": "Skin-fhd post",
-            "type": "process",
-            "command": "${config:python.pythonPath}",
-            "args": [
-                "./skin-post.py",
-                "skin-fhd/skin.xml",
-                "skin-fhd/iptvdream.xml"
+                "./scripts/skins-post.py",
             ],
             "group": "build",
         },
@@ -82,7 +69,7 @@
                 ]
             },
             "dependsOn": [
-                "Skin post", "Skin-fhd post", "Copy keymap"
+                "Skins post", "Copy keymap"
             ]
         },
         {

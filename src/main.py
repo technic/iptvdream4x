@@ -1273,6 +1273,7 @@ class IPtvDreamEpg(Screen):
 				"nextDay": self.nextDay,
 				"prevDay": self.prevDay,
 				"green": self.showInfo,
+				"showInfo": self.showInfo,
 				"red": self.archive
 			}, -1)
 
