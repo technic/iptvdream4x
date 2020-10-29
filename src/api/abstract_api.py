@@ -243,9 +243,6 @@ class AbstractStream(AbstractAPI):
 				return cid
 		return None
 
-	def isLocked(self, cid):
-		return self.channels[cid].is_protected
-
 	# To be implemented in a derived class
 
 	def setTimeShift(self, time_shift):
