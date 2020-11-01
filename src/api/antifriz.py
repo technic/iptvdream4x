@@ -93,7 +93,7 @@ class OTTProvider(OfflineFavourites):
 			salt = ''.join(random.choice(ALPHA_NUM) for _ in range(5))
 			return "%s_%s" % (self.urls[cid], salt)
 		url = self.urls[cid]
-		return url.replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
+		return url.replace(':80/', ':1600/s/%s/' % self.username) + '&utc=%s' % time.strftime('%s')
 
 	def getDayEpg(self, cid, date):
 		data = self._getJson(self.api_site + "/epg/%s/?" % self.web_names[cid], {"date": date.strftime("%Y-%m-%d")})
