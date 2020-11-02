@@ -77,8 +77,8 @@
     <entries>
       <entry name="key_red" value="Close" render="Label" type="string"/>
       <entry name="key_green" value="Settings" render="Label" type="string"/>
-      <entry name="key_yellow" value="Options" render="Label" type="string"/>
-      <entry name="key_blue" value="Keyboard" render="Label" type="string"/>
+      <entry name="key_yellow" value="Web-settings" render="Label" type="string"/>
+      <entry name="key_blue" value="Menu" render="Label" type="string"/>
     </entries>
   </screen>
   <screen>
