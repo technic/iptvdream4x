@@ -29,7 +29,6 @@ class OTTProvider(OfflineFavourites):
 		super(OTTProvider, self).__init__(username, password)
 		self.playlist_url = "https://antifriz.tv/api/enigma/%s" % username
 		self.api_site = "http://api.iptvx.tv/"
-		self._token = password
 		self.web_names = {}
 		self.urls = {}
 
