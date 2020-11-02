@@ -49,7 +49,7 @@ class OTTProvider(OfflineFavourites):
 			json = json_loads(reply)
 		except Exception as e:
 			raise APIException("Failed to parse json: %s" % str(e))
-		self.parseChannels(json)
+		self._parseChannels(json)
 
 	def _getJson(self, url, params):
 		try:
@@ -64,7 +64,7 @@ class OTTProvider(OfflineFavourites):
 		# self.trace(json)
 		return json
 
-	def parseChannels(self, channelsData):
+	def _parseChannels(self, channelsData):
 		self.channels = {}
 		self.groups = {}
 		self.web_names = {}
