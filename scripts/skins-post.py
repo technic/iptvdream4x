@@ -11,6 +11,10 @@ from subprocess import check_call
 
 
 if __name__ == "__main__":
-	for s in ["skin", "skin-contrast", "skin-fhd", "skin-fhd-contrast"]:
+	for s in os.listdir("skins"):
 		print("Processing", s)
-		check_call(["python", "skin-post.py", os.path.join(s, "skin.xml"), os.path.join(s, "iptvdream.xml")])
+		check_call([
+			"python", "skin-post.py",
+			os.path.join("skins", s, "skin.xml"),
+			os.path.join("skins", s, "iptvdream.xml")
+		])
