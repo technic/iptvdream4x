@@ -8,11 +8,8 @@ PROVIDER ?= all
 
 plugin_name := IPtvDream
 plugin_path := /usr/lib/enigma2/python/Plugins/Extensions/$(plugin_name)
-skin_path := /usr/share/enigma2/$(plugin_name)
-skin-fhd_path := /usr/share/enigma2/$(plugin_name)FHD
-skin-contrast_path := /usr/share/enigma2/$(plugin_name)Contrast
-skin-fhd-contrast_path := /usr/share/enigma2/$(plugin_name)FHDContrast
-
+skin_prefix := /usr/share/enigma2
+  
 ifeq ($(DEB),y)
 pkgext := deb
 else
@@ -78,38 +75,38 @@ $(plugindir)/README.md: README.md
 install: $(plugindir)/LICENSE $(plugindir)/README.md
 
 
-skin_dir := $(build)$(skin_path)
-skin_files := $(shell find skin/ -name '*.png') skin/iptvdream.xml
-skin_install := $(patsubst skin/%,$(skin_dir)/%,$(skin_files))
+skin_dir := $(build)$(skin_prefix)/IPtvDream
+skin_files := $(shell find skins/IPtvDream/ -name '*.png') skins/IPtvDream/iptvdream.xml
+skin_install := $(patsubst skins/IPtvDream/%,$(skin_dir)/%,$(skin_files))
 
-$(skin_install): $(skin_dir)/%: skin/%
+$(skin_install): $(skin_dir)/%: skins/IPtvDream/%
 	install -D -m644 $< $@
 
-skin-fhd_dir := $(build)$(skin-fhd_path)
-skin-fhd_files := $(shell find skin-fhd/ -name '*.png') skin-fhd/iptvdream.xml
-skin-fhd_install := $(patsubst skin-fhd/%,$(skin-fhd_dir)/%,$(skin-fhd_files))
+skin-fhd_dir := $(build)$(skin_prefix)/IPtvDreamFHD
+skin-fhd_files := $(shell find skins/IPtvDreamFHD/ -name '*.png') skins/IPtvDreamFHD/iptvdream.xml
+skin-fhd_install := $(patsubst skins/IPtvDreamFHD/%,$(skin-fhd_dir)/%,$(skin-fhd_files))
 
-$(skin-fhd_install): $(skin-fhd_dir)/%: skin-fhd/%
+$(skin-fhd_install): $(skin-fhd_dir)/%: skins/IPtvDreamFHD/%
 	install -D -m644 $< $@
 
-skin-contrast_dir := $(build)$(skin-contrast_path)
-skin-contrast_files := $(shell find skin-contrast/ -name '*.png') skin-contrast/iptvdream.xml
-skin-contrast_install := $(patsubst skin-contrast/%,$(skin-contrast_dir)/%,$(skin-contrast_files))
+skin-contrast_dir := $(build)$(skin_prefix)/IPtvDreamContrast
+skin-contrast_files := $(shell find skins/IPtvDreamContrast/ -name '*.png') skins/IPtvDreamContrast/iptvdream.xml
+skin-contrast_install := $(patsubst skins/IPtvDreamContrast/%,$(skin-contrast_dir)/%,$(skin-contrast_files))
 
-$(skin-contrast_install): $(skin-contrast_dir)/%: skin-contrast/%
-	install -D -m644 $< $@
-
-
-skin-fhd-contrast_dir := $(build)$(skin-fhd-contrast_path)
-skin-fhd-contrast_files := $(shell find skin-fhd-contrast/ -name '*.png') skin-fhd-contrast/iptvdream.xml
-skin-fhd-contrast_install := $(patsubst skin-fhd-contrast/%,$(skin-fhd-contrast_dir)/%,$(skin-fhd-contrast_files))
-
-$(skin-fhd-contrast_install): $(skin-fhd-contrast_dir)/%: skin-fhd-contrast/%
+$(skin-contrast_install): $(skin-contrast_dir)/%: skins/IPtvDreamContrast/%
 	install -D -m644 $< $@
 
 
+skin-fhd-contrast_dir := $(build)$(skin_prefix)/IPtvDreamFHDContrast
+skin-fhd-contrast_files := $(shell find skins/IPtvDreamFHDContrast/ -name '*.png') skins/IPtvDreamFHDContrast/iptvdream.xml
+skin-fhd-contrast_install := $(patsubst skins/IPtvDreamFHDContrast/%,$(skin-fhd-contrast_dir)/%,$(skin-fhd-contrast_files))
 
-skinxmls = $(addsuffix /iptvdream.xml,skin skin-fhd skin-contrast skin-fhd-contrast)
+$(skin-fhd-contrast_install): $(skin-fhd-contrast_dir)/%: skins/IPtvDreamFHDContrast/%
+	install -D -m644 $< $@
+
+
+
+skinxmls = $(addprefix skins/,$(addsuffix /iptvdream.xml,IPtvDream IPtvDreamFHD IPtvDreamContrast IPtvDreamFHDContrast))
 
 $(skinxmls): %/iptvdream.xml: %/skin.xml
 	python skin-post.py $< $@
