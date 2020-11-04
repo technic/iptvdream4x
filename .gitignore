@@ -1,8 +1,7 @@
 # build
 version
 /info.json
-skin/iptvdream.xml
-skin-*/iptvdream.xml
+skins/*/iptvdream.xml
 *.mo
 build/
 packages/
