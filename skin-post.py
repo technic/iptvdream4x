@@ -9,6 +9,8 @@ import os
 import sys
 from xml.etree.ElementTree import ElementTree, Element, parse
 
+coldict = {}
+
 
 def search(element):
 	for attr in element.keys():
@@ -47,27 +49,20 @@ def replace_panel(s):
 
 
 def load_include(inc):
-	root = parse(os.path.join(os.path.dirname(infile), inc.get('filename')))
-	return root.findall('screen')
+	tree = parse(os.path.join(os.path.dirname(input_file), inc.get('filename')))
+	return tree.findall('screen')
 
 
-if __name__ == "__main__":
-	if not len(sys.argv) > 1:
-		print('Specify input and output files!')
-		print('usage: %s <infile> <outfile>' % sys.argv[0])
-		sys.exit(1)
+root = Element('skin')
 
-	infile = sys.argv[1]
 
-	root = Element('skin')
-	for element in parse(infile).getroot():
+def main():
+	for element in parse(input_file).getroot():
 		if element.tag == 'include':
 			for s in load_include(element):
 				root.append(s)
 		else:
 			root.append(element)
-
-	coldict = {}
 
 	for col in root.find('colors'):
 		colname = col.get('name')
@@ -84,4 +79,15 @@ if __name__ == "__main__":
 		if not screen.get('name') in used_panels:
 			skin_root.append(screen)
 
-	ElementTree(skin_root).write(sys.argv[2])
+	ElementTree(skin_root).write(output_file)
+
+
+if __name__ == "__main__":
+	if not len(sys.argv) > 1:
+		print('Specify input and output files!')
+		print('usage: %s <infile> <outfile>' % sys.argv[0])
+		sys.exit(1)
+
+	input_file = sys.argv[1]
+	output_file = sys.argv[2]
+	main()
