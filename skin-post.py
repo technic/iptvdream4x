@@ -5,8 +5,9 @@ read colors section from the skin header and replace all screens colors with exp
 """
 from __future__ import print_function
 
+import os
 import sys
-from xml.etree.ElementTree import ElementTree, Element
+from xml.etree.ElementTree import ElementTree, Element, parse
 
 
 def search(element):
@@ -45,29 +46,40 @@ def replace_panel(s):
 			s.insert(i, child)
 
 
+def load_include(inc):
+	root = parse(os.path.join(os.path.dirname(infile), inc.get('filename')))
+	return root.findall('screen')
+
+
 if __name__ == "__main__":
 	if not len(sys.argv) > 1:
 		print('Specify input and output files!')
 		print('usage: %s <infile> <outfile>' % sys.argv[0])
 		sys.exit(1)
 
-	infile = open(sys.argv[1])
-	root = ElementTree()
-	root.parse(infile)
-	colors = root.find('colors')
+	infile = sys.argv[1]
+
+	root = Element('skin')
+	for element in parse(infile).getroot():
+		if element.tag == 'include':
+			for s in load_include(element):
+				root.append(s)
+		else:
+			root.append(element)
+
 	coldict = {}
 
-	for col in colors:
+	for col in root.find('colors'):
 		colname = col.get('name')
 		colval = col.get('value')
 		# print('Add color', colname, colval)
 		coldict[colname] = colval
 
-	skin_root = Element('skin')
 	for screen in root.findall('screen'):
 		search(screen)
 		replace_panel(screen)
 
+	skin_root = Element('skin')
 	for screen in root.findall('screen'):
 		if not screen.get('name') in used_panels:
 			skin_root.append(screen)
