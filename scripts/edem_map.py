@@ -84,8 +84,12 @@ def main(outfile):
 			print('Bad url', item['name'])
 			continue
 		cid = m.group(1)
+		if item['tvg-id'] is not None:
+			tvg = int(item['tvg-id'])
+		else:
+			tvg = None
 		result[cid] = {
-			'tvg-id': item['tvg-id'],
+			'tvg-id': tvg,
 			'tvg-logo': item['tvg-logo'],
 		}
 
