@@ -11,9 +11,9 @@ services:
       - 5678:5678
     volumes:
       - "./src:/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream"
-      - "./skin:/usr/share/enigma2/IPtvDream"
-      - "./skin-fhd:/usr/share/enigma2/IPtvDreamFHD"
-      - "./skin-fhd-contrast:/usr/share/enigma2/IPtvDreamFHDContrast"
+      - "./skins:/usr/share/enigma2/IPtvDream"
+      - "./skins/IPtvDreamFHD:/usr/share/enigma2/IPtvDreamFHD"
+      - "./skins/IPtvDreamFHDContrast:/usr/share/enigma2/IPtvDreamFHDContrast"
       - "./:/project"
     environment:
       - RESOLUTION=1920x1080x16
