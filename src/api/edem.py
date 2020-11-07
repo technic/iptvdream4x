@@ -47,7 +47,7 @@ class OTTProvider(M3UProvider):
 			cid = int(cid_str)
 			try:
 				data = self._tvg_info[cid_str]
-				tvg = int(data['tvg-id'])
+				tvg = data['tvg-id']
 				logo = data['tvg-logo'].encode('utf-8')
 			except KeyError:
 				pass
