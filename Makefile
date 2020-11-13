@@ -114,10 +114,6 @@ $(skinxmls): %/iptvdream.xml: %/skin.xml
 prepare: $(skinxmls)
 
 
-$(build)/etc/iptvdream/iptvdream.epgmap: src/iptvdream.epgmap
-	install -D -m644 $^ $@
-
-
 langs := uk ru en de lt
 
 langs_po := $(addprefix po/,$(langs))
@@ -153,7 +149,6 @@ $(bin_install): $(build)/usr/bin/%: tools/%
 	install -D -m755 $< $@
 
 
-#install: $(build)/etc/iptvdream/iptvdream.epgmap
 install: $(pycinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(skin-contrast_install) $(skin-fhd-contrast_install) $(moinstall) $(bin_install)
 	install -d $(build)/etc/iptvdream
 
