@@ -149,7 +149,7 @@ $(bin_install): $(build)/usr/bin/%: tools/%
 	install -D -m755 $< $@
 
 
-install: $(pycinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(skin-contrast_install) $(skin-fhd-contrast_install) $(moinstall) $(bin_install)
+install: $(pyinstall) $(datainstall) $(skin_install) $(skin-fhd_install) $(skin-contrast_install) $(skin-fhd-contrast_install) $(moinstall) $(bin_install)
 	install -d $(build)/etc/iptvdream
 
 
