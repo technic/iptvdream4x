@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-09 00:31+0200\n"
+"POT-Creation-Date: 2020-11-13 23:36+0100\n"
 "PO-Revision-Date: 2020-04-02 11:33+0200\n"
 "Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
 "Language-Team: Russian / enigma(c) Ukraine, Kiev>\n"
@@ -54,6 +54,9 @@ msgstr "Скасувати"
 msgid "Channel Locked"
 msgstr "Канал закритий"
 
+msgid "Channel Selection"
+msgstr ""
+
 msgid "Channel:"
 msgstr "Канал:"
 
@@ -84,6 +87,9 @@ msgstr "Контекстне меню"
 
 msgid "Details"
 msgstr "Деталі"
+
+msgid "EPG List"
+msgstr ""
 
 msgid "EPG-json url"
 msgstr "Посилання на EPG-json"

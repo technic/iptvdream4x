@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-09 00:31+0200\n"
+"POT-Creation-Date: 2020-11-13 23:36+0100\n"
 "PO-Revision-Date: 2020-03-31 11:53+0300\n"
 "Last-Translator: technic <alexeytech@gmail.com>\n"
 "Language-Team: none\n"
@@ -58,6 +58,9 @@ msgstr "Atšaukti"
 msgid "Channel Locked"
 msgstr "Kanalas užrakintas"
 
+msgid "Channel Selection"
+msgstr ""
+
 msgid "Channel:"
 msgstr ""
 
@@ -88,6 +91,9 @@ msgstr "Kontekstinis meniu"
 
 msgid "Details"
 msgstr "Išsami informacija"
+
+msgid "EPG List"
+msgstr ""
 
 msgid "EPG-json url"
 msgstr ""

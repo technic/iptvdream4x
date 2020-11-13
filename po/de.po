@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: IPtvDream 4X\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-09 00:31+0200\n"
+"POT-Creation-Date: 2020-11-13 23:36+0100\n"
 "PO-Revision-Date: 2019-08-21 20:27+0200\n"
 "Last-Translator: Alex Maystrenko <alexeytech@gmail.com>\n"
 "Language-Team: Open Source contribution\n"
@@ -58,6 +58,9 @@ msgstr "Abbrechen"
 msgid "Channel Locked"
 msgstr "Sender Gespert"
 
+msgid "Channel Selection"
+msgstr "Sender Auswahl"
+
 msgid "Channel:"
 msgstr ""
 
@@ -88,6 +91,9 @@ msgstr "Kontexmenü"
 
 msgid "Details"
 msgstr "Einzelheiten"
+
+msgid "EPG List"
+msgstr ""
 
 msgid "EPG-json url"
 msgstr ""
@@ -403,9 +409,6 @@ msgstr ""
 
 #~ msgid "Channel"
 #~ msgstr "Sender"
-
-#~ msgid "Channel Selection"
-#~ msgstr "Sender Auswahl"
 
 #~ msgid "Delete"
 #~ msgstr "Entfernen"
