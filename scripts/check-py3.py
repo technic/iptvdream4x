@@ -12,7 +12,7 @@ def check(f):
 
 def main():
 	print("Python", sys.version)
-	files = glob.glob("src/**/*.py")
+	files = glob.glob("src/*.py") + glob.glob("src/**/*.py")
 	for f in files:
 		check(f)
 
