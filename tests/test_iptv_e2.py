@@ -10,7 +10,7 @@
 
 from __future__ import print_function
 
-import ott_provider
+from tests import ott_provider
 from src.api.iptv_e2_soveni import OTTProvider
 
 
