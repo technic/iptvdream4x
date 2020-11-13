@@ -70,6 +70,10 @@ jobs:
             whoami
             echo PROVIDER=${PROVIDER}
       - run:
+          name: check-py3
+          command: |
+            python3 scripts/check-py3.py
+      - run:
           name: build
           command: |
             make
