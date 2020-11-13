@@ -795,6 +795,7 @@ class IPtvDreamChannels(Screen):
 		from manager import manager
 		self.cfg = manager.getConfig(self.db.NAME)
 
+		self["caption"] = Label(_("Channel Selection"))
 		self["key_red"] = Label(_("All"))
 		self["key_green"] = Label(_("Groups"))
 		self["key_yellow"] = Label(_("Add"))
@@ -1246,6 +1247,7 @@ class IPtvDreamEpg(Screen):
 	def __init__(self, session, db, cid, shift):
 		Screen.__init__(self, session)
 
+		self["caption"] = Label(_("EPG List"))
 		self["btn_red"] = Pixmap()
 		self["key_red"] = Label(_("Archive"))
 		self["key_green"] = Label(_("Details"))

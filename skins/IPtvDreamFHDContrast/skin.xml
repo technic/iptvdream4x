@@ -96,6 +96,7 @@
     <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/providerFrame.png" position="76,23" size="105,45"/>
   </screen>
   <screen size="0,0" position="0,0" name="IPtvDreamList">
+    <widget backgroundColor="bg" font="Regular;53" foregroundColor="fgactive" halign="center" position="588,35" shadowColor="#000064c7" size="689,65" name="caption" transparent="1"/>
     <widget backgroundColor="bg" font="Regular;35" foregroundColor="fg" position="105,107" render="Label" shadowColor="#000064c7" size="1050,42" source="Title" transparent="1"/>
     <widget backgroundColor="bg" font="Regular;27" foregroundColor="snow" halign="right" name="packetExpire" position="1434,21" size="416,33" transparent="1"/>
     <ePixmap alphatest="blend" pixmap="IPtvDreamFHD/icons/clock.png" position="1212,107" size="32,32"/>
@@ -112,7 +113,6 @@
   <screen flags="wfNoBorder" name="IPtvDreamChannels" position="0,0" size="1920,1080" title="Channel Selection">
     <ePixmap pixmap="IPtvDreamFHD/back1.png" position="0,0" size="1920,1080" zPosition="-10"/>
     <panel size="1920,1080" position="0,0" name="IPtvDreamList"/>
-    <eLabel backgroundColor="bg" font="Regular;53" foregroundColor="fgactive" halign="center" position="588,35" shadowColor="#000064c7" size="689,65" text="Channel Selection" transparent="1"/>
     <widget backgroundColor="#15000000" backgroundColorSelected="#000a1822" colorEventProgressbar="#005DB5" colorEventProgressbarBorder="#00bbbbbb" colorEventProgressbarBorderSelected="#FFC387" colorServiceDescription="#00FFFF" colorServiceDescriptionSelected="#FFC387" colorServicePlaying="#00ff0000" colorServicePlayingSelected="#00ff880a" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" name="list" picServiceArchive="IPtvDream/rec.png" position="84,161" scrollbarMode="showOnDemand" serviceInfoFont="Regular;36" serviceItemHeight="54" serviceNameFont="Regular;37" serviceNumberFont="Regular;37" size="1071,810" transparent="1"/>
     <widget backgroundColor="bg" font="Regular;33" foregroundColor="fgactive" halign="center" name="epgName" position="1193,563" size="645,38" transparent="1"/>
     <widget backgroundColor="bg" font="Regular;29" foregroundColor="fg" name="epgTime" position="1193,608" size="218,33" transparent="1"/>
@@ -132,7 +132,6 @@
   <screen flags="wfNoBorder" name="IPtvDreamEpg" position="0,0" size="1920,1080" title="Channel EPG">
     <ePixmap pixmap="IPtvDreamFHD/back1.png" position="0,0" size="1920,1080" zPosition="-10"/>
     <panel size="1920,1080" position="0,0" name="IPtvDreamList"/>
-    <eLabel backgroundColor="bg" font="Regular;53" foregroundColor="fgactive" halign="center" position="588,35" shadowColor="#000064c7" size="689,65" text="EPG List" transparent="1"/>
     <widget backgroundColor="#15000000" backgroundColorSelected="#000a1822" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" position="84,161" render="Listbox" scrollbarMode="showOnDemand" size="1071,810" source="list" transparent="1">
       <convert type="TemplatedMultiContent">
           {

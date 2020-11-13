@@ -103,7 +103,7 @@
     </widget>
     <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/info.png" position="1187,679" size="70,30" zPosition="3" />
     <ePixmap alphatest="blend" pixmap="IPtvDream/buttons/menu.png" position="1112,679" size="70,30" zPosition="3" />
-    <eLabel backgroundColor="#0038435a" font="Regular;37" halign="center" position="392,17" foregroundColor="#00e5b243" size="459,43" text="Channel Selection" transparent="1" />
+    <widget backgroundColor="#0038435a" font="Regular;37" halign="center" position="392,17" foregroundColor="#00e5b243" size="459,43" name="caption" transparent="1" />
     <widget backgroundColor="#00343c4f" font="Regular;24" position="70,66" render="Label" shadowColor="#000064c7" size="700,28" source="Title" transparent="1" />
     <widget backgroundColor="#15000000" backgroundColorSelected="#000a1822" colorEventProgressbar="#005DB5" colorEventProgressbarBorder="#00bbbbbb" colorEventProgressbarBorderSelected="#FFC387" colorServiceDescription="#00FFFF" colorServiceDescriptionSelected="#FFC387" colorServicePlaying="#00ff0000" colorServicePlayingSelected="#00ff880a" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" name="list" picServiceArchive="IPtvDream/rec.png" position="56,107" scrollbarWidth="10" scrollbarMode="showOnDemand" serviceInfoFont="Regular;24" serviceItemHeight="36" serviceNameFont="Regular;25" serviceNumberFont="Regular;25" size="714,540" transparent="1" />
     <widget backgroundColor="#0038435a" font="Regular;22" foregroundColor="#00e5b243" halign="center" name="epgName" position="795,375" size="430,25" transparent="1" />
@@ -132,7 +132,7 @@
     <widget backgroundColor="#001b2c47" font="Regular;20" position="1122,72" render="Label" size="128,25" source="global.CurrentTime" transparent="1">
       <convert type="ClockToText">Format:%d.%m.%Y</convert>
     </widget>
-    <eLabel backgroundColor="0038435a#" font="Regular;37" halign="center" position="392,17" foregroundColor="#00e5b243" size="459,43" text="EPG Selection" transparent="1" />
+    <widget backgroundColor="0038435a#" font="Regular;37" halign="center" position="392,17" foregroundColor="#00e5b243" size="459,43" name="caption" transparent="1" />
     <widget backgroundColor="#00343c4f" font="Regular;24" position="70,66" render="Label" shadowColor="#000064c7" size="700,28" source="Title" transparent="1" />
     <widget backgroundColor="#15000000" backgroundColorSelected="#000a1822" foregroundColor="#00ffffff" foregroundColorSelected="#00ff880a" position="56,107" render="Listbox" scrollbarWidth="10" scrollbarMode="showOnDemand" size="714,540" source="list" transparent="1">
       <convert type="TemplatedMultiContent">
