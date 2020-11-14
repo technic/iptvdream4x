@@ -11,7 +11,9 @@
 from __future__ import print_function
 
 from tests import ott_provider
-from src.api.playlist import OTTProvider
+from src.api.playlist import getOTTProviders
+
+OTTProvider = getOTTProviders().next()
 
 
 class Test(ott_provider.TestOTTProvider):
