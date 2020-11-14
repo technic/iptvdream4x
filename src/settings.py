@@ -39,7 +39,6 @@ from .virtualkb import VirtualKeyBoard
 from .common import ConfigNumberText
 from .api.abstract_api import AbstractStream
 from .loc import translate as _
-from .updater import getPage
 from .common import safecb, fatalError
 
 try:
