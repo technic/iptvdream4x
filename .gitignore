@@ -9,6 +9,7 @@ packages/
 src/keymap.xml
 # python
 *.py[cod]
+env/
 .venv/
 .ropeproject/
 __pycache__/
