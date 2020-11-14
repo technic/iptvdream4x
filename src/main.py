@@ -792,7 +792,7 @@ class IPtvDreamChannels(Screen):
 		self.history = History(10)
 		self.db = db  # type: AbstractStream
 		self.player_ref = player_ref
-		from manager import manager
+		from .manager import manager
 		self.cfg = manager.getConfig(self.db.NAME)
 
 		self["caption"] = Label(_("Channel Selection"))

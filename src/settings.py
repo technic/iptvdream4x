@@ -79,7 +79,7 @@ class SettingsRepository(object):
 
 	def _buildEnigmaSettings(self):
 		"""Settings stored in enigma2"""
-		from manager import manager
+		from .manager import manager
 		cfg = manager.getConfig(self.db.NAME)
 
 		settings = OrderedDict()
@@ -114,7 +114,7 @@ class SettingsRepository(object):
 		"""
 		trace("Saving settings")
 
-		from manager import manager
+		from .manager import manager
 		cfg = manager.getConfig(self.db.NAME)
 
 		local_changes = {}
