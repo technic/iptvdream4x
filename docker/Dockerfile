@@ -59,8 +59,10 @@ RUN cd enigma2 \
 COPY enigma2-settings /etc/enigma2/settings
 RUN ldconfig
 
-RUN git clone --depth 10 https://github.com/technic/servicemp3.git
+RUN git clone --depth 10 https://github.com/technic/servicemp3.git \
+ && cd servicemp3 && git checkout 925d1a4732437049ba7ba37557dea37de830177c
 RUN cd servicemp3 \
+ && git checkout 925d1a4732437049ba7ba37557dea37de830177c \
  && ./autogen.sh \
  && ./configure --with-gstversion=1.0 --prefix=/usr \
  && make -j4 \
