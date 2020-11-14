@@ -94,7 +94,7 @@ class IPtvDreamStreamPlayer(
 
 		trace("start stream player")
 		self.db = db
-		from manager import manager
+		from .manager import manager
 		self.cfg = manager.getConfig(self.db.NAME)
 		self.cid = None
 
