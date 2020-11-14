@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 pycodestyle = "*"
 typing = "*"
-pylint = "<2.0.0"
+pylint = "*"
 pipenv = "*"
 ptvsd = "*"
 rope = "*"
