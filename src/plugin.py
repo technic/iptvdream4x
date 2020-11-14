@@ -17,15 +17,15 @@ from Screens.Standby import TryQuitMainloop
 from Tools.BoundFunction import boundFunction
 
 # plugin imports
-from dist import NAME, TITLE
+from .dist import NAME, TITLE
 try:
-	from loc import translate as _
+	from .loc import translate as _
 except ImportError:
 	def _(text):
 		return text
 
 try:
-	from server import startApiProxy
+	from .server import startApiProxy
 	startApiProxy()
 except Exception as e:
 	print("[IPtvDream] Can't start server", e)
@@ -33,7 +33,7 @@ except Exception as e:
 
 def checkUpdate(session, callback):
 	try:
-		from updater import UpdaterScreen
+		from .updater import UpdaterScreen
 	except ImportError as e:
 		print("[IPtvDream] critical error!")
 		import traceback
@@ -56,7 +56,7 @@ def checkUpdate(session, callback):
 
 
 def provision(session, run):
-	from provision import ProvisionScreen
+	from .provision import ProvisionScreen
 	if ProvisionScreen.provisionRequired():
 		session.openWithCallback(run, ProvisionScreen)
 	else:
@@ -65,14 +65,14 @@ def provision(session, run):
 
 def pluginRun(name, session, **kwargs):
 	def run():
-		from manager import runner
+		from .manager import runner
 		runner.runPlugin(session, name)
 	checkUpdate(session, lambda: provision(session, run))
 
 
 def managerRun(session, **kwargs):
 	def run():
-		from manager import runner
+		from .manager import runner
 		runner.runManager(session)
 	checkUpdate(session, lambda: provision(session, run))
 
@@ -92,7 +92,7 @@ def makeExtensionsFunc(name):
 def Plugins(path, **kwargs):
 	plugins = []
 	try:
-		from manager import manager
+		from .manager import manager
 		for p in manager.getList():
 			name = p['name']
 			if manager.getConfig(name).in_menu.value:
