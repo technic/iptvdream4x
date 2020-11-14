@@ -19,7 +19,7 @@ from Components.Console import Console
 from Components.config import config, ConfigInteger, ConfigSubsection
 
 try:
-	from loc import translate as _
+	from .loc import translate as _
 except ImportError as e:
 	def _(text):
 		return text

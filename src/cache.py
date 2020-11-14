@@ -13,8 +13,8 @@ from __future__ import print_function
 from datetime import datetime, timedelta
 
 # from api.abstract_api import AbstractStream
-from utils import trace, APIException, EPG
-from layer import eTimer
+from .utils import trace, APIException, EPG
+from .layer import eTimer
 
 try:
 	from typing import List, Dict, Callable, Tuple  # pylint: disable=unused-import

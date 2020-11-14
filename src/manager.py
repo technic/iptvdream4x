@@ -37,13 +37,13 @@ from enigma import getDesktop
 from skin import loadSkin
 
 # plugin imports
-from dist import VERSION
-from provision import pluginConfig
-from common import ConfigNumberText
-from utils import trace, APIException, APILoginFailed
-from loc import translate as _
-from settings import IPtvDreamConfig, IPtvDreamWebConfig, SettingsRepository, WebConfig
-from main import IPtvDreamStreamPlayer, IPtvDreamChannels
+from .dist import VERSION
+from .provision import pluginConfig
+from .common import ConfigNumberText
+from .utils import trace, APIException, APILoginFailed
+from .loc import translate as _
+from .settings import IPtvDreamConfig, IPtvDreamWebConfig, SettingsRepository, WebConfig
+from .main import IPtvDreamStreamPlayer, IPtvDreamChannels
 
 PLAYERS = [('1', "enigma2 ts (1)"), ('4097', "gstreamer (4097)"), ('5002', "exteplayer3 (5002)")]
 KEYMAPS = [('enigma', 'enigma'), ('neutrino', 'neutrino')]

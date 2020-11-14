@@ -16,8 +16,8 @@ from urllib2 import HTTPError
 from json import loads as json_loads
 
 # plugin imports
-from m3u import M3UProvider
-from abstract_api import JsonSettings
+from .m3u import M3UProvider
+from .abstract_api import JsonSettings
 from ..utils import Channel, APIException, APILoginFailed, ConfInteger
 try:
 	from ..loc import translate as _

@@ -13,7 +13,10 @@ from __future__ import print_function
 
 import socket
 import zlib
-import cookielib
+try:
+	import cookielib
+except ImportError:
+	import http.cookiejar as cookielib
 import urllib
 import urllib2
 from json import loads as json_loads

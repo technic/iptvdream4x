@@ -15,8 +15,8 @@ from urllib import urlencode
 import re
 
 # plugin imports
-from abstract_api import JsonSettings
-from m3u import M3UProvider
+from .abstract_api import JsonSettings
+from .m3u import M3UProvider
 from ..utils import APILoginFailed, Channel, ConfSelection
 try:
 	from ..loc import translate as _

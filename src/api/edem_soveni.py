@@ -11,9 +11,9 @@
 from __future__ import print_function
 
 # plugin imports
-from abstract_api import JsonSettings
+from .abstract_api import JsonSettings
 from ..utils import Channel
-from m3u import M3UProvider
+from .m3u import M3UProvider
 
 from ..utils import ConfSelection
 try:

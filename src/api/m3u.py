@@ -17,7 +17,7 @@ from time import mktime
 from json import loads as json_loads
 
 # plugin imports
-from abstract_api import OfflineFavourites
+from .abstract_api import OfflineFavourites
 from ..utils import syncTime, APIException, EPG, Channel, Group
 
 

@@ -12,7 +12,7 @@ from __future__ import print_function
 
 from datetime import datetime
 
-from abstract_api import OfflineFavourites
+from .abstract_api import OfflineFavourites
 from ..utils import Channel, Group, APIWrongPin, EPG
 
 

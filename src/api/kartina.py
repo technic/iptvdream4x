@@ -10,7 +10,7 @@
 
 from __future__ import print_function
 
-from ktv import KtvStream
+from .ktv import KtvStream
 
 
 class OTTProvider(KtvStream):

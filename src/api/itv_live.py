@@ -17,7 +17,7 @@ import zlib
 from json import loads as json_loads, dumps as json_dumps
 
 # plugin imports
-from abstract_api import OfflineFavourites
+from .abstract_api import OfflineFavourites
 from ..utils import syncTime, APIException, APILoginFailed, EPG, Channel, Group
 
 

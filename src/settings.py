@@ -33,14 +33,14 @@ from Components.Sources.Boolean import Boolean
 from Tools.LoadPixmap import LoadPixmap
 
 # plugin imports
-from dist import NAME, VERSION
-from utils import trace, ConfInteger, ConfSelection, ConfString, ConfBool, APIException
-from virtualkb import VirtualKeyBoard
-from common import ConfigNumberText
-from api.abstract_api import AbstractStream
-from loc import translate as _
-from updater import getPage
-from common import safecb, fatalError
+from .dist import NAME, VERSION
+from .utils import trace, ConfInteger, ConfSelection, ConfString, ConfBool, APIException
+from .virtualkb import VirtualKeyBoard
+from .common import ConfigNumberText
+from .api.abstract_api import AbstractStream
+from .loc import translate as _
+from .updater import getPage
+from .common import safecb, fatalError
 
 try:
 	from typing import List, Tuple, Dict  # pylint: disable=unused-import

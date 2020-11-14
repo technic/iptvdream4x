@@ -14,8 +14,8 @@ from __future__ import print_function
 from datetime import datetime
 
 # plugin imports
-from abstract_api import JsonSettings
-from m3u import M3UProvider
+from .abstract_api import JsonSettings
+from .m3u import M3UProvider
 from ..utils import APILoginFailed, ConfSelection
 try:
 	from ..loc import translate as _

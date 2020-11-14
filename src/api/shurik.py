@@ -14,8 +14,8 @@ from __future__ import print_function
 from urllib2 import HTTPError
 
 # plugin imports
-from abstract_api import JsonSettings
-from m3u import M3UProvider
+from .abstract_api import JsonSettings
+from .m3u import M3UProvider
 from ..utils import APIException, APILoginFailed, Channel
 try:
 	from ..loc import translate as _

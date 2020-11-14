@@ -14,8 +14,8 @@ from __future__ import print_function
 from json import loads as json_loads
 
 # plugin imports
-from m3u import M3UProvider
-from abstract_api import JsonSettings
+from .m3u import M3UProvider
+from .abstract_api import JsonSettings
 from ..utils import APIException, Channel, ConfSelection, ConfString, syncTime
 try:
 	from ..loc import translate as _

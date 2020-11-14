@@ -12,7 +12,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from hashlib import md5
 
-from abstract_api import AbstractAPI, OfflineFavourites
+from .abstract_api import AbstractAPI, OfflineFavourites
 from ..utils import toDate, EPG, Channel, Group, APIWrongPin
 try:
 	from ..loc import translate as _

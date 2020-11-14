@@ -22,12 +22,12 @@ from twisted.web.client import getPage as _getPage, downloadPage as _downloadPag
 from twisted.internet.defer import Deferred, fail
 
 # plugin imports
-from dist import NAME, VERSION
-from layer import enigma2Qt
+from .dist import NAME, VERSION
+from .layer import enigma2Qt
 
 # not necessary for functioning
 try:
-	from loc import translate as _
+	from .loc import translate as _
 except ImportError as e:
 	print("[IPtvDream] loc", e)
 

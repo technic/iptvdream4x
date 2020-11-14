@@ -1,4 +1,4 @@
-from koronaiptv import Korona
+from .koronaiptv import Korona
 
 
 class OTTProvider(Korona):

@@ -10,7 +10,8 @@
 # version.
 
 from datetime import datetime
-from abstract_api import AbstractAPI, AbstractStream, MODE_STREAM
+
+from .abstract_api import AbstractAPI, AbstractStream, MODE_STREAM
 from ..utils import Group, Channel, EPG, APIWrongPin
 
 

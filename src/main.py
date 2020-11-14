@@ -50,16 +50,16 @@ from enigma import eServiceReference
 from skin import parseFont, parseColor
 
 # plugin imports
-from layer import eTimer
-from common import NumberEnter
-from utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG
-from api.abstract_api import AbstractStream
-from loc import translate as _
-from common import ShowHideScreen, AutoAudioSelection, MainMenuScreen
-from standby import standbyNotifier
-from cache import LiveEpgWorker
-from lib.epg import EpgProgress
-from lib.tv import SortOrderSettings, Picon
+from .layer import eTimer
+from .common import NumberEnter
+from .utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG
+from .api.abstract_api import AbstractStream
+from .loc import translate as _
+from .common import ShowHideScreen, AutoAudioSelection, MainMenuScreen
+from .standby import standbyNotifier
+from .cache import LiveEpgWorker
+from .lib.epg import EpgProgress
+from .lib.tv import SortOrderSettings, Picon
 
 SKIN_PATH = resolveFilename(SCOPE_SKIN, 'IPtvDream')
 ENIGMA_CONF_PATH = resolveFilename(SCOPE_SYSETC, 'enigma2')

@@ -14,7 +14,7 @@ from __future__ import print_function
 from json import loads as json_loads
 
 # plugin imports
-from m3u import M3UProvider
+from .m3u import M3UProvider
 from ..utils import Channel, APIException
 
 

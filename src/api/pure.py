@@ -10,7 +10,7 @@
 
 from __future__ import print_function
 
-from api1 import TeleportStream
+from .api1 import TeleportStream
 
 
 # This is Raduga clone with own branding

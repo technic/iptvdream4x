@@ -15,7 +15,11 @@ from functools import wraps
 from datetime import datetime, timedelta
 import time
 import re
-import htmlentitydefs
+try:
+	import htmlentitydefs
+except ImportError:
+	# ignore it, because it is not used
+	pass
 
 
 def trace(*args):
