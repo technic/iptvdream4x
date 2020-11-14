@@ -22,8 +22,8 @@ Pipfile.lock
 *.yml.tmp
 # Private configuration
 secret.json
-/*.m3u8
-/*.m3u
+playlists/*.m3u8
+playlists/*.m3u
 # Twisted tests
 _trial_temp*
 
