@@ -136,7 +136,6 @@ disable=print-statement,
         comprehension-escape,
         invalid-name,
         missing-docstring,
-        relative-import,
         bad-continuation,
 
 
