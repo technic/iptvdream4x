@@ -787,6 +787,40 @@ class HistoryEntry(object):
 		return "HistoryEntry(%d, (%d, %d), (%d, %d))" % (self.mode, self.gid, self.gr_idx, self.cid, self.ch_idx)
 
 
+class VerticalLayoutPart(object):
+	"""
+	Grow program name label while title does not fit, and shrink program description accordingly
+	"""
+
+	def __init__(self, screen, widgetsToMove):
+		self._name_height = 0
+		self._desc_top = 0
+		self._desc_height = 0
+		self._widgets_top = []
+		self.name = screen["epgName"]
+		self.desc = screen["epgDescription"]
+		self.widgets = widgetsToMove
+		screen.onLayoutFinish.append(self.initLayout)
+
+	def initLayout(self):
+		self._name_height = self.name.instance.size().height()
+		self._desc_top = self.desc.instance.position().y()
+		self._desc_height = self.desc.instance.size().height()
+		self._widgets_top = [w.instance.position().y() for w in self.widgets]
+
+	def updateLayout(self):
+		height = min(self.name.instance.calculateSize().height(), self._name_height * 3)
+		dh = height - self._name_height
+		self.name.instance.resize(eSize(
+			self.name.instance.size().width(), height))
+		self.desc.instance.move(ePoint(
+			self.desc.instance.position().x(), self._desc_top + dh))
+		self.desc.instance.resize(eSize(
+			self.desc.instance.size().width(), self._desc_height - dh))
+		for w, y in zip(self.widgets, self._widgets_top):
+			w.instance.move(ePoint(w.instance.position().x(), y + dh))
+
+
 class IPtvDreamChannels(Screen):
 	"""
 	:type db: AbstractStream
@@ -817,13 +851,16 @@ class IPtvDreamChannels(Screen):
 		self["epgName"] = Label()
 		self["epgTime"] = Label()
 		self["epgDescription"] = Label()
-		self["epgProgress"] = Slider(0, 100)
 		self["epgNextTime"] = Label()
 		self["epgNextName"] = Label()
 		self["epgNextDescription"] = Label()
 
+		self["epgProgress"] = Slider(0, 100)
 		self["progress"] = self._progress = EpgProgress()
 		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
+
+		# auto resize some widgets
+		self._info_part = VerticalLayoutPart(self, (self["epgTime"], self["epgProgress"]))
 
 		self._worker = LiveEpgWorker(db)
 		self._worker.onUpdate.append(self.updatePrograms)
@@ -1020,6 +1057,7 @@ class IPtvDreamChannels(Screen):
 				self["epgDescription"].show()
 				self._progress.setEpg(curr)
 				self["epgProgress"].show()
+				self._info_part.updateLayout()
 			else:
 				self.hideEpgLabels()
 			curr = self._worker.getNext(channel.cid)
@@ -1288,6 +1326,9 @@ class IPtvDreamEpg(Screen):
 		self["progress"] = self._progress = EpgProgress()
 		self._progress.onChanged.append(lambda value: self["epgProgress"].setValue(int(100 * value)))
 
+		# auto resize some widgets
+		self._info_part = VerticalLayoutPart(self, (self["epgTime"], self["epgProgress"], self["epgDuration"]))
+
 		self["packetExpire"] = Label()
 
 		self["actions"] = ActionMap(
@@ -1363,6 +1404,7 @@ class IPtvDreamEpg(Screen):
 			self["btn_red"].hide()
 			self["key_red"].hide()
 		self._progress.setEpg(entry)
+		self._info_part.updateLayout()
 
 	def archive(self):
 		entry = self.list.getCurrent()
@@ -1434,11 +1476,15 @@ class IPtvDreamEpgInfo(Screen):
 		self.channel = channel
 
 		self.setTitle("%d. %s" % (channel.number, channel.name))
+		
 		self["epgName"] = Label(entry.name)
 		self["epgDescription"] = ScrollLabel(entry.description or _("No detailed information"))
+		self._main_part = VerticalLayoutPart(self, widgetsToMove=())
+
 		self["epgTime"] = Label(entry.begin.strftime("%a %H:%M"))
 		self["epgDate"] = Label(entry.begin.strftime("%d.%m.%Y"))
 		self["epgDuration"] = Label()
+
 		self["epgProgress"] = Slider(0, 100)
 		self["progress"] = self._progress = EpgProgress()
 		self._progress.onChanged.append(self.updateProgress)
@@ -1460,6 +1506,7 @@ class IPtvDreamEpgInfo(Screen):
 		}, -1)
 
 	def initGui(self):
+		self._main_part.updateLayout()
 		self._progress.setEpg(self.entry)
 
 	def hasArchive(self):
