@@ -893,6 +893,7 @@ class IPtvDreamChannels(Screen):
 			}, -1)
 
 		self.list.onSelectionChanged.append(self.selectionChanged)
+		self.onClose.append(lambda: self.list.onSelectionChanged.remove(self.selectionChanged))
 
 		start_mode = manager.getStartMode()
 		if start_mode == self.FAV and not self.db.selectFavourites():
