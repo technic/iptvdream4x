@@ -60,7 +60,7 @@ def main(skip_push):
 					ver = m.group(1)
 					print("Current version", ver)
 					ver = list(map(int, ver.split('.')))
-					nextVer = ver
+					nextVer = ver[:2]
 					nextVer[1] += 1
 					lines[i] = 'VERSION = "%s"' % '.'.join(map(str, nextVer))
 					print("Update to", lines[i])
