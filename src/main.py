@@ -350,7 +350,13 @@ class IPtvDreamStreamPlayer(
 		elif pause:
 			# do pause
 			self.archive_pause = syncTime()
-			self.session.nav.stopService()
+			# try to pause and freeze the picture, otherwise stop and show black screen
+			service = self.session.nav.getCurrentService()
+			pauseable = service and service.pause()
+			if pauseable:
+				pauseable.pause()
+			else:
+				self.session.nav.stopService()
 			self.lockShow()
 			# freeze epg labels
 			self.epgTimer.stop()
