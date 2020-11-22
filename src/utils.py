@@ -32,7 +32,7 @@ def timeit(f):
 		t = time.time()
 		result = f(*args, **kwargs)
 		d = time.time() - t
-		trace("timeit", f, d)
+		trace("timeit %s %.6f" % (f, d))
 		return result
 	return wrapper
 
