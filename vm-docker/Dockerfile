@@ -12,7 +12,7 @@ RUN apt-get install -y bash-completion command-not-found psmisc htop vim wput
 
 RUN mkdir /etc/iptvdream
 
-RUN pip install ptvsd
+RUN pip install ptvsd pytest typing
 EXPOSE 5678
 COPY mytest-ptvsd.py /opt/mytest-ptvsd.py
 COPY start.sh /opt/start.sh
