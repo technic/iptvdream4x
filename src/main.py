@@ -52,7 +52,7 @@ from skin import parseFont, parseColor
 # plugin imports
 from .layer import eTimer
 from .common import NumberEnter
-from .utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG
+from .utils import trace, tdSec, secTd, syncTime, APIException, APIWrongPin, EPG, timeit
 from .api.abstract_api import AbstractStream
 from .loc import translate as _
 from .common import ShowHideScreen, AutoAudioSelection, MainMenuScreen
@@ -593,7 +593,7 @@ class ChannelList(MenuList):
 	def setChannelsList(self, channels):
 		self.setList(map(self.buildChannelEntry, channels))
 		# Create map from channel id to its index in list
-		self.index = dict((entry[0].cid, i) for (i, entry) in enumerate(self.list))
+		self.index = dict((entry[0][0].cid, i) for (i, entry) in enumerate(self.list))
 		if self.num:
 			self.num = 1
 
@@ -604,6 +604,10 @@ class ChannelList(MenuList):
 			return
 		self.list[index] = self.buildChannelEntry(channel)
 		self.l.invalidateEntry(index)
+
+	def updateChannelsProgress(self):
+		if self.showEpgProgress:
+			self.setList([self.buildChannelEntry(item[0]) for item in self.list])
 
 	def moveEntryUp(self):
 		index = self.getSelectedIndex()
@@ -628,7 +632,7 @@ class ChannelList(MenuList):
 		self.down()
 
 	def _updateIndexMap(self, i):
-		cid = self.list[i][0].cid
+		cid = self.list[i][0][0].cid
 		self.index[cid] = i
 
 	def highlight(self, cid):
@@ -657,7 +661,7 @@ class ChannelList(MenuList):
 		defaultFlag = RT_HALIGN_LEFT | RT_VALIGN_CENTER
 		# Filling from left to right
 
-		lst = [c]
+		lst = [entry]
 		xoffset = 1
 
 		if self.num:
@@ -827,6 +831,10 @@ class IPtvDreamChannels(Screen):
 		standbyNotifier.onStandbyChanged.append(workerStandby)
 		self.onClose.append(lambda: standbyNotifier.onStandbyChanged.remove(workerStandby))
 
+		self._progressTimer = eTimer()
+		self._progressTimer.callback.append(self.updateProgramsProgress)
+		self._progressTimer.start(1000 * 60 * 5)  # every 5 min
+
 		self["actions"] = ActionMap(
 			["OkCancelActions", "IPtvDreamChannelListActions"], {
 				"cancel": self.exit,
@@ -926,6 +934,12 @@ class IPtvDreamChannels(Screen):
 			self.history.append(HistoryEntry(self.mode, self.gid, 0, cid, idx))
 			self.close(cid, time)
 
+	@timeit
+	def updateProgramsProgress(self):
+		if self.mode != self.GROUPS:
+			print("Updating list progressbars")
+			self.list.updateChannelsProgress()
+
 	def updatePrograms(self, data):
 		# type: (List[Tuple[int, EPG]]) -> None
 		if self.mode == self.GROUPS:
@@ -938,6 +952,7 @@ class IPtvDreamChannels(Screen):
 					continue
 				self.list.updateChannel(cid, (channel, epg))
 
+	@timeit
 	def setChannels(self, channels):
 		self.list.setChannelsList((c, self._worker.get(c.cid)) for c in channels)
 
@@ -1182,7 +1197,12 @@ class IPtvDreamChannels(Screen):
 	def getSelected(self):
 		entry = self.list.getCurrent()
 		trace("getSelected", entry and entry[0])
-		return entry and entry[0]
+		if entry:
+			if self.mode == self.GROUPS:
+				return entry[0]
+			else:
+				return entry[0][0]
+		return None
 
 	def getCurrent(self):
 		return self.history.now().cid
