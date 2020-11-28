@@ -60,6 +60,7 @@ jobs:
       - run:
           name: pytest
           command: |
+            source env/bin/activate
             Xvfb :99 -ac -screen 0 1280x720x16 &
             export DISPLAY=:99
             export ENIGMA_DEBUG_LVL=5
