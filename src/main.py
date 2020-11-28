@@ -1283,7 +1283,7 @@ class IPtvDreamChannels(Screen):
 
 	def findChannelIndex(self, cid):
 		for i, entry in enumerate(self.list.list):
-			channel = entry[0]
+			channel = entry[0][0]
 			if channel.cid == cid:
 				return i
 		return None

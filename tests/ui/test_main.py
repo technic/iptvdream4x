@@ -28,6 +28,7 @@ class TestChannelsScreen(unittest.TestCase):
 			db,
 			None
 		)  # type: IPtvDreamChannels
+		dlg.showAll()
 		dlg.sortByName()
 		dlg.sortByNumber()
 
