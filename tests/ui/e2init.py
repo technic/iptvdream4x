@@ -200,7 +200,7 @@ def getSession():
 	if _session is not None:
 		return _session
 
-	print "Init Session!" * 10
+	print "===== Init Session! ====="
 	from Components.SetupDevices import InitSetupDevices
 	InitSetupDevices()
 	# import InfoBar to ensure correct import order
