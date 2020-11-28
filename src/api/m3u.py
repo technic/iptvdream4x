@@ -52,7 +52,7 @@ class M3UProvider(OfflineFavourites):
 			from Tools.Directories import resolveFilename, SCOPE_SYSETC
 			path = resolveFilename(SCOPE_SYSETC, 'iptvdream')
 		except ImportError:
-			path = '.'
+			path = 'playlists'
 
 		m3u8 = os.path.join(path, self.playlist)
 		if not os.path.exists(m3u8):
