@@ -58,14 +58,6 @@ jobs:
             source env/bin/activate
             PYTHONPATH=/usr/lib/enigma2/python pylint src || exit $(( $? & 35 ))
       - run:
-          name: pytest
-          command: |
-            pip install pytest
-            Xvfb :99 -ac -screen 0 1280x720x16 &
-            export DISPLAY=:99
-            export ENIGMA_DEBUG_LVL=5
-            enigma2 /usr/local/bin/pytest -s tests/ui/test_main.py
-      - run:
           name: test update
           command: |
             mkdir -p /dev/input
@@ -75,6 +67,14 @@ jobs:
             ps ax
             cat src/dist.py
             python update-test.py
+      - run:
+          name: pytest
+          command: |
+            pip install pytest
+            Xvfb :99 -ac -screen 0 1280x720x16 &
+            export DISPLAY=:99
+            export ENIGMA_DEBUG_LVL=5
+            enigma2 /usr/local/bin/pytest -s tests/ui/test_main.py
 
   build:
     docker:
