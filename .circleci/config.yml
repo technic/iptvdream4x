@@ -58,6 +58,9 @@ jobs:
             source env/bin/activate
             PYTHONPATH=/usr/lib/enigma2/python pylint src || exit $(( $? & 35 ))
       - run:
+          name: pytest
+          command: enigma2 /usr/local/bin/pytest -s tests/ui/test_main.py
+      - run:
           name: test update
           command: |
             mkdir -p /dev/input
