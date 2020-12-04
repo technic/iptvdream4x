@@ -87,12 +87,10 @@ class OTTProvider(OfflineFavourites):
 			g.channels.append(c)
 
 	def getStreamUrl(self, cid, pin, time=None):
-		if time is None:
-			ALPHA_NUM = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-			salt = ''.join(random.choice(ALPHA_NUM) for _ in range(5))
-			return "%s_%s" % (self.urls[cid], salt)
 		url = self.urls[cid]
-		return url.replace(':80/', ':1600/s/%s/' % self.username) + '&utc=%s' % time.strftime('%s')
+		if time is None:
+			return url
+		return '%s?utc=%s' % (url, time.strftime('%s'))
 
 	def getDayEpg(self, cid, date):
 		data = self._getJson(self.api_site + "/epg/%s/?" % self.web_names[cid], {"date": date.strftime("%Y-%m-%d")})
