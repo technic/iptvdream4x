@@ -1224,7 +1224,7 @@ class IPtvDreamChannels(Screen):
 		self["actions"].setEnabled(True)
 		self["move_actions"].setEnabled(False)
 		try:
-			self.db.setFavourites([entry[0].cid for entry in self.list.list])
+			self.db.setFavourites([entry[0][0].cid for entry in self.list.list])
 		except APIException as ex:
 			self.session.open(
 				MessageBox, "%s\n%s" % (_("Failed to save favourites list."), str(ex)), MessageBox.TYPE_ERROR)
