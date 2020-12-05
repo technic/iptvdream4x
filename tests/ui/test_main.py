@@ -62,15 +62,15 @@ class TestChannelsScreen(unittest.TestCase):
 
 		dlg.startEditing()
 		dlg.toggleMarkForMoving()
-		dlg.moveDown()
+		dlg.moveUp()
 		dlg.finishEditing()
 
 		new_favs = db.selectFavourites()
 		print("After:", favs)
 		print("After:", new_favs)
-		assert favs[0] == new_favs[1]
-		assert favs[1] == new_favs[0]
-		assert favs[2] == new_favs[2]
+		assert favs[0] == new_favs[0]
+		assert favs[1] == new_favs[2]
+		assert favs[2] == new_favs[1]
 
 
 class TestEpgScreen(unittest.TestCase):
