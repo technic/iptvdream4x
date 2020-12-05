@@ -46,7 +46,7 @@ class TestChannelsScreen(unittest.TestCase):
 			db,
 			None
 		)  # type: IPtvDreamChannels
-		
+
 		dlg.showAll()
 		dlg.addRemoveFavourites()
 		dlg.moveDown()
@@ -55,8 +55,9 @@ class TestChannelsScreen(unittest.TestCase):
 		dlg.addRemoveFavourites()
 		dlg.showFavourites()
 		assert len(dlg.list.list) == 3
-		
+
 		favs = db.selectFavourites()
+		print("Before:", favs)
 		assert len(favs) == 3
 
 		dlg.startEditing()
@@ -65,7 +66,11 @@ class TestChannelsScreen(unittest.TestCase):
 		dlg.finishEditing()
 
 		new_favs = db.selectFavourites()
-		assert (favs[0], favs[1], favs[2]) == (new_favs[1], new_favs[0], new_favs[2])
+		print("After:", favs)
+		print("After:", new_favs)
+		assert favs[0] == new_favs[1]
+		assert favs[1] == new_favs[0]
+		assert favs[2] == new_favs[2]
 
 
 class TestEpgScreen(unittest.TestCase):
