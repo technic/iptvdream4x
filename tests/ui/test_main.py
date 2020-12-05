@@ -32,6 +32,41 @@ class TestChannelsScreen(unittest.TestCase):
 		dlg.sortByName()
 		dlg.sortByNumber()
 
+	def test_favourites_ordering(self):
+		from src.main import IPtvDreamChannels
+
+		session = getSession()
+
+		db = OTTProvider("", "")
+		db.start()
+		db.setChannelsList()
+
+		dlg = session.open(
+			IPtvDreamChannels,
+			db,
+			None
+		)  # type: IPtvDreamChannels
+		
+		dlg.showAll()
+		dlg.addRemoveFavourites()
+		dlg.moveDown()
+		dlg.addRemoveFavourites()
+		dlg.moveDown()
+		dlg.addRemoveFavourites()
+		dlg.showFavourites()
+		assert len(dlg.list.list) == 3
+		
+		favs = db.selectFavourites()
+		assert len(favs) == 3
+
+		dlg.startEditing()
+		dlg.toggleMarkForMoving()
+		dlg.moveDown()
+		dlg.finishEditing()
+
+		new_favs = db.selectFavourites()
+		assert (favs[0], favs[1], favs[2]) == (new_favs[1], new_favs[0], new_favs[2])
+
 
 class TestEpgScreen(unittest.TestCase):
 	def setUp(self):
