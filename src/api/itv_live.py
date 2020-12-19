@@ -77,7 +77,7 @@ class OTTProvider(OfflineFavourites):
 	def getChannelsEpg(self, cids):
 		req = '/epg/{"chid": [%s]}/1' % ",".join(
 			'"%d:%s"' % (cid, self.channels_data[cid]['id']) for cid in cids)
-		data = self._getJson(self.site + urllib2.quote(req, safe='/:,'), {})
+		data = self._getJson(self.site + urllib2.quote(req, safe='/:",'), {})
 
 		for e in data['res']:
 			yield int(e['id']), [EPG(
