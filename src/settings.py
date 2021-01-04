@@ -15,9 +15,11 @@ from io import StringIO, BytesIO
 from collections import OrderedDict
 import urllib
 from json import loads as json_loads, dumps as json_dumps
-from twisted.web.client import downloadPage, FileBodyProducer, readBody, Agent, Headers
+from twisted.web.client import downloadPage, FileBodyProducer, Agent, Headers
+from twisted.web._newclient import ResponseDone
 from twisted.web.error import Error as WebError
 from twisted.internet import reactor
+from twisted.internet.protocol import Protocol
 from twisted.internet.defer import Deferred, CancelledError
 
 # enigma2 imports
@@ -206,6 +208,49 @@ def readResponseBody(response):
 		return readBody(response)
 	else:
 		raise HttpError(response.code, response.phrase)
+
+
+def readBody(response):
+	"""
+	Copy-paste from twisted > 14.0.0
+	Get full body from IResponse
+	"""
+
+	def cancel(deferred):
+		abort = getattr(protocol.transport, "abortConnection", None)
+		if abort is not None:
+			abort()
+
+	d = Deferred(cancel)
+	protocol = _ReadBodyProtocol(response.code, response.phrase, d)
+	response.deliverBody(protocol)
+	return d
+
+
+class _ReadBodyProtocol(Protocol):
+	"""
+	Copy-paste from twisted > 14.0.0
+	Helper protocol for deliverBody
+	"""
+
+	def __init__(self, status, message, deferred):
+		self.deferred = deferred
+		self.status = status
+		self.message = message
+		self.dataBuffer = []
+
+	def dataReceived(self, data):
+		self.dataBuffer.append(data)
+
+	def connectionLost(self, reason):
+		"""
+		Deliver the accumulated response bytes to the waiting L{Deferred}, if
+		the response body has been completely received without error.
+		"""
+		if reason.check(ResponseDone):
+			self.deferred.callback(b"".join(self.dataBuffer))
+		else:
+			self.deferred.errback(reason)
 
 
 class HttpError(WebError):
