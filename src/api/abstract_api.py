@@ -267,11 +267,6 @@ class AbstractStream(AbstractAPI):
 		"""
 		return []
 
-	def getCurrentEpg(self, cid):
-		x = self.getDayEpg(1, datetime.now())
-		print(x[0].begin)
-		return []
-
 	def getDayEpg(self, cid, date):
 		"""
 		:param int cid: channel id

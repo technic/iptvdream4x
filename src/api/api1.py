@@ -119,9 +119,6 @@ class TeleportStream(AbstractStream, TeleportAPI):
 					continue
 			yield (cid, programs)
 
-	def getCurrentEpg(self, cid):
-		return self.getChannelsEpg([cid])
-
 	def getDayEpg(self, cid, date):
 		params = {"cid": cid, "from_uts": datetime(date.year, date.month, date.day).strftime('%s'), "hours": 24}
 		data = self.getJsonData(self.site + "/get_epg?", params)
