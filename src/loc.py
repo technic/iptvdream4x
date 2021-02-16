@@ -17,10 +17,10 @@ def localeInit():
 	gettext.bindtextdomain("IPtvDream", resolveFilename(SCOPE_PLUGINS, "Extensions/IPtvDream/locale"))
 
 
-def translate(txt):
-	t = gettext.dgettext("IPtvDream", txt)
-	if t == txt:
-		t = gettext.gettext(txt)
+def translate(text):
+	t = gettext.dgettext("IPtvDream", text)
+	if t == text:
+		t = gettext.gettext(text)
 	return t
 
 
