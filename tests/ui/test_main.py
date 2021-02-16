@@ -6,7 +6,7 @@ from .e2init import getSession
 from twisted.trial import unittest
 from twisted.internet import task, reactor
 
-from src.api.edem import OTTProvider
+from ..mock_api import MockApi as OTTProvider
 
 
 class TestChannelsScreen(unittest.TestCase):
