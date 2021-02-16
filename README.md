@@ -11,6 +11,11 @@
 
 # Release notes
 
+
+## 4.106
+
+- Исправлен tvteam
+
 ## 4.105
 - Добавлен tvteam
 
