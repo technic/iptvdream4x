@@ -13,7 +13,7 @@ from __future__ import print_function
 from twisted.trial import unittest
 from twisted.internet.defer import Deferred
 from twisted.internet import task
-from tests.timer import eTimerTwisted, reactor
+from ..timer import eTimerTwisted, reactor
 
 
 class TestTimer(unittest.TestCase):

@@ -15,8 +15,8 @@ from twisted.trial.unittest import TestCase
 from twisted.internet import task, reactor
 from twisted.internet.defer import DeferredList
 
-from src.api.edem_soveni import OTTProvider
 from src.cache import LiveEpgWorker
+from ..mock_api import MockApi as OTTProvider
 
 
 class TestLiveEpgWorker(TestCase):
