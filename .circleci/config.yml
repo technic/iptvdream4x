@@ -58,6 +58,17 @@ jobs:
             source env/bin/activate
             PYTHONPATH=/usr/lib/enigma2/python pylint src || exit $(( $? & 35 ))
       - run:
+          name: pytest
+          command: |
+            python -m pip install pytest pytest-cov
+            Xvfb :99 -ac -screen 0 1280x720x16 &
+            export DISPLAY=:99
+            ps ax
+            ENIGMA_DEBUG_LVL=5 enigma2 /usr/local/bin/pytest -s --cov=src tests/ui/
+            coverage report
+      - store_artifacts:
+          path: htmlcov
+      - run:
           name: test update
           command: |
             mkdir -p /dev/input

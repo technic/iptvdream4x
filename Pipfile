@@ -15,6 +15,7 @@ pydocstyle = "*"
 flake8 = "*"
 xmldiff = "*"
 pytest = "*"
+pytest-cov = "*"
 
 [packages]
 twisted = "*"
