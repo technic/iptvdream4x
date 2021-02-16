@@ -77,6 +77,7 @@ jobs:
           command: |
             mkdir -p /dev/input
             service apache2 start
+            killall Xvfb || true
             Xvfb :99 -ac -screen 0 1280x720x16 &
             export DISPLAY=:99
             ps ax
