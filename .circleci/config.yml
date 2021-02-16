@@ -61,7 +61,9 @@ jobs:
           name: pytest
           command: |
             mkdir /etc/iptvdream
+            ./scripts/skins-post.py
             ln -s "$(realpath src)" /usr/lib/enigma2/python/Plugins/Extensions/IPtvDream
+            ln -s "$(realpath skins/IPtvDream)" /usr/share/enigma2/IPtvDream
             python -m pip install pytest pytest-cov
             Xvfb :99 -ac -screen 0 1280x720x16 &
             export DISPLAY=:99
