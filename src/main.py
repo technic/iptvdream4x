@@ -1477,7 +1477,7 @@ class IPtvDreamEpgInfo(Screen):
 		self.channel = channel
 
 		self.setTitle("%d. %s" % (channel.number, channel.name))
-		
+
 		self["epgName"] = Label(entry.name)
 		self["epgDescription"] = ScrollLabel(entry.description or _("No detailed information"))
 		self._main_part = VerticalLayoutPart(self, widgetsToMove=())
