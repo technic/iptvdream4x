@@ -118,7 +118,7 @@ class OTTProvider(AbstractStream, JsonSettings):
 		url = self.channels_data[cid]['url']
 		if time is None:
 			return url + "?token=%s" % token
-		return url.replace('mpegts', 'timeshift_abs/%s' % time.strftime('%s'))
+		return url + "?token=%s&utc=%s" % (token, time.strftime('%s'))
 
 	def getDayEpg(self, cid, date):
 		data = self._getJson(self.site, {
