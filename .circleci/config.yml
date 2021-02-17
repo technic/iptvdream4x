@@ -74,7 +74,7 @@ jobs:
             python -m pip install pytest pytest-cov
             ps ax
             ENIGMA_DEBUG_LVL=5 enigma2 /usr/local/bin/pytest -s --cov=src tests/ui/
-            ENIGMA_DEBUG_LVL=5 enigma2 /usr/local/bin/pytest -s --cov=src tests/base/
+            ENIGMA_DEBUG_LVL=5 enigma2 /usr/local/bin/pytest -s --cov=src --cov-append tests/base/
             coverage report
             coverage html
       - store_artifacts:
