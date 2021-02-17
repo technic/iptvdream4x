@@ -10,7 +10,7 @@
 
 from __future__ import print_function
 
-from tests import ott_provider
+from . import ott_provider
 from src.api.tvteam import OTTProvider
 
 
