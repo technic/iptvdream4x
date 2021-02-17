@@ -20,6 +20,8 @@ from ..mock_api import MockApi as OTTProvider
 
 
 class TestLiveEpgWorker(TestCase):
+	timeout = 5 * 60  # Allow to run test longer, because we need to wait for epg update
+
 	def setUp(self):
 		# Test with iptvdream epg-server
 		self.db = OTTProvider("", "")
