@@ -58,21 +58,6 @@ jobs:
             source env/bin/activate
             PYTHONPATH=/usr/lib/enigma2/python pylint src || exit $(( $? & 35 ))
       - run:
-          name: pytest
-          command: |
-            mkdir /etc/iptvdream
-            python ./scripts/skins-post.py
-            ln -s "$(realpath src)" /usr/lib/enigma2/python/Plugins/Extensions/IPtvDream
-            ln -s "$(realpath skins/IPtvDream)" /usr/share/enigma2/IPtvDream
-            python -m pip install pytest pytest-cov
-            Xvfb :99 -ac -screen 0 1280x720x16 &
-            export DISPLAY=:99
-            ps ax
-            ENIGMA_DEBUG_LVL=5 enigma2 /usr/local/bin/pytest -s --cov=src tests/ui/
-            coverage report
-      - store_artifacts:
-          path: htmlcov
-      - run:
           name: test update
           command: |
             mkdir -p /dev/input
@@ -83,6 +68,15 @@ jobs:
             ps ax
             cat src/dist.py
             python update-test.py
+      - run:
+          name: pytest
+          command: |
+            python -m pip install pytest pytest-cov
+            ps ax
+            ENIGMA_DEBUG_LVL=5 enigma2 /usr/local/bin/pytest -s --cov=src tests/ui/
+            coverage report
+      - store_artifacts:
+          path: htmlcov
 
   build:
     docker:
