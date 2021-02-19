@@ -17,11 +17,11 @@ from hashlib import md5
 from json import loads as json_loads
 
 # plugin imports
-from .abstract_api import JsonSettings, AbstractStream
+from .abstract_api import JsonSettings, OfflineFavourites
 from ..utils import APIException, APILoginFailed, Channel, Group, EPG
 
 
-class OTTProvider(AbstractStream, JsonSettings):
+class OTTProvider(OfflineFavourites, JsonSettings):
 	NAME = "TvTeam"
 	AUTH_TYPE = "Login"
 
