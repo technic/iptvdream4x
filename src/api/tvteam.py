@@ -13,14 +13,11 @@ from __future__ import print_function
 # system imports
 from urllib2 import URLError
 import urllib
-import re
 from hashlib import md5
 from json import loads as json_loads
-from datetime import datetime
 
 # plugin imports
 from .abstract_api import JsonSettings, AbstractStream
-from .m3u import M3UProvider
 from ..utils import APIException, APILoginFailed, Channel, Group, EPG
 
 
