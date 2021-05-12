@@ -29,7 +29,7 @@ except ImportError:
 class OTTProvider(JsonSettings, M3UProvider):
 	NAME = "ShuraTV"
 	AUTH_TYPE = "Key"
-	TVG_MAP = False
+	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
