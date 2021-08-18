@@ -15,7 +15,7 @@ import urllib
 from json import loads as json_loads
 
 # plugin imports
-from abstract_api import OfflineFavourites
+from .abstract_api import OfflineFavourites
 from ..utils import syncTime, APIException, APILoginFailed, EPG, Channel, Group
 
 
@@ -27,7 +27,7 @@ class OTTProvider(OfflineFavourites):
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
 		self.site = "http://cbilling.pw/enigma"
-		self.stalker_site = "http://mag.iptvx.tv/stalker_portal/server/tools"
+		self.api_site = "http://api.iptvx.tv/"
 		self._token = password
 		self.web_names = {}
 		self.urls = {}
@@ -89,20 +89,19 @@ class OTTProvider(OfflineFavourites):
 	def getStreamUrl(self, cid, pin, time=None):
 		if time is None:
 			return self.urls[cid]
-		else:
-			return self.urls[cid].replace('index.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
+		return self.urls[cid].replace('video.m3u8', 'video-timeshift_abs-%s.m3u8' % time.strftime('%s'))
 
 	def getDayEpg(self, cid, date):
-		params = {"id": self.web_names[cid], "day": date.strftime("%Y-%m-%d")}
-		data = self._getJson(self.stalker_site + "/epg_day.php?", params)
-		return map(lambda e: EPG(
-			int(e['begin']), int(e['end']),
-			e['title'].encode('utf-8'), e['description'].encode('utf-8')), data['data'])
+		data = self._getJson(self.api_site + "/epg/%s/?" % self.web_names[cid], {"date": date.strftime("%Y-%m-%d")})
+		return [
+			EPG(e['time'], e['time_to'], e['name'].encode('utf-8'), e['descr'].encode('utf-8'))
+			for e in data
+		]
 
 	def getChannelsEpg(self, cids):
-		data = self._getJson(self.stalker_site + "/epg_list.php?", {"time": syncTime().strftime("%s")})
-		for c in data['data']:
-			yield hash(c['channel_id']), map(lambda e: EPG(
-					int(e['begin']), int(e['end']), e['title'].encode('utf-8'),
-					e['description'].encode('utf-8')
-			), c['programs'])
+		data = self._getJson(self.api_site + "/epg/current", {})
+		for c in data:
+			yield hash(c['alias']), [
+				EPG(e['time'], e['time_to'], e['name'].encode('utf-8'), e['descr'].encode('utf-8'))
+				for e in c['epg']
+			]

@@ -23,11 +23,11 @@ from Components.ServiceEventTracker import ServiceEventTracker
 from Screens.Screen import Screen
 from enigma import iPlayableService
 
-from layer import eTimer
-from utils import trace
-from loc import translate as _
+from .layer import eTimer
+from .utils import trace
+from .loc import translate as _
 # provide it from common file
-from updater import fatalError
+from .updater import fatalError
 
 
 def safecb(callback):

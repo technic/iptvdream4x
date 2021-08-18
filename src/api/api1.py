@@ -14,7 +14,7 @@ from __future__ import print_function
 from datetime import datetime
 from hashlib import md5
 
-from abstract_api import MODE_STREAM, AbstractAPI, AbstractStream
+from .abstract_api import MODE_STREAM, AbstractAPI, AbstractStream
 from ..utils import EPG, Group, Channel
 try:
 	from ..loc import translate as _
@@ -118,9 +118,6 @@ class TeleportStream(AbstractStream, TeleportAPI):
 					self.trace(err)
 					continue
 			yield (cid, programs)
-
-	def getCurrentEpg(self, cid):
-		return self.getChannelsEpg([cid])
 
 	def getDayEpg(self, cid, date):
 		params = {"cid": cid, "from_uts": datetime(date.year, date.month, date.day).strftime('%s'), "hours": 24}

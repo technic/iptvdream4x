@@ -16,8 +16,8 @@ from urllib2 import HTTPError
 from json import loads as json_loads
 
 # plugin imports
-from m3u import M3UProvider
-from abstract_api import JsonSettings
+from .m3u import M3UProvider
+from .abstract_api import JsonSettings
 from ..utils import Channel, APIException, APILoginFailed, ConfInteger
 try:
 	from ..loc import translate as _
@@ -29,12 +29,12 @@ except ImportError:
 class OTTProvider(JsonSettings, M3UProvider):
 	NAME = "ShuraTV"
 	AUTH_TYPE = "Key"
-	TVG_MAP = False
+	TVG_MAP = True
 
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
 		self.site = "http://technic.cf/epg-1ott/"
-		server = self.getSettings()['server'].value
+		server = self.getLocalSettings()['server'].value
 		self.playlist_url = "http://pl.tvshka.net/?uid=%s&srv=%s&type=halva" % (username, server)
 		self._url_regexp = re.compile(r"https?://[\w.]+/~\w+/(\d+)/hls/.*\.m3u8")
 		self.name_map = {}
@@ -77,7 +77,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 			self.trace("Failed to get cid from url", url)
 		return Channel(cid, name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
 
-	def getSettings(self):
+	def getLocalSettings(self):
 		settings = {
 			'server': ConfInteger(_("Server"), 1, (0, 10000)),
 		}

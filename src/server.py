@@ -18,8 +18,8 @@ except ImportError:
 	from twisted.web.resource import ErrorPage
 
 # plugin imports
-from manager import manager
-from utils import trace, APIException
+from .manager import manager
+from .utils import trace, APIException
 
 
 class ApiInstanceManager(object):

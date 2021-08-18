@@ -15,8 +15,8 @@ from urllib import urlencode
 import re
 
 # plugin imports
-from abstract_api import JsonSettings
-from m3u import M3UProvider
+from .abstract_api import JsonSettings
+from .m3u import M3UProvider
 from ..utils import APILoginFailed, Channel, ConfSelection
 try:
 	from ..loc import translate as _
@@ -34,7 +34,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 	def __init__(self, username, password):
 		super(OTTProvider, self).__init__(username, password)
 		self.site = "http://technic.cf/epg-iptvxone/"
-		s = self.getSettings()
+		s = self.getLocalSettings()
 		self._format = s['format'].value
 		self.playlist_url = "http://pl.ottg.tv/get.php?" + urlencode({
 			'username': self.username, 'password': self.password,
@@ -54,7 +54,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 			self.trace("Failed to get cid from url", url)
 		return Channel(cid, name, num, rec), {'tvg': tvg, 'url': url, 'logo': logo}
 
-	def getSettings(self):
+	def getLocalSettings(self):
 		return self._safeLoadSettings({
 			'format': ConfSelection(_("Stream format"), 'ts', [('ts', "MPEG-TS"), ('hls', "HLS")]),
 			'censored': ConfSelection(_("Playlist"), '0', [('0', "Lite"), ('1', "Full")]),

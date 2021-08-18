@@ -9,7 +9,7 @@
 # (at your option) any later version.
 
 from __future__ import print_function
-from utils import trace
+from .utils import trace
 
 
 class StandbyNotifier(object):

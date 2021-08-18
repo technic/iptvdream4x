@@ -11,6 +11,7 @@ services:
       - 5678:5678
     volumes:
       - './src:/usr/lib/enigma2/python/Plugins/Extensions/IPtvDream'
-      - './skin:/usr/share/enigma2/IPtvDream'
+      - './skins/IPtvDream:/usr/share/enigma2/IPtvDream'
+      - './skins/IPtvDreamContrast:/usr/share/enigma2/IPtvDreamContrast'
       - './:/project'
 

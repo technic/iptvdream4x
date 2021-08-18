@@ -43,7 +43,7 @@ def clip(s):
 	print("Copied to clipboard")
 
 
-if __name__ == "__main__":
+def main(skip_push):
 	subprocess.check_call(['git', 'reset'])
 	c = subprocess.call(['git', 'diff', '--exit-code', '--', versionFile, readmeFile])
 	if c != 0:
@@ -60,7 +60,7 @@ if __name__ == "__main__":
 					ver = m.group(1)
 					print("Current version", ver)
 					ver = list(map(int, ver.split('.')))
-					nextVer = ver
+					nextVer = ver[:2]
 					nextVer[1] += 1
 					lines[i] = 'VERSION = "%s"' % '.'.join(map(str, nextVer))
 					print("Update to", lines[i])
@@ -77,7 +77,8 @@ if __name__ == "__main__":
 		ver = '.'.join(map(str, nextVer))
 		subprocess.check_call(['git', 'commit', '-m', 'version up %s' % ver])
 		subprocess.check_call(['git', 'tag', '-a', 'v/%s' % ver, '-m', 'version up %s' % ver])
-		subprocess.check_call(['git', 'push'])
+		if not skip_push:
+			subprocess.check_call(['git', 'push'])
 
 	print("Done.\n")
 
@@ -87,3 +88,7 @@ if __name__ == "__main__":
 		with open('secret.json') as f:
 			url = json.load(f)['forum']
 		subprocess.call(["C:/Program Files/Mozilla Firefox/firefox.exe", url])
+
+
+if __name__ == "__main__":
+	main(len(sys.argv) > 1 and '-n' in sys.argv[1:])

@@ -12,7 +12,7 @@ from __future__ import print_function
 
 from datetime import datetime
 
-from abstract_api import OfflineFavourites
+from .abstract_api import OfflineFavourites
 from ..utils import Channel, Group, APIWrongPin, EPG
 
 
@@ -78,14 +78,6 @@ class OTTProvider(OfflineFavourites):
 			yield int(e['chid']), [EPG(
 				int(e['start']), int(e['end']),
 				e['progname'].encode('utf-8'), e['description'].encode('utf-8'))]
-
-	def getCurrentEpg(self, cid):
-		data = self.getJsonData(self.site + "/epg_next2?", {"cid": cid})
-		epg = data['epg']
-		for i, e in enumerate(epg[:-1]):
-			yield EPG(
-				int(epg[i]['ts']), int(epg[i+1]['ts']),
-				e['progname'].encode('utf-8'), e['description'].encode('utf-8'))
 
 	def getDayEpg(self, cid, date):
 		data = self.getJsonData(self.site + "/epg?", {'cid': cid, 'day': date.strftime("%d%m%y")})

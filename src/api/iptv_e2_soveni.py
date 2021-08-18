@@ -14,8 +14,8 @@ from __future__ import print_function
 import re
 
 # plugin imports
-from abstract_api import JsonSettings
-from m3u import M3UProvider
+from .abstract_api import JsonSettings
+from .m3u import M3UProvider
 from ..utils import Channel, ConfSelection
 try:
 	from ..loc import translate as _
@@ -32,7 +32,7 @@ class OTTProvider(JsonSettings, M3UProvider):
 		super(OTTProvider, self).__init__(username, password)
 		self.site = "http://technic.cf/epg-soveni"
 		self.playlist = "iptv-e2_pl.m3u8"
-		s = self.getSettings()
+		s = self.getLocalSettings()
 		self.playlist_url = "http://soveni.leolitz.info/plist/iptv-e2_epg_%s.m3u8" % s['playlist'].value
 		self._url_regexp = re.compile(r"https?://[\w.]+/(\d+)\?token=.*")
 
@@ -56,13 +56,8 @@ class OTTProvider(JsonSettings, M3UProvider):
 			url += '&utcstart=%s' % (time.strftime('%s'))
 		return url
 
-	def getSettings(self):
+	def getLocalSettings(self):
 		settings = {
 			'playlist': ConfSelection(_("Playlist"), 'ico', [('ico', "Lite"), ('full', "Full")]),
 		}
 		return self._safeLoadSettings(settings)
-
-	def pushSettings(self, settings):
-		data = self._loadSettings()
-		data.update(settings)
-		self._saveSettings(data)

@@ -11,7 +11,7 @@
 from __future__ import print_function
 
 # plugin imports
-from m3u import M3UProvider
+from .m3u import M3UProvider
 
 
 class OTTProvider(M3UProvider):

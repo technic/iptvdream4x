@@ -1,8 +1,7 @@
 # build
 version
 /info.json
-skin/iptvdream.xml
-skin-*/iptvdream.xml
+skins/*/iptvdream.xml
 *.mo
 build/
 packages/
@@ -10,10 +9,14 @@ packages/
 src/keymap.xml
 # python
 *.py[cod]
+env/
 .venv/
 .ropeproject/
 __pycache__/
 Pipfile.lock
+# coverage
+.coverage
+htmlcov/
 # backup files
 *~
 # linux stuff
@@ -22,8 +25,8 @@ Pipfile.lock
 *.yml.tmp
 # Private configuration
 secret.json
-/*.m3u8
-/*.m3u
+playlists/*.m3u8
+playlists/*.m3u
 # Twisted tests
 _trial_temp*
 

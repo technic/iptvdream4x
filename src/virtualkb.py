@@ -53,7 +53,9 @@ kbd_languages = {
 
 
 class VirtualKeyBoard(VirtualKeyBoard_e2):
-	def __init__(self, session, title="", text="", languages=kbd_languages.keys()):
+	def __init__(self, session, title="", text="", languages=None):
+		if languages is None:
+			languages = kbd_languages.keys()
 		self.languages = {}
 		for lang in languages:
 			try:

@@ -136,7 +136,6 @@ disable=print-statement,
         comprehension-escape,
         invalid-name,
         missing-docstring,
-        relative-import,
         bad-continuation,
 
 
@@ -405,7 +404,7 @@ ignore-on-opaque-inference=yes
 # List of class names for which member attributes should not be checked (useful
 # for classes with dynamically set attributes). This supports the use of
 # qualified names.
-ignored-classes=optparse.Values,thread._local,_thread._local
+ignored-classes=optparse.Values,thread._local,_thread._local,twisted.internet.reactor
 
 # List of module names for which member attributes should not be checked
 # (useful for modules/projects where namespaces are manipulated during runtime

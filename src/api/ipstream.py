@@ -16,8 +16,8 @@ import urllib
 from json import loads as json_loads
 
 # plugin imports
-from abstract_api import JsonSettings
-from m3u import M3UProvider
+from .abstract_api import JsonSettings
+from .m3u import M3UProvider
 from ..utils import APIException, APILoginFailed, Channel
 try:
 	from ..loc import translate as _
@@ -39,7 +39,7 @@ class IpStreamOne(JsonSettings, M3UProvider):
 
 		self.site = "http://technic.cf/epg-ipstream/"
 		self.token_api = "http://ipstream.one/api/iptvdream-apiH4s.php?"
-		self.playlist_url = "http://www.ipstr.im/iptv/m3u_plus-%s"
+		self.playlist_url = "http://www.ipstream.one/iptv/m3u_plus-%s"
 
 	def _getJson(self, url, params):
 		try:
@@ -91,8 +91,8 @@ class SharaClub(IpStreamOne):
 
 	def __init__(self, username, password):
 		super(SharaClub, self).__init__(username, password)
-		self.token_api = "http://www.tvsmart.live/api/iptvdream-apiFd7.php?"
-		self.playlist_url = "http://list.satfor.pro/tv-m3u8/%s"
+		self.token_api = "http://list.playtv.pro/api/iptvdream-apiFd7.php?"
+		self.playlist_url = "http://list.playtv.pro/tv-m3u8/%s"
 
 
 def getOTTProviders():

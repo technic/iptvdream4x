@@ -13,7 +13,10 @@ from __future__ import print_function
 
 import socket
 import zlib
-import cookielib
+try:
+	import cookielib
+except ImportError:
+	import http.cookiejar as cookielib
 import urllib
 import urllib2
 from json import loads as json_loads
@@ -49,6 +52,10 @@ class AbstractAPI(object):
 	AUTH_TYPE = "Login"
 
 	def __init__(self, username, password):
+		"""
+		:param str username:
+		:param str password:
+		"""
 		self.username = username
 		self.password = password
 		self.sid = None
@@ -75,6 +82,31 @@ class AbstractAPI(object):
 
 	def authorize(self):
 		"""Perform authorization, used when session expired"""
+		pass
+
+	def getSettings(self):
+		"""
+		Return setting that can be access after start
+		:rtype: Dict[str, utils.ConfEntry]
+		"""
+		return {}
+
+	def pushSettings(self, settings):
+		"""
+		Push settings to server for key to value dict
+		:type settings: typing.Dict[str, str]
+		"""
+		pass
+
+	def getLocalSettings(self):
+		"""
+		Return settings that are stored locally and don't require authorization
+		:rtype: Dict[str, utils.ConfEntry]
+		"""
+		return {}
+
+	def saveLocalSettings(self, settings):
+		"""Save local settings"""
 		pass
 
 	def readHttp(self, request):
@@ -214,9 +246,6 @@ class AbstractStream(AbstractAPI):
 				return cid
 		return None
 
-	def isLocked(self, cid):
-		return self.channels[cid].is_protected
-
 	# To be implemented in a derived class
 
 	def setTimeShift(self, time_shift):
@@ -238,11 +267,6 @@ class AbstractStream(AbstractAPI):
 		"""
 		return []
 
-	def getCurrentEpg(self, cid):
-		x = self.getDayEpg(1, datetime.now())
-		print(x[0].begin)
-		return []
-
 	def getDayEpg(self, cid, date):
 		"""
 		:param int cid: channel id
@@ -260,17 +284,6 @@ class AbstractStream(AbstractAPI):
 	def uploadFavourites(self, current):
 		"""
 		:param list[int] current: list of current favourites
-		"""
-		pass
-
-	def getSettings(self):
-		""" Return setting id to ConfEntry object dict """
-		return {}
-
-	def pushSettings(self, settings):
-		"""
-		Push settings to server for key to value dict
-		:type settings: typing.Dict[str, str]
 		"""
 		pass
 
@@ -332,7 +345,7 @@ class JsonSettings(AbstractAPI):
 		except Exception as e:
 			raise APIException(str(e))
 
-	def pushSettings(self, settings):
+	def saveLocalSettings(self, settings):
 		data = self._loadSettings()
 		data.update(settings)
 		self._saveSettings(data)

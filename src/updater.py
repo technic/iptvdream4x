@@ -22,12 +22,12 @@ from twisted.web.client import getPage as _getPage, downloadPage as _downloadPag
 from twisted.internet.defer import Deferred, fail
 
 # plugin imports
-from dist import NAME, VERSION
-from layer import enigma2Qt
+from .dist import NAME, VERSION
+from .layer import enigma2Qt
 
 # not necessary for functioning
 try:
-	from loc import translate as _
+	from .loc import translate as _
 except ImportError as e:
 	print("[IPtvDream] loc", e)
 
@@ -45,11 +45,12 @@ def fatalError(err):
 
 
 def getPage(url):
-	return _getPage(url, agent="IPtvDream-%s/%s" % (NAME, VERSION)).addErrback(twistedError)
+	return _getPage(url.encode('utf-8'), agent="IPtvDream-%s/%s" % (NAME, VERSION)).addErrback(twistedError)
 
 
 def downloadPage(url, filename):
-	return _downloadPage(url, filename, agent="IPtvDream-%s/%s" % (NAME, VERSION)).addErrback(twistedError)
+	return _downloadPage(
+		url.encode('utf-8'), filename, agent="IPtvDream-%s/%s" % (NAME, VERSION)).addErrback(twistedError)
 
 
 def twistedError(err):
@@ -62,7 +63,7 @@ class UpdaterException(Exception):
 
 
 def parseVersion(data):
-	parts = data.strip().split(".")
+	parts = data.strip().split(b".")
 	try:
 		return tuple(map(int, parts))
 	except ValueError:
@@ -77,7 +78,7 @@ class Updater(object):
 		self._version = None
 
 	def checkUpdate(self):
-		version = parseVersion(VERSION)
+		version = parseVersion(VERSION.encode('utf-8'))
 		print("[IPtvDream] Installed version:", version)
 
 		def cb(data):

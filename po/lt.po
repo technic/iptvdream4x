@@ -2,12 +2,12 @@
 # Copyright (C) 2005 THE tuxbox-enigma'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the tuxbox-enigma package.
 # Automatically generated, 2005.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: tuxbox-enigma 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-31 16:30+0200\n"
+"POT-Creation-Date: 2020-11-13 23:36+0100\n"
 "PO-Revision-Date: 2020-03-31 11:53+0300\n"
 "Last-Translator: technic <alexeytech@gmail.com>\n"
 "Language-Team: none\n"
@@ -58,6 +58,9 @@ msgstr "Atšaukti"
 msgid "Channel Locked"
 msgstr "Kanalas užrakintas"
 
+msgid "Channel Selection"
+msgstr ""
+
 msgid "Channel:"
 msgstr ""
 
@@ -80,11 +83,17 @@ msgstr "Išvalykite prisijungimo duomenis ir išeikite"
 msgid "Configuration of %s"
 msgstr "%s Konfigūracija"
 
+msgid "Connecting to server..."
+msgstr ""
+
 msgid "Context menu"
 msgstr "Kontekstinis meniu"
 
 msgid "Details"
 msgstr "Išsami informacija"
+
+msgid "EPG List"
+msgstr ""
 
 msgid "EPG-json url"
 msgstr ""
@@ -126,8 +135,8 @@ msgstr "Nepavyko įdiegti %s!"
 msgid "Failed to save favourites list."
 msgstr "Nepavyko išsaugoti mėgstamų sąrašo."
 
-msgid "Failed to send settings to server."
-msgstr "Nepavyko nusiųsti nustatymų į serverį."
+msgid "Failed to save settings"
+msgstr ""
 
 msgid "Failed to update package list!"
 msgstr "Nepavyko atnaujinti paketų sąrašo!"
@@ -135,8 +144,14 @@ msgstr "Nepavyko atnaujinti paketų sąrašo!"
 msgid "Favourites"
 msgstr "Mėgstami"
 
+msgid "Favourites when not empty"
+msgstr ""
+
 msgid "Finished!"
 msgstr "Baigta!"
+
+msgid "Generate new code"
+msgstr ""
 
 msgid "Get playlist"
 msgstr ""
@@ -167,7 +182,8 @@ msgid ""
 msgstr ""
 "Redagavimo režime galite pertvarkyti savo mėgstamų sąrašą. Greita pagalba:\n"
 "- Pasirinkite kanalą, kurį norite perkelti į naują vietą.\n"
-"- Spauskite OK, jei norite perkelti kanalą rodyklių aukštyn/žemyn mygtukais.\n"
+"- Spauskite OK, jei norite perkelti kanalą rodyklių aukštyn/žemyn "
+"mygtukais.\n"
 "- Spauskite OK, kad išsaugotumėte naują kanalo vietą.\n"
 "- Paspauskite EXIT, kai baigsite.\n"
 "- Pradėti redagavimo režimą?"
@@ -182,6 +198,9 @@ msgstr "Įdiegiama %s"
 msgid "Installing update, please wait"
 msgstr "Įdiegiate naujinimą, palaukite"
 
+msgid "Invalid key"
+msgstr ""
+
 msgid "Key"
 msgstr ""
 
@@ -190,6 +209,9 @@ msgstr "Klaviatūra"
 
 msgid "Login"
 msgstr "Prisijungti"
+
+msgid "Logout"
+msgstr ""
 
 msgid "Low"
 msgstr "Žemas"
@@ -212,12 +234,6 @@ msgstr "Atidaryti  \"%s\" kanalo archyvą"
 
 msgid "Open plugin settings"
 msgstr "Atidarykite priedo nustatymus"
-
-msgid "Open provider settings"
-msgstr "Atidarykite teikėjo nustatymus"
-
-msgid "Options"
-msgstr ""
 
 msgid "Password"
 msgstr "Slaptažodis"
@@ -252,13 +268,17 @@ msgid "Restart enigma2 to apply changes?"
 msgstr ""
 
 msgid "Restart enigma2 to apply keymap changes?"
-msgstr "Iš naujo paleiskite enigma2, kad pritaikytumėte klavišų žemėlapio pakeitimus?"
+msgstr ""
+"Iš naujo paleiskite enigma2, kad pritaikytumėte klavišų žemėlapio pakeitimus?"
 
 msgid "Restart enigma2 to apply skin changes?"
 msgstr ""
 
 msgid "Restarting enigma2 after IPtvDream update..."
 msgstr "Iš naujo paleidžiama enigma2 po „IPtvDream“ naujinimo ..."
+
+msgid "Scan QR code or visit url below"
+msgstr ""
 
 msgid "Select keymap style"
 msgstr "Pasirinkite klaviatūros stilių"
@@ -267,6 +287,9 @@ msgid "Select playlist number"
 msgstr ""
 
 msgid "Select skin"
+msgstr ""
+
+msgid "Select start mode"
 msgstr ""
 
 msgid "Server"
@@ -300,6 +323,9 @@ msgstr "Rūšiuoti pagal pavadinimą"
 msgid "Sort by number"
 msgstr "Rūšiuoti pagal numerį"
 
+msgid "Start mode"
+msgstr ""
+
 #, python-format
 msgid "Start of %s failed"
 msgstr "%s pradžia nepavyko"
@@ -319,7 +345,22 @@ msgstr "Naujinimas nepavyko"
 msgid "Updating package list, please wait ..."
 msgstr "Naujinamas paketų sąrašas, palaukite ..."
 
+msgid "Use HLS proxy"
+msgstr ""
+
+msgid "Waiting for changes made in the web interface..."
+msgstr ""
+
+msgid "Waiting for changes to be entered"
+msgstr ""
+
 msgid "We need to authenticate your device"
+msgstr ""
+
+msgid "Web Setup"
+msgstr ""
+
+msgid "Web settings error"
 msgstr ""
 
 msgid "Wrong number or pin"
@@ -340,8 +381,14 @@ msgstr ""
 msgid "from url"
 msgstr ""
 
+#~ msgid "Failed to send settings to server."
+#~ msgstr "Nepavyko nusiųsti nustatymų į serverį."
+
 #~ msgid "Keymap"
 #~ msgstr "Klavišų žemėlapis"
+
+#~ msgid "Open provider settings"
+#~ msgstr "Atidarykite teikėjo nustatymus"
 
 #~ msgid "text"
 #~ msgstr "search"

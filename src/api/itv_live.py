@@ -17,13 +17,12 @@ import zlib
 from json import loads as json_loads, dumps as json_dumps
 
 # plugin imports
-from abstract_api import OfflineFavourites
+from .abstract_api import OfflineFavourites
 from ..utils import syncTime, APIException, APILoginFailed, EPG, Channel, Group
 
 
 class OTTProvider(OfflineFavourites):
 	NAME = "ITVLive"
-	TITLE = "ITV.LIVE"
 	AUTH_TYPE = "Key"
 
 	def __init__(self, username, password):
@@ -77,7 +76,7 @@ class OTTProvider(OfflineFavourites):
 	def getChannelsEpg(self, cids):
 		req = '/epg/{"chid": [%s]}/1' % ",".join(
 			'"%d:%s"' % (cid, self.channels_data[cid]['id']) for cid in cids)
-		data = self._getJson(self.site + urllib2.quote(req, safe='/:,'), {})
+		data = self._getJson(self.site + urllib2.quote(req, safe='/:",'), {})
 
 		for e in data['res']:
 			yield int(e['id']), [EPG(

@@ -136,6 +136,7 @@ def test():
 	assert foundVerStr == testVerStr, "Found %s expected %s" % (foundVerStr, testVerStr)
 
 	print("Test finished OK")
+	enableHostAlias(SERVER_HOSTNAME, None)
 
 
 if __name__ == "__main__":

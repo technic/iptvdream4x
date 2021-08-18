@@ -15,7 +15,11 @@ from functools import wraps
 from datetime import datetime, timedelta
 import time
 import re
-import htmlentitydefs
+try:
+	import htmlentitydefs
+except ImportError:
+	# ignore it, because it is not used
+	pass
 
 
 def trace(*args):
@@ -28,7 +32,7 @@ def timeit(f):
 		t = time.time()
 		result = f(*args, **kwargs)
 		d = time.time() - t
-		trace("timeit", f, d)
+		trace("timeit %s %.6f" % (f, d))
 		return result
 	return wrapper
 
@@ -149,24 +153,43 @@ class ConfEntry(object):
 		self.value = None
 
 	def safeSetValue(self, value):
-		""" Override and do validation if required """
-		self.value = value
+		"""Validate and set the value"""
+		raise NotImplementedError()
+
+	def to_json(self):
+		"""
+		Serialize configuration entry to json
+		Used to display in web settings
+		"""
+		raise NotImplementedError()
 
 
 class ConfInteger(ConfEntry):
 	def __init__(self, title, value, limits):
 		"""
 		:type value: int
-		:type limits: typing.Tuple[int, int]
+		:type limits: Tuple[int, int]
 		"""
 		super(ConfInteger, self).__init__(title)
 		self.value = value
 		self.limits = limits
 
 	def safeSetValue(self, value):
-		value = int(value)
+		try:
+			value = int(value)
+		except ValueError:
+			return
 		if self.limits[0] <= value <= self.limits[1]:
 			self.value = value
+
+	def to_json(self):
+		return {
+			"type": "integer",
+			"title": self.title,
+			"value": self.value,
+			"min": self.limits[0],
+			"max": self.limits[1]
+		}
 
 
 class ConfString(ConfEntry):
@@ -176,6 +199,16 @@ class ConfString(ConfEntry):
 		"""
 		super(ConfString, self).__init__(title)
 		self.value = value
+
+	def safeSetValue(self, value):
+		self.value = str(value)
+
+	def to_json(self):
+		return {
+			"type": "string",
+			"title": self.title,
+			"value": self.value,
+		}
 
 
 class ConfSelection(ConfEntry):
@@ -192,6 +225,33 @@ class ConfSelection(ConfEntry):
 	def safeSetValue(self, value):
 		if value in [c[0] for c in self.choices]:
 			self.value = value
+
+	def to_json(self):
+		return {
+			"type": "selection",
+			"title": self.title,
+			"value": self.value,
+			"options": list({"value": c[0], "title": c[1]} for c in self.choices),
+		}
+
+
+class ConfBool(ConfEntry):
+	def __init__(self, title, value):
+		"""
+		:type value: bool
+		"""
+		super(ConfBool, self).__init__(title)
+		self.value = value
+
+	def safeSetValue(self, value):
+		self.value = bool(value)
+
+	def to_json(self):
+		return {
+			"type": "bool",
+			"title": self.title,
+			"value": self.value,
+		}
 
 
 class EPGDB(object):
