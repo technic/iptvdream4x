@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
   gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
   gstreamer1.0-plugins-bad gstreamer1.0-libav
 
-RUN apt-get install -y bash-completion command-not-found psmisc htop vim wput
+RUN apt-get update && apt-get install -y bash-completion command-not-found psmisc htop vim wput
 
 RUN mkdir /etc/iptvdream
 
