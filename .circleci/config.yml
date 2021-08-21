@@ -225,8 +225,11 @@ workflows:
           requires:
             - test
             - build
-          tags:
-            only: /WowTV\/v\/(\d)+(\.(\d)+)+$/
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /WowTV\/v\/(\d)+(\.(\d)+)+$/
 
   task-73mtv:
     jobs:
