@@ -217,7 +217,9 @@ workflows:
 
   task-wow:
     jobs:
-      - test: *config-wow
+      - test:
+          <<: *config-wow
+          matrix: *python-matrix
       - build: *config-wow
       - deploy:
           requires:
